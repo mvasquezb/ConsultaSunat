@@ -1,0 +1,62 @@
+Bumeran:
+	- Titulo de la oferta
+	- Nombre de la empresa
+	- Fecha de publicacion
+	- Area
+	- Tipo de puesto
+	- Salario (Texto)
+	- Lugar
+
+	- Descripcion
+	- Conocimientos  					No tiene tags para separar explicitamente.
+	- Competencias							Formas de obtencion:
+	- Funciones										Texto completo (los 4 o mas campos en un mismo texto, luego separarlos haciendo una busqueda de los titulos)
+	- Beneficios									Lista de textos(separa los 4 o mas campos, pero no se puede diferenciar cual es cual)                       
+	- Requisitos
+
+
+
+
+
+
+
+
+
+
+Aptitus:
+	- Titulo de la oferta
+	- Nombre de la empresa
+	- Descripcion de la oferta (Requisitos, Funciones, Beneficios, etc. en mayor detalle que en los campos siguientes. Todo texto,separado por saltos de linea)
+	- Requisitos
+	- Modalidad (Igual que Tipo de puesto en Bumeran)
+	- Salario (Texto)
+	- Nivel (Analista, Jefe, etc)
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+	
+
+
+
+
+
+
+
+
