@@ -83,7 +83,6 @@ def _validateAttributeFormat(attr):
 	return attr.isalpha() or attr == ""
 
 
-
 def _validateStringSource(source):
 
 	if source is "":
@@ -91,7 +90,7 @@ def _validateStringSource(source):
 
 	nlvls = len(source.split('->'))
 	if (nlvls == 1):
-		nparts = len(source.split('/'))
+		nparts = len(source.split('\\'))
 		if nparts == 1:
 			return True
 		else:
@@ -130,7 +129,7 @@ def readSourceFromString(strdata	,mainList = MessageList() ):
 
 			levels = data[1].split('->')
 			for level in levels:
-				parts = level.split('/')
+				parts = level.split('\\')
 
 				if (len(parts)!=3):
 					return None

@@ -95,7 +95,7 @@ class Scraper:
 		ATTIDX = 2
 
 		curlvl = self.levels[index]
-		parts = curlvl.split('/')
+		parts = curlvl.split('\\')
 		
 		tagFormat = parts[TAGIDX].split()
 
