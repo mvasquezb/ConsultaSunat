@@ -109,19 +109,16 @@ class Store:
 
 	@staticmethod
 	def getCurIndex(jobCenter):
+		filename = "curIndex_" + jobCenter
 
-		with open("curIndex") as file:
+		with open(filename) as file:
 			#get both indexes
 			idxApt = int(file.readline())
-			idxBum = int(file.radline())
+			return idxApt
 
-			if jobCenter == "Aptitus":
-				return idxApt
-			if jobCenter == "Bumeran":
-				return idxBum
-
-	def setCurIndex(self):
-		file = open("curIndex", 'w')
+	def setCurIndex(self,jobCenter):
+		filename = "curIndex_" + jobCenter
+		file = open(filename, 'w')
 		file.write(str(self.curIndex))
 		
 
@@ -140,9 +137,9 @@ class Store:
 
 		try:
 			cmd = """
-				SELECT * FROM {0}.{1} WHERE description = '{2}';
-				""".format(self.keyspace, findTable, description)	
-			result = self.sesion.execute(cmd)
+				SELECT * FROM {0}.{1} WHERE description = %s and month = %s and year = %s;
+				""".format(self.keyspace, findTable)	
+			result = self.sesion.execute(cmd,[description, month, year])
 		except:
 			return None
 

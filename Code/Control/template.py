@@ -343,7 +343,7 @@ class Template:
 						db.loadOffers(offers, self.jobCenter,msgList)
 						mainList.addMsgList(msgList)
 
-				db.setCurIndex()
+				db.setCurIndex(self.jobCenter)
 				mainList.setTitle("Template " + self.jobCenter + " executed.", MessageList.INF)
 				return 
 
