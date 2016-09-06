@@ -16,6 +16,6 @@ Feature Names:					|* *\{"class":"job_box_title"}\|
 Feature Values:					|* div\{"class":"job_box_information"}\|
 Feature Names:					|["Titulo"]|
 Feature Values:					|* h1\{"class":"job_description_title"}\|
-Feature Names:					|["Trash","JSON"]|
-Feature values:					|1 body\{}\->* script\{}\|
+Feature Names:					|["JSON"]|
+Feature values:					|1 body\{}\->* script\{"type":"text/javascript"}\|
 
