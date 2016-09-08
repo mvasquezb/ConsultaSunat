@@ -7,20 +7,311 @@ Detail:
   INFO: Function file imported
   INFO: 31 Areas obtained
   INFO: Area #1
-  INFO: http://aptitus.com/buscar-trabajo-en-peru/de-comercial-ventas--call-center-telemarketing--operaciones--atencion-al-cliente--administracion-y-finanzas--medicina-salud--produccion--gastronomia--mantenimiento--abastecimiento-y-logistica--seguridad--contabilidad--marketing-publicidad--hoteleria-turismo--educacion-docencia-e-investigacion--sistemas-ti--transporte--recursos-humanos--proyectos--legal--diseno--ingenieria--comercio-exterior--gerencia-direccion--auditoria--administracion-servicios-generales--relaciones-institucionales-publicas--ventas--hoteleria-turismo-restaurantes--sistemas--otros
-  INFO: 11301 valid offers selected
-   INFO: 16674 offers obtained in total (Invalid included)
+  INFO: http://aptitus.com/buscar-trabajo-en-peru/de-comercial-ventas--call-center-telemarketing--operaciones--atencion-al-cliente--administracion-y-finanzas--medicina-salud--gastronomia--produccion--mantenimiento--abastecimiento-y-logistica--marketing-publicidad--seguridad--contabilidad--educacion-docencia-e-investigacion--hoteleria-turismo--sistemas-ti--transporte--recursos-humanos--proyectos--legal--diseno--ingenieria--comercio-exterior--gerencia-direccion--auditoria--relaciones-institucionales-publicas--administracion-servicios-generales--hoteleria-turismo-restaurantes--ventas--sistemas--otros
+  INFO: 572 valid offers selected
+   INFO: 579 offers obtained in total (Invalid included)
     
-    INFO: Number of Offers filtered: 16673
-    INFO: Unexpected number of offers at page #37
-    INFO: Unexpected number of offers at page #38
-    INFO: Unexpected number of offers at page #39
-    INFO: Unexpected number of offers at page #834
+    INFO: Number of Offers filtered: 579
  
  
   INFO: All offers were loaded
-   INFO: 8598 Offers succesfully loaded to database
-   INFO: 2703 Offers discarted because of duplication in database
+   INFO: 12 Offers succesfully loaded to database
+   INFO: 560 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+ 
+ INFO: Template Instance created
+  INFO: All Offer Template Attributes are OK :)
+ 
+ INFO: Template Bumeran executed.
+  INFO: Function file imported
+  INFO: 22 Areas obtained
+  INFO: Area #1
+  INFO: http://bumeran.com.pe/empleos-area-abastecimiento-y-logistica.html
+  INFO: 39 valid offers selected
+   INFO: 39 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 39
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 39 Offers succesfully loaded to database
+   INFO: 0 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #2
+  INFO: http://bumeran.com.pe/empleos-area-administracion-contabilidad-y-finanzas.html
+  INFO: 126 valid offers selected
+   INFO: 126 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 125
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #9
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 100 Offers succesfully loaded to database
+   INFO: 26 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #3
+  INFO: http://bumeran.com.pe/empleos-area-aduana-y-comercio-exterior.html
+  INFO: 3 valid offers selected
+   INFO: 3 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 3
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 3 Offers succesfully loaded to database
+   INFO: 0 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #4
+  INFO: http://bumeran.com.pe/empleos-area-atencion-al-cliente-call-center-y-telemarketing.html
+  INFO: 85 valid offers selected
+   INFO: 85 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 85
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 80 Offers succesfully loaded to database
+   INFO: 5 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #5
+  INFO: http://bumeran.com.pe/empleos-area-comercial-ventas-y-negocios.html
+  INFO: 178 valid offers selected
+   INFO: 178 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 178
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 158 Offers succesfully loaded to database
+   INFO: 20 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #6
+  INFO: http://bumeran.com.pe/empleos-area-comunicacion-relaciones-institucionales-y-publicas.html
+  INFO: 8 valid offers selected
+   INFO: 8 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 8
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 8 Offers succesfully loaded to database
+   INFO: 0 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #7
+  INFO: http://bumeran.com.pe/empleos-area-diseno.html
+  INFO: 4 valid offers selected
+   INFO: 4 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 4
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 4 Offers succesfully loaded to database
+   INFO: 0 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #8
+  INFO: http://bumeran.com.pe/empleos-area-educacion-docencia-e-investigacion.html
+  INFO: 3 valid offers selected
+   INFO: 3 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 3
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 3 Offers succesfully loaded to database
+   INFO: 0 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #9
+  INFO: http://bumeran.com.pe/empleos-area-gastronomia-y-turismo.html
+  INFO: 11 valid offers selected
+   INFO: 11 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 11
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 11 Offers succesfully loaded to database
+   INFO: 0 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #10
+  INFO: http://bumeran.com.pe/empleos-area-gerencia-y-direccion-general.html
+  INFO: 1 valid offers selected
+   INFO: 1 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 1
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 1 Offers succesfully loaded to database
+   INFO: 0 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #11
+  INFO: http://bumeran.com.pe/empleos-area-ingenieria-civil-y-construccion.html
+  INFO: 19 valid offers selected
+   INFO: 19 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 19
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 19 Offers succesfully loaded to database
+   INFO: 0 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #12
+  INFO: http://bumeran.com.pe/empleos-area-ingenierias.html
+  INFO: 30 valid offers selected
+   INFO: 30 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 30
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 30 Offers succesfully loaded to database
+   INFO: 0 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #13
+  INFO: http://bumeran.com.pe/empleos-area-legales.html
+  INFO: 10 valid offers selected
+   INFO: 10 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 10
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 10 Offers succesfully loaded to database
+   INFO: 0 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #14
+  INFO: http://bumeran.com.pe/empleos-area-marketing-y-publicidad.html
+  INFO: 16 valid offers selected
+   INFO: 16 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 16
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 16 Offers succesfully loaded to database
+   INFO: 0 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #15
+  INFO: http://bumeran.com.pe/empleos-area-mineria-petroleo-y-gas.html
+  INFO: 14 valid offers selected
+   INFO: 14 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 14
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 13 Offers succesfully loaded to database
+   INFO: 1 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #16
+  INFO: http://bumeran.com.pe/empleos-area-oficios-y-otros.html
+  INFO: 71 valid offers selected
+   INFO: 71 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 71
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 66 Offers succesfully loaded to database
+   INFO: 5 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #17
+  INFO: http://bumeran.com.pe/empleos-area-produccion-y-manufactura.html
+  INFO: 35 valid offers selected
+   INFO: 35 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 35
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 35 Offers succesfully loaded to database
+   INFO: 0 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #18
+  INFO: http://bumeran.com.pe/empleos-area-recursos-humanos-y-capacitacion.html
+  INFO: 30 valid offers selected
+   INFO: 30 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 30
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 29 Offers succesfully loaded to database
+   INFO: 1 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #19
+  INFO: http://bumeran.com.pe/empleos-area-salud-medicina-y-farmacia.html
+  INFO: 23 valid offers selected
+   INFO: 23 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 23
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 23 Offers succesfully loaded to database
+   INFO: 0 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #20
+  INFO: http://bumeran.com.pe/empleos-area-secretarias-y-recepcion.html
+  INFO: 10 valid offers selected
+   INFO: 10 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 10
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 10 Offers succesfully loaded to database
+   INFO: 0 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #21
+  INFO: http://bumeran.com.pe/empleos-area-seguros.html
+  INFO: 4 valid offers selected
+   INFO: 4 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 4
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 3 Offers succesfully loaded to database
+   INFO: 1 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #22
+  INFO: http://bumeran.com.pe/empleos-area-tecnologia-sistemas-y-telecomunicaciones.html
+  INFO: 33 valid offers selected
+   INFO: 33 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 33
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 32 Offers succesfully loaded to database
+   INFO: 1 Offers discarted because of duplication in database
    ERROR: 0 Offers failed to load to database
  
  
