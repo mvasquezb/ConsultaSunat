@@ -9,6 +9,8 @@ from Utils.utils import eprint
 from Utils.message import MessageList
 
 
+import time
+
 class Store:
 	
 	def __init__(self,keyspace,ip= None):
@@ -52,8 +54,7 @@ class Store:
 
 			self.sesion.execute("""
 				CREATE TABLE IF NOT EXISTS {0}.{1}
-				(	position int,
-					description text,
+				(	position int, description text,
 					pubdate timestamp,
 					features map<text,text>,
 					PRIMARY KEY(position));
@@ -128,53 +129,102 @@ class Store:
 		year = offer.pubDate.year
 
 		description = Store.dbFormat(offer.description)
-		pubDate = Store.dbFormat(offer.pubDate)
+		#pubDate = Store.dbFormat(offer.pubDate)
+		pubDate = offer.pubDate
+
+		auto_process = False
+		date_process = 0
 
 
-
-		findTable = "unproc_offer_"+jobCenter+"_by_desc"
-		storeTable = "unproc_offer_"+jobCenter
+		findTable = "unprocessed_"+jobCenter + "_by_desc"
+		storeTable = "unprocessed_"+jobCenter
+		cmd = """
+					SELECT * FROM {0}.{1} WHERE description = %s and month = %s and year = %s;
+					""".format(self.keyspace, findTable)
 
 		try:
-			cmd = """
-				SELECT * FROM {0}.{1} WHERE description = %s and month = %s and year = %s;
-				""".format(self.keyspace, findTable)	
-			result = self.sesion.execute(cmd,[description, month, year])
+			result = self.sesion.execute(cmd, [description, month, year])
 		except:
 			return None
 
 		if len(list(result)) == 0:
 			#No duplication
 			cmd = """
-				INSERT INTO {0}.{1}(description, month, year) values
-				(%s,%s,%s)
-				""".format(self.keyspace, findTable)
+						INSERT INTO {0}.{1} (description, month, year, features)
+						VALUES (%s,%s,%s,%s);
+						""".format(self.keyspace, findTable)
 
 			try:
-				self.sesion.execute(cmd,[description,month, year])
+				self.sesion.execute(cmd, [description,month,year,offer.features])
 			except:
 				eprint("")
-				eprint("Error running the cql command: "+ cmd)
-				eprint("---------------------------------------------------------------------------------------------------------")
-				return None
+				eprint("Error running the cql command: " + cmd)
+				eprint(" ---------------------------------------------------------------------")
 
 			cmd = """
-				INSERT INTO {0}.{1}(position, description, pubdate, features)
-				VALUES (
-				%s,%s,%s,%s)
-				""".format(self.keyspace, storeTable)
+						INSERT INTO {0}.{1}
+						(auto_process, date_process, description, features, publication_date)
+						VALUES
+						(%s,%s,%s,%s,%s);
+						""".format(self.keyspace, storeTable)
 
 			try:
-				self.sesion.execute(cmd, [self.curIndex,description, pubDate, offer.features])
-				self.curIndex+=1
+				self.sesion.execute(cmd, [auto_process, date_process, description,offer.features, pubDate])
+				self.curIndex += 1
 			except:
 				eprint("")
-				eprint("Error running the cql command: "+cmd)
-				eprint("---------------------------------------------------------------------------------------------------------")
+				eprint("Error runing the cql command: " + cmd)
+				eprint(" -------------------------------------------------------------------------")
 				return None
-
-
 			return True
-			
 		else:
 			return False
+
+
+		#findTable = "unproc_offer_"+jobCenter+"_by_desc"
+		#storeTable = "unproc_offer_"+jobCenter
+
+		#try:
+		#	cmd = """
+		#		SELECT * FROM {0}.{1} WHERE description = %s and month = %s and year = %s;
+		#		""".format(self.keyspace, findTable)	
+		#	result = self.sesion.execute(cmd,[description, month, year])
+		#except:
+		#	return None
+
+		#if len(list(result)) == 0:
+		#	#No duplication
+		#	cmd = """
+		#		INSERT INTO {0}.{1}(description, month, year) values
+		#		(%s,%s,%s);
+		#		""".format(self.keyspace, findTable)
+
+		#	try:
+		#		self.sesion.execute(cmd,[description,month, year])
+		#	except:
+		#		eprint("")
+		#		eprint("Error running the cql command: "+ cmd)
+		#		eprint("---------------------------------------------------------------------------------------------------------")
+		#		return None
+
+		#	cmd = """
+		#				INSERT INTO {0}.{1}
+		#				(auto_process, date_process, description, feature, publication_date)
+		#				VALUES
+		#				(%s,%s,%s,%s,%s);
+		#				""".format(self.keyspace, storeTable)
+
+		#	try:
+		#		self.sesion.execute(cmd, [self.curIndex,description, pubDate, offer.features])
+		#		self.curIndex+=1
+		#	except:
+		#		eprint("")
+		#		eprint("Error running the cql command: "+cmd)
+		#		eprint("---------------------------------------------------------------------------------------------------------")
+		#		return None
+
+
+		#	return True
+		#	
+		#else:
+		#	return False

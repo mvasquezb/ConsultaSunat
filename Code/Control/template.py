@@ -99,7 +99,7 @@ class Template:
 		areas = data[0]
 
 		#print(areas)
-		#areas = ["medicina-salud"]
+		areas = ["medicina-salud"]
 		#areas = ["/empleos-area-salud-medicina-y-farmacia.html"]
 
 		if areas is None:
@@ -108,8 +108,6 @@ class Template:
 		else:
 			mainList.setTitle(str(len(areas)) + " Areas obtained",MessageList.INF)
 			return areas
-
-
 
 
 	def getNumOffers(self,dateUrl,mainList):
