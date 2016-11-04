@@ -58,8 +58,6 @@ def sendEmail(sender, password, receiver, filename):
 		msg.attach(part)
 				
 
-
-
 	s = smtplib.SMTP('smtp.gmail.com', 587)
 	s.starttls()
 	s.login(sender,password)
@@ -80,7 +78,6 @@ def readConfigFile(mainList):
 	sender = utils.readTextFromFile(confFile)
 	password = utils.readTextFromFile(confFile)
 	receiver = utils.readTextFromFile(confFile)
-	keyspace = utils.readTextFromFile(confFile)
 	out = utils.readTextFromFile(confFile)
 
 	filenames = []
@@ -92,16 +89,16 @@ def readConfigFile(mainList):
 			filename = _addTemplatePath(filename)
 			filenames.append(filename)
 
-	if _checkConfigValues(sender, password, receiver, keyspace, out,filenames):
+	if _checkConfigValues(sender, password, receiver, out,filenames):
 		mainList.setTitle("Configuration file read correctly",MessageList.INF)
-		return sender, password, receiver, keyspace, out, filenames
+		return sender, password, receiver, out, filenames
 	else:
 		mainList.setTitle("Incorrect configuration file values",MessageList.ERR)
 		return None
 
 
-def _checkConfigValues(sender, password, receiver, keyspace, out, filenames):
-	if sender is None or password is None or receiver is None or keyspace is None or out is None :
+def _checkConfigValues(sender, password, receiver, out, filenames):
+	if sender is None or password is None or receiver is None or out is None :
 		return False
 	if len(filenames)==0:
 		return False
@@ -120,12 +117,9 @@ def main():
 	mainList = MessageList("Detail:")
 
 	msgList = MessageList()
-	sender, password, receiver, keyspace,out, filenames = readConfigFile(msgList)
-	mainList.addMsgList(msgList)
 
-	database = Store(keyspace)
-	if not database.connect():
-		return None
+	sender, password, receiver, out, filenames = readConfigFile(msgList)
+	mainList.addMsgList(msgList)
 
 	sys.stdout = open("summary.txt", 'w')
 	sys.stderr = open(out,'w')
@@ -137,7 +131,7 @@ def main():
 
 		if template is not None:
 			msgList = MessageList()
-			template.execute(database, msgList)
+			template.execute(msgList)
 			mainList.addMsgList(msgList)
 
 	mainList.showAll(0,sys.stdout)

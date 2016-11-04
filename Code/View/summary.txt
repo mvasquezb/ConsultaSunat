@@ -5,18 +5,810 @@ Detail:
  
  INFO: Template Aptitus executed.
   INFO: Function file imported
-  INFO: 1 Areas obtained
+  INFO: 32 Areas obtained
   INFO: Area #1
-  INFO: http://aptitus.com/buscar-trabajo-en-peru/de-medicina-salud
-  INFO: 18 valid offers selected
-   INFO: 18 offers obtained in total (Invalid included)
+  INFO: http://aptitus.com/buscar-trabajo-en-peru/de-comercial-ventas--operaciones--atencion-al-cliente--call-center-telemarketing--produccion--administracion-y-finanzas--abastecimiento-y-logistica--mantenimiento--seguridad--medicina-salud--gastronomia--educacion-docencia-e-investigacion--transporte--contabilidad--marketing-publicidad--sistemas-ti--proyectos--hoteleria-turismo--recursos-humanos--legal--diseno--ingenieria--gerencia-direccion--auditoria--comercio-exterior--administracion-servicios-generales--relaciones-institucionales-publicas--almacen--ventas--hoteleria-turismo-restaurantes--banca--otros
+  INFO: 6992 valid offers selected
+   INFO: 9619 offers obtained in total (Invalid included)
     
-    INFO: Number of Offers filtered: 18
+    INFO: Number of Offers filtered: 9604
+    INFO: Unexpected number of offers at page #42
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 4425 Offers succesfully loaded to database
+   INFO: 2567 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+ 
+ INFO: Template Instance created
+  INFO: All Offer Template Attributes are OK :)
+ 
+ INFO: Template Bumeran executed.
+  INFO: Function file imported
+  INFO: 22 Areas obtained
+  INFO: Area #1
+  INFO: http://bumeran.com.pe/empleos-area-abastecimiento-y-logistica.html
+  INFO: 334 valid offers selected
+   INFO: 334 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 326
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+    INFO: Unexpected number of offers at page #7
+    INFO: Unexpected number of offers at page #8
+    INFO: Unexpected number of offers at page #9
+    INFO: Unexpected number of offers at page #10
+    INFO: Unexpected number of offers at page #11
+    INFO: Unexpected number of offers at page #12
+    INFO: Unexpected number of offers at page #13
+    INFO: Unexpected number of offers at page #14
+    INFO: Unexpected number of offers at page #15
+    INFO: Unexpected number of offers at page #16
+    INFO: Unexpected number of offers at page #17
+    INFO: Unexpected number of offers at page #18
+    INFO: Unexpected number of offers at page #19
+    INFO: Unexpected number of offers at page #20
+    INFO: Unexpected number of offers at page #21
+    INFO: Unexpected number of offers at page #22
+    INFO: Unexpected number of offers at page #23
+    INFO: Unexpected number of offers at page #24
+    INFO: Unexpected number of offers at page #25
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 270 Offers succesfully loaded to database
+   INFO: 64 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #2
+  INFO: http://bumeran.com.pe/empleos-area-administracion-contabilidad-y-finanzas.html
+  INFO: 800 valid offers selected
+   INFO: 800 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 791
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+    INFO: Unexpected number of offers at page #7
+    INFO: Unexpected number of offers at page #8
+    INFO: Unexpected number of offers at page #9
+    INFO: Unexpected number of offers at page #10
+    INFO: Unexpected number of offers at page #11
+    INFO: Unexpected number of offers at page #12
+    INFO: Unexpected number of offers at page #13
+    INFO: Unexpected number of offers at page #14
+    INFO: Unexpected number of offers at page #15
+    INFO: Unexpected number of offers at page #16
+    INFO: Unexpected number of offers at page #17
+    INFO: Unexpected number of offers at page #18
+    INFO: Unexpected number of offers at page #19
+    INFO: Unexpected number of offers at page #20
+    INFO: Unexpected number of offers at page #21
+    INFO: Unexpected number of offers at page #22
+    INFO: Unexpected number of offers at page #23
+    INFO: Unexpected number of offers at page #24
+    INFO: Unexpected number of offers at page #25
+    INFO: Unexpected number of offers at page #26
+    INFO: Unexpected number of offers at page #27
+    INFO: Unexpected number of offers at page #28
+    INFO: Unexpected number of offers at page #29
+    INFO: Unexpected number of offers at page #30
+    INFO: Unexpected number of offers at page #31
+    INFO: Unexpected number of offers at page #32
+    INFO: Unexpected number of offers at page #33
+    INFO: Unexpected number of offers at page #34
+    INFO: Unexpected number of offers at page #35
+    INFO: Unexpected number of offers at page #36
+    INFO: Unexpected number of offers at page #37
+    INFO: Unexpected number of offers at page #38
+    INFO: Unexpected number of offers at page #39
+    INFO: Unexpected number of offers at page #40
+    INFO: Unexpected number of offers at page #41
+    INFO: Unexpected number of offers at page #42
+    INFO: Unexpected number of offers at page #43
+    INFO: Unexpected number of offers at page #44
+    INFO: Unexpected number of offers at page #45
+    INFO: Unexpected number of offers at page #46
+    INFO: Unexpected number of offers at page #47
+    INFO: Unexpected number of offers at page #48
+    INFO: Unexpected number of offers at page #49
+    INFO: Unexpected number of offers at page #50
+    INFO: Unexpected number of offers at page #51
+    INFO: Unexpected number of offers at page #52
+    INFO: Unexpected number of offers at page #53
+    INFO: Unexpected number of offers at page #54
+    INFO: Unexpected number of offers at page #55
+    INFO: Unexpected number of offers at page #56
+    INFO: Unexpected number of offers at page #57
+    INFO: Unexpected number of offers at page #58
+    INFO: Unexpected number of offers at page #59
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 610 Offers succesfully loaded to database
+   INFO: 190 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #3
+  INFO: http://bumeran.com.pe/empleos-area-aduana-y-comercio-exterior.html
+  INFO: 34 valid offers selected
+   INFO: 34 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 26
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 19 Offers succesfully loaded to database
+   INFO: 15 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #4
+  INFO: http://bumeran.com.pe/empleos-area-atencion-al-cliente-call-center-y-telemarketing.html
+  INFO: 662 valid offers selected
+   INFO: 662 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 658
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+    INFO: Unexpected number of offers at page #7
+    INFO: Unexpected number of offers at page #8
+    INFO: Unexpected number of offers at page #9
+    INFO: Unexpected number of offers at page #10
+    INFO: Unexpected number of offers at page #11
+    INFO: Unexpected number of offers at page #12
+    INFO: Unexpected number of offers at page #13
+    INFO: Unexpected number of offers at page #14
+    INFO: Unexpected number of offers at page #15
+    INFO: Unexpected number of offers at page #16
+    INFO: Unexpected number of offers at page #17
+    INFO: Unexpected number of offers at page #18
+    INFO: Unexpected number of offers at page #19
+    INFO: Unexpected number of offers at page #20
+    INFO: Unexpected number of offers at page #21
+    INFO: Unexpected number of offers at page #22
+    INFO: Unexpected number of offers at page #23
+    INFO: Unexpected number of offers at page #24
+    INFO: Unexpected number of offers at page #25
+    INFO: Unexpected number of offers at page #26
+    INFO: Unexpected number of offers at page #27
+    INFO: Unexpected number of offers at page #28
+    INFO: Unexpected number of offers at page #29
+    INFO: Unexpected number of offers at page #30
+    INFO: Unexpected number of offers at page #31
+    INFO: Unexpected number of offers at page #32
+    INFO: Unexpected number of offers at page #33
+    INFO: Unexpected number of offers at page #34
+    INFO: Unexpected number of offers at page #35
+    INFO: Unexpected number of offers at page #36
+    INFO: Unexpected number of offers at page #37
+    INFO: Unexpected number of offers at page #38
+    INFO: Unexpected number of offers at page #39
+    INFO: Unexpected number of offers at page #40
+    INFO: Unexpected number of offers at page #41
+    INFO: Unexpected number of offers at page #42
+    INFO: Unexpected number of offers at page #43
+    INFO: Unexpected number of offers at page #44
+    INFO: Unexpected number of offers at page #45
+    INFO: Unexpected number of offers at page #46
+    INFO: Unexpected number of offers at page #47
+    INFO: Unexpected number of offers at page #48
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 515 Offers succesfully loaded to database
+   INFO: 147 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #5
+  INFO: http://bumeran.com.pe/empleos-area-comercial-ventas-y-negocios.html
+  INFO: 1290 valid offers selected
+   INFO: 1290 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 1289
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+    INFO: Unexpected number of offers at page #7
+    INFO: Unexpected number of offers at page #8
+    INFO: Unexpected number of offers at page #9
+    INFO: Unexpected number of offers at page #10
+    INFO: Unexpected number of offers at page #11
+    INFO: Unexpected number of offers at page #12
+    INFO: Unexpected number of offers at page #13
+    INFO: Unexpected number of offers at page #14
+    INFO: Unexpected number of offers at page #15
+    INFO: Unexpected number of offers at page #16
+    INFO: Unexpected number of offers at page #17
+    INFO: Unexpected number of offers at page #18
+    INFO: Unexpected number of offers at page #19
+    INFO: Unexpected number of offers at page #20
+    INFO: Unexpected number of offers at page #21
+    INFO: Unexpected number of offers at page #22
+    INFO: Unexpected number of offers at page #23
+    INFO: Unexpected number of offers at page #24
+    INFO: Unexpected number of offers at page #25
+    INFO: Unexpected number of offers at page #26
+    INFO: Unexpected number of offers at page #27
+    INFO: Unexpected number of offers at page #28
+    INFO: Unexpected number of offers at page #29
+    INFO: Unexpected number of offers at page #30
+    INFO: Unexpected number of offers at page #31
+    INFO: Unexpected number of offers at page #32
+    INFO: Unexpected number of offers at page #33
+    INFO: Unexpected number of offers at page #34
+    INFO: Unexpected number of offers at page #35
+    INFO: Unexpected number of offers at page #36
+    INFO: Unexpected number of offers at page #37
+    INFO: Unexpected number of offers at page #38
+    INFO: Unexpected number of offers at page #39
+    INFO: Unexpected number of offers at page #40
+    INFO: Unexpected number of offers at page #41
+    INFO: Unexpected number of offers at page #42
+    INFO: Unexpected number of offers at page #43
+    INFO: Unexpected number of offers at page #44
+    INFO: Unexpected number of offers at page #45
+    INFO: Unexpected number of offers at page #46
+    INFO: Unexpected number of offers at page #47
+    INFO: Unexpected number of offers at page #48
+    INFO: Unexpected number of offers at page #49
+    INFO: Unexpected number of offers at page #50
+    INFO: Unexpected number of offers at page #51
+    INFO: Unexpected number of offers at page #52
+    INFO: Unexpected number of offers at page #53
+    INFO: Unexpected number of offers at page #54
+    INFO: Unexpected number of offers at page #55
+    INFO: Unexpected number of offers at page #56
+    INFO: Unexpected number of offers at page #57
+    INFO: Unexpected number of offers at page #58
+    INFO: Unexpected number of offers at page #59
+    INFO: Unexpected number of offers at page #60
+    INFO: Unexpected number of offers at page #61
+    INFO: Unexpected number of offers at page #62
+    INFO: Unexpected number of offers at page #63
+    INFO: Unexpected number of offers at page #64
+    INFO: Unexpected number of offers at page #65
+    INFO: Unexpected number of offers at page #66
+    INFO: Unexpected number of offers at page #67
+    INFO: Unexpected number of offers at page #68
+    INFO: Unexpected number of offers at page #69
+    INFO: Unexpected number of offers at page #70
+    INFO: Unexpected number of offers at page #71
+    INFO: Unexpected number of offers at page #72
+    INFO: Unexpected number of offers at page #73
+    INFO: Unexpected number of offers at page #74
+    INFO: Unexpected number of offers at page #75
+    INFO: Unexpected number of offers at page #76
+    INFO: Unexpected number of offers at page #77
+    INFO: Unexpected number of offers at page #78
+    INFO: Unexpected number of offers at page #79
+    INFO: Unexpected number of offers at page #80
+    INFO: Unexpected number of offers at page #81
+    INFO: Unexpected number of offers at page #82
+    INFO: Unexpected number of offers at page #83
+    INFO: Unexpected number of offers at page #84
+    INFO: Unexpected number of offers at page #85
+    INFO: Unexpected number of offers at page #86
+    INFO: Unexpected number of offers at page #87
+    INFO: Unexpected number of offers at page #88
+    INFO: Unexpected number of offers at page #89
+    INFO: Unexpected number of offers at page #90
+    INFO: Unexpected number of offers at page #91
+    INFO: Unexpected number of offers at page #92
+    INFO: Unexpected number of offers at page #93
+    INFO: Unexpected number of offers at page #94
+    INFO: Unexpected number of offers at page #95
+    INFO: Unexpected number of offers at page #96
+    INFO: Unexpected number of offers at page #97
+    INFO: Unexpected number of offers at page #98
+    INFO: Unexpected number of offers at page #99
+    INFO: Unexpected number of offers at page #100
+    INFO: Unexpected number of offers at page #101
+    INFO: Unexpected number of offers at page #102
+    INFO: Unexpected number of offers at page #103
+    INFO: Unexpected number of offers at page #104
+    INFO: Unexpected number of offers at page #105
+    INFO: Unexpected number of offers at page #106
+    INFO: Unexpected number of offers at page #107
+    INFO: Unexpected number of offers at page #108
+    INFO: Unexpected number of offers at page #109
+    INFO: Unexpected number of offers at page #110
+    INFO: Unexpected number of offers at page #111
+    INFO: Unexpected number of offers at page #112
+    INFO: Unexpected number of offers at page #113
+    INFO: Unexpected number of offers at page #114
+    INFO: Unexpected number of offers at page #115
+    INFO: Unexpected number of offers at page #116
+    INFO: Unexpected number of offers at page #117
+    INFO: Unexpected number of offers at page #118
+    INFO: Unexpected number of offers at page #119
+    INFO: Unexpected number of offers at page #120
+    INFO: Unexpected number of offers at page #121
+    INFO: Unexpected number of offers at page #122
+    INFO: Unexpected number of offers at page #123
+    INFO: Unexpected number of offers at page #124
+    INFO: Unexpected number of offers at page #125
+    INFO: Unexpected number of offers at page #126
+    INFO: Unexpected number of offers at page #127
+    INFO: Unexpected number of offers at page #128
+    INFO: Unexpected number of offers at page #129
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 959 Offers succesfully loaded to database
+   INFO: 331 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #6
+  INFO: http://bumeran.com.pe/empleos-area-comunicacion-relaciones-institucionales-y-publicas.html
+  INFO: 31 valid offers selected
+   INFO: 31 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 31
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 24 Offers succesfully loaded to database
+   INFO: 7 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #7
+  INFO: http://bumeran.com.pe/empleos-area-diseno.html
+  INFO: 31 valid offers selected
+   INFO: 31 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 31
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 24 Offers succesfully loaded to database
+   INFO: 7 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #8
+  INFO: http://bumeran.com.pe/empleos-area-educacion-docencia-e-investigacion.html
+  INFO: 78 valid offers selected
+   INFO: 78 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 72
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 60 Offers succesfully loaded to database
+   INFO: 18 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #9
+  INFO: http://bumeran.com.pe/empleos-area-gastronomia-y-turismo.html
+  INFO: 136 valid offers selected
+   INFO: 136 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 129
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+    INFO: Unexpected number of offers at page #7
+    INFO: Unexpected number of offers at page #8
+    INFO: Unexpected number of offers at page #9
+    INFO: Unexpected number of offers at page #10
+    INFO: Unexpected number of offers at page #11
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 99 Offers succesfully loaded to database
+   INFO: 37 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #10
+  INFO: http://bumeran.com.pe/empleos-area-gerencia-y-direccion-general.html
+  INFO: 16 valid offers selected
+   INFO: 16 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 9
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 7 Offers succesfully loaded to database
+   INFO: 9 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #11
+  INFO: http://bumeran.com.pe/empleos-area-ingenieria-civil-y-construccion.html
+  INFO: 110 valid offers selected
+   INFO: 110 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 109
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+    INFO: Unexpected number of offers at page #7
+    INFO: Unexpected number of offers at page #8
+    INFO: Unexpected number of offers at page #9
+    INFO: Unexpected number of offers at page #10
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 95 Offers succesfully loaded to database
+   INFO: 15 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #12
+  INFO: http://bumeran.com.pe/empleos-area-ingenierias.html
+  INFO: 186 valid offers selected
+   INFO: 186 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 186
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+    INFO: Unexpected number of offers at page #7
+    INFO: Unexpected number of offers at page #8
+    INFO: Unexpected number of offers at page #9
+    INFO: Unexpected number of offers at page #10
+    INFO: Unexpected number of offers at page #11
+    INFO: Unexpected number of offers at page #12
+    INFO: Unexpected number of offers at page #13
+    INFO: Unexpected number of offers at page #14
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 151 Offers succesfully loaded to database
+   INFO: 35 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #13
+  INFO: http://bumeran.com.pe/empleos-area-legales.html
+  INFO: 52 valid offers selected
+   INFO: 52 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 50
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 41 Offers succesfully loaded to database
+   INFO: 11 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #14
+  INFO: http://bumeran.com.pe/empleos-area-marketing-y-publicidad.html
+  INFO: 138 valid offers selected
+   INFO: 138 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 134
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+    INFO: Unexpected number of offers at page #7
+    INFO: Unexpected number of offers at page #8
+    INFO: Unexpected number of offers at page #9
+    INFO: Unexpected number of offers at page #10
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 107 Offers succesfully loaded to database
+   INFO: 31 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #15
+  INFO: http://bumeran.com.pe/empleos-area-mineria-petroleo-y-gas.html
+  INFO: 88 valid offers selected
+   INFO: 88 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 85
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+    INFO: Unexpected number of offers at page #7
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 70 Offers succesfully loaded to database
+   INFO: 18 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #16
+  INFO: http://bumeran.com.pe/empleos-area-oficios-y-otros.html
+  INFO: 707 valid offers selected
+   INFO: 707 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 700
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+    INFO: Unexpected number of offers at page #7
+    INFO: Unexpected number of offers at page #8
+    INFO: Unexpected number of offers at page #9
+    INFO: Unexpected number of offers at page #10
+    INFO: Unexpected number of offers at page #11
+    INFO: Unexpected number of offers at page #12
+    INFO: Unexpected number of offers at page #13
+    INFO: Unexpected number of offers at page #14
+    INFO: Unexpected number of offers at page #15
+    INFO: Unexpected number of offers at page #16
+    INFO: Unexpected number of offers at page #17
+    INFO: Unexpected number of offers at page #18
+    INFO: Unexpected number of offers at page #19
+    INFO: Unexpected number of offers at page #20
+    INFO: Unexpected number of offers at page #21
+    INFO: Unexpected number of offers at page #22
+    INFO: Unexpected number of offers at page #23
+    INFO: Unexpected number of offers at page #24
+    INFO: Unexpected number of offers at page #25
+    INFO: Unexpected number of offers at page #26
+    INFO: Unexpected number of offers at page #27
+    INFO: Unexpected number of offers at page #28
+    INFO: Unexpected number of offers at page #29
+    INFO: Unexpected number of offers at page #30
+    INFO: Unexpected number of offers at page #31
+    INFO: Unexpected number of offers at page #32
+    INFO: Unexpected number of offers at page #33
+    INFO: Unexpected number of offers at page #34
+    INFO: Unexpected number of offers at page #35
+    INFO: Unexpected number of offers at page #36
+    INFO: Unexpected number of offers at page #37
+    INFO: Unexpected number of offers at page #38
+    INFO: Unexpected number of offers at page #39
+    INFO: Unexpected number of offers at page #40
+    INFO: Unexpected number of offers at page #41
+    INFO: Unexpected number of offers at page #42
+    INFO: Unexpected number of offers at page #43
+    INFO: Unexpected number of offers at page #44
+    INFO: Unexpected number of offers at page #45
+    INFO: Unexpected number of offers at page #46
+    INFO: Unexpected number of offers at page #47
+    INFO: Unexpected number of offers at page #48
+    INFO: Unexpected number of offers at page #49
+    INFO: Unexpected number of offers at page #50
+    INFO: Unexpected number of offers at page #51
+    INFO: Unexpected number of offers at page #52
+    INFO: Unexpected number of offers at page #53
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 555 Offers succesfully loaded to database
+   INFO: 152 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #17
+  INFO: http://bumeran.com.pe/empleos-area-produccion-y-manufactura.html
+  INFO: 364 valid offers selected
+   INFO: 364 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 359
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+    INFO: Unexpected number of offers at page #7
+    INFO: Unexpected number of offers at page #8
+    INFO: Unexpected number of offers at page #9
+    INFO: Unexpected number of offers at page #10
+    INFO: Unexpected number of offers at page #11
+    INFO: Unexpected number of offers at page #12
+    INFO: Unexpected number of offers at page #13
+    INFO: Unexpected number of offers at page #14
+    INFO: Unexpected number of offers at page #15
+    INFO: Unexpected number of offers at page #16
+    INFO: Unexpected number of offers at page #17
+    INFO: Unexpected number of offers at page #18
+    INFO: Unexpected number of offers at page #19
+    INFO: Unexpected number of offers at page #20
+    INFO: Unexpected number of offers at page #21
+    INFO: Unexpected number of offers at page #22
+    INFO: Unexpected number of offers at page #23
+    INFO: Unexpected number of offers at page #24
+    INFO: Unexpected number of offers at page #25
+    INFO: Unexpected number of offers at page #26
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 292 Offers succesfully loaded to database
+   INFO: 72 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #18
+  INFO: http://bumeran.com.pe/empleos-area-recursos-humanos-y-capacitacion.html
+  INFO: 262 valid offers selected
+   INFO: 262 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 262
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+    INFO: Unexpected number of offers at page #7
+    INFO: Unexpected number of offers at page #8
+    INFO: Unexpected number of offers at page #9
+    INFO: Unexpected number of offers at page #10
+    INFO: Unexpected number of offers at page #11
+    INFO: Unexpected number of offers at page #12
+    INFO: Unexpected number of offers at page #13
+    INFO: Unexpected number of offers at page #14
+    INFO: Unexpected number of offers at page #15
+    INFO: Unexpected number of offers at page #16
+    INFO: Unexpected number of offers at page #17
+    INFO: Unexpected number of offers at page #18
+    INFO: Unexpected number of offers at page #19
+    INFO: Unexpected number of offers at page #20
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 211 Offers succesfully loaded to database
+   INFO: 51 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #19
+  INFO: http://bumeran.com.pe/empleos-area-salud-medicina-y-farmacia.html
+  INFO: 164 valid offers selected
+   INFO: 164 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 159
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+    INFO: Unexpected number of offers at page #7
+    INFO: Unexpected number of offers at page #8
+    INFO: Unexpected number of offers at page #9
+    INFO: Unexpected number of offers at page #10
+    INFO: Unexpected number of offers at page #11
+    INFO: Unexpected number of offers at page #12
+    INFO: Unexpected number of offers at page #13
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 132 Offers succesfully loaded to database
+   INFO: 32 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #20
+  INFO: http://bumeran.com.pe/empleos-area-secretarias-y-recepcion.html
+  INFO: 76 valid offers selected
+   INFO: 76 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 71
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 54 Offers succesfully loaded to database
+   INFO: 22 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #21
+  INFO: http://bumeran.com.pe/empleos-area-seguros.html
+  INFO: 22 valid offers selected
+   INFO: 22 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 19
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
  
  
   INFO: All offers were loaded
    INFO: 16 Offers succesfully loaded to database
-   INFO: 2 Offers discarted because of duplication in database
+   INFO: 6 Offers discarted because of duplication in database
+   ERROR: 0 Offers failed to load to database
+ 
+  INFO: Area #22
+  INFO: http://bumeran.com.pe/empleos-area-tecnologia-sistemas-y-telecomunicaciones.html
+  INFO: 524 valid offers selected
+   INFO: 524 offers obtained in total (Invalid included)
+    
+    INFO: Number of Offers filtered: 518
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+    INFO: Unexpected number of offers at page #7
+    INFO: Unexpected number of offers at page #8
+    INFO: Unexpected number of offers at page #9
+    INFO: Unexpected number of offers at page #10
+    INFO: Unexpected number of offers at page #11
+    INFO: Unexpected number of offers at page #12
+    INFO: Unexpected number of offers at page #13
+    INFO: Unexpected number of offers at page #14
+    INFO: Unexpected number of offers at page #15
+    INFO: Unexpected number of offers at page #16
+    INFO: Unexpected number of offers at page #17
+    INFO: Unexpected number of offers at page #18
+    INFO: Unexpected number of offers at page #19
+    INFO: Unexpected number of offers at page #20
+    INFO: Unexpected number of offers at page #21
+    INFO: Unexpected number of offers at page #22
+    INFO: Unexpected number of offers at page #23
+    INFO: Unexpected number of offers at page #24
+    INFO: Unexpected number of offers at page #25
+    INFO: Unexpected number of offers at page #26
+    INFO: Unexpected number of offers at page #27
+    INFO: Unexpected number of offers at page #28
+    INFO: Unexpected number of offers at page #29
+    INFO: Unexpected number of offers at page #30
+    INFO: Unexpected number of offers at page #31
+    INFO: Unexpected number of offers at page #32
+    INFO: Unexpected number of offers at page #33
+    INFO: Unexpected number of offers at page #34
+    INFO: Unexpected number of offers at page #35
+    INFO: Unexpected number of offers at page #36
+    INFO: Unexpected number of offers at page #37
+    INFO: Unexpected number of offers at page #38
+    INFO: Unexpected number of offers at page #39
+    INFO: Unexpected number of offers at page #40
+ 
+ 
+  INFO: All offers were loaded
+   INFO: 420 Offers succesfully loaded to database
+   INFO: 104 Offers discarted because of duplication in database
    ERROR: 0 Offers failed to load to database
  
  

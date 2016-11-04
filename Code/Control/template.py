@@ -11,6 +11,7 @@ from Utils.utils import eprint
 from Control.scraper import Scraper
 
 from Model.offer import Offer
+from Control.store import Store
 
 
 class Template:
@@ -99,7 +100,7 @@ class Template:
 		areas = data[0]
 
 		#print(areas)
-		areas = ["medicina-salud"]
+		#areas = ["medicina-salud"]
 		#areas = ["/empleos-area-salud-medicina-y-farmacia.html"]
 
 		if areas is None:
@@ -298,11 +299,10 @@ class Template:
 			return validOffers
 
 
-	def execute(self,db, mainList):
+	def execute(self,mainList):
 
-		if not db.createTables(self.jobCenter):
-			return None
-
+		db=  Store()
+		db.connect(self.jobCenter)
 
 		#Importing Custom Functions
 		msgList = MessageList()
@@ -466,9 +466,6 @@ class OfferTemplate(Template):
 		else:
 			if (type(source) is list):
 				return source
-
-
-
 
 			scraper = Scraper(soup, source)
 			data = scraper.scrap()[0]
