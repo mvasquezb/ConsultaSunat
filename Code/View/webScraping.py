@@ -15,37 +15,34 @@ from Utils import utils
 from Control.template import Template
 from Control.template import OfferTemplate
 
-from Control.store import Store
-
 import datetime
 
-def createTemplate(tempFilename, mainList):
-
+def create_template(temp_filename, main_list):
 	try:
-		tempFile = open(tempFilename,'r')
+		temp_file = open(temp_filename,'r')
 	except OSError:
-		mainList.setTitle("Template File not found",MessageList.ERR)
+		main_list.set_title("Plantilla no encontrada",MessageList.ERR)
 		return None
 
-	msgList = MessageList()
-	template = OfferTemplate.fromFile(tempFile,msgList)
-	mainList.addMsgList(msgList)
+	msg_list = MessageList()
+	template = OfferTemplate.fromFile(temp_file,msg_list)
+	main_list.add_msg_list(msg_list)
 
 	if template is None:
-		mainList.setTitle("Unable to create Template Instance",MessageList.ERR)
+		main_list.set_title("No se pudo inicializar la plantilla",MessageList.ERR)
 		return None
 	else:
-		mainList.setTitle("Template Instance created",MessageList.INF)
+		main_list.set_title("Plantilla creada",MessageList.INF)
 		return template
 
 
-def sendEmail(sender, password, receiver, filename):
+def send_email(sender, password, receiver, filename):
 
 	msg = MIMEMultipart()
 	with open("summary.txt") as repFile:
 		part = MIMEText(repFile.read())
 		msg.attach(part)
-	msg['Subject'] = "Web Scraping resuts"
+	msg['Subject'] = "Resultados del WebScraping"
 	msg['From'] = "btpucp"
 	msg['To'] =receiver
 
@@ -60,44 +57,47 @@ def sendEmail(sender, password, receiver, filename):
 
 	s = smtplib.SMTP('smtp.gmail.com', 587)
 	s.starttls()
-	s.login(sender,password)
-	s.send_message(msg)
+  try:
+	  s.login(sender,password)
+	  s.send_message(msg)
+  except:
+    print("No se pudo enviar el correo por error en el usuario o contraseña")
+
 	s.quit()
 
-	
-def readConfigFile(mainList):
+def read_config_file(main_list):
 
-	configFilename = "../../config"
+	config_filename = "../../config"
 
 	try:
-		confFile = open(configFilename, 'r')
+		conf_file = open(config_filename, 'r')
 	except OSError:
-		mainList.setTitle("Configuration file not found", MessageList.ERR)
+		main_list.set_title("Configuration file not found", MessageList.ERR)
 		return None
 
-	sender = utils.readTextFromFile(confFile)
-	password = utils.readTextFromFile(confFile)
-	receiver = utils.readTextFromFile(confFile)
-	out = utils.readTextFromFile(confFile)
+	sender = utils.read_text_from_file(conf_file)
+	password = utils.read_text_from_file(conf_file)
+	receiver = utils.read_text_from_file(conf_file)
+	out = utils.read_text_from_file(conf_file)
 
 	filenames = []
 	while True:
-		filename = utils.readTextFromFile(confFile)
+		filename = utils.read_text_from_file(conf_file)
 		if filename is None:
 			break
 		else:
-			filename = _addTemplatePath(filename)
+			filename = add_template_path(filename)
 			filenames.append(filename)
 
-	if _checkConfigValues(sender, password, receiver, out,filenames):
-		mainList.setTitle("Configuration file read correctly",MessageList.INF)
+	if check_config_values(sender, password, receiver, out,filenames):
+		main_list.set_title("Archivo de configuracion leído correctamente",MessageList.INF)
 		return sender, password, receiver, out, filenames
 	else:
-		mainList.setTitle("Incorrect configuration file values",MessageList.ERR)
+		main_list.set_title("Valores incorrectos en el archivo de configuración",MessageList.ERR)
 		return None
 
 
-def _checkConfigValues(sender, password, receiver, out, filenames):
+def check_config_values(sender, password, receiver, out, filenames):
 	if sender is None or password is None or receiver is None or out is None :
 		return False
 	if len(filenames)==0:
@@ -107,37 +107,36 @@ def _checkConfigValues(sender, password, receiver, out, filenames):
 		
 
 
-def _addTemplatePath(filename):
+def add_template_path(filename):
 	relativePath = "../../Templates/"
 	return relativePath + filename
 
 
 def main():
 
-	mainList = MessageList("Detail:")
+	main_list = MessageList("Resumen:")
+	msg_list = MessageList()
 
-	msgList = MessageList()
-
-	sender, password, receiver, out, filenames = readConfigFile(msgList)
-	mainList.addMsgList(msgList)
+	sender, password, receiver, out, filenames = read_config_file(msg_list)
+	main_list.add_msg_list(msg_list)
 
 	sys.stdout = open("summary.txt", 'w')
 	sys.stderr = open(out,'w')
 		
 	for filename in filenames:
-		msgList = MessageList()
-		template = createTemplate(filename, msgList)
-		mainList.addMsgList(msgList)
+		msg_list = MessageList()
+		template = create_template(filename, msg_list)
+		main_list.add_msg_list(msg_list)
 
 		if template is not None:
-			msgList = MessageList()
-			template.execute(msgList)
-			mainList.addMsgList(msgList)
+			msg_list = MessageList()
+			template.execute(msg_list)
+			main_list.add_msg_list(msg_list)
 
-	mainList.showAll(0,sys.stdout)
+	main_list.show_all(0,sys.stdout)
 	sys.stdout.flush()
 
-	sendEmail(sender, password, receiver, out)
+	send_email(sender, password, receiver, out)
 
 
 if __name__ == "__main__":

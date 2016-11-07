@@ -5,15 +5,13 @@ import sys
 def eprint(*args,**kwargs):
 	print(*args, file = sys.stderr, **kwargs)
 
-
-	
 from Utils.message import MessageList
 
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 
-def readUrlFromFile(tempFile):
-	str = tempFile.readline()
+def read_url_from_file(temp_file):
+	str = temp_file.readline()
 	data = str.split('|')
 
 	err = False
@@ -29,8 +27,8 @@ def readUrlFromFile(tempFile):
 		return data[1]
 
 
-def readTextFromFile(tempFile):
-	str = tempFile.readline()
+def read_text_from_file(temp_file):
+	str = temp_file.readline()
 	data = str.split('|')
 
 	err = False
@@ -41,8 +39,8 @@ def readTextFromFile(tempFile):
 		return data[1]
 		
 
-def readIntFromFile(tempFile):
-	str = tempFile.readline()
+def read_int_from_file(temp_file):
+	str = temp_file.readline()
 	data = str.split('|')
 
 	err = False
@@ -56,34 +54,34 @@ def readIntFromFile(tempFile):
 		return val
 
 
-def _validateTagFormat(tag):
-	tagParts = tag.split()
-	if len(tagParts) is not 2:
+def validate_tag_format(tag):
+	tag_parts = tag.split()
+	if len(tag_parts) is not 2:
 		return False
 	else:
-		index = tagParts[0]
+		index = tag_parts[0]
 		if index.isdigit() or index == '*':
 			return True
 		else:
 			return False
 
 
-def _validateDiccionaryFormat(dicc):
+def validate_dictionary_format(dictionary):
 	try:
-		diccionary = eval(dicc)
+		dictionary = eval(dictionary)
 	except:
 		return False
 
-	if type(diccionary) is dict:
+	if type(dictionary) is dict:
 		return True
 	else:
 		return False
 
-def _validateAttributeFormat(attr):
+def validate_attribute_format(attr):
 	return attr.isalpha() or attr == ""
 
 
-def _validateStringSource(source):
+def validate_string_source(source):
 
 	if source is "":
 		return False
@@ -100,7 +98,7 @@ def _validateStringSource(source):
 
 
 
-def readSourceFromString(strdata	,mainList = MessageList() ):
+def read_source_from_string(strdata	,main_list = MessageList() ):
 
 
 	data = strdata.split('|')
@@ -109,17 +107,17 @@ def readSourceFromString(strdata	,mainList = MessageList() ):
 		return None
 	else:
 			
-		if _validateStringSource(data[1]):
-			listData = eval(data[1])
-			if type(listData) is list:
-				mainList.addMsg("Using list data from template: " + str(listData),MessageList.INF)
-				return listData
+		if validate_string_source(data[1]):
+			list_data = eval(data[1])
+			if type(list_data) is list:
+				main_list.add_msg("Using list data from template: " + str(list_data),MessageList.INF)
+				return list_data
 
 			try:	
-				listData = eval(data[1])
-				if type(listData) is list:
-					mainList.addMsg("Using list data from template: " + str(listData),MessageList.INF)
-					return listData
+				list_data = eval(data[1])
+				if type(list_data) is list:
+					main_list.add_msg("Using list data from template: " + str(list_data),MessageList.INF)
+					return list_data
 
 			except:
 				return None
@@ -136,30 +134,30 @@ def readSourceFromString(strdata	,mainList = MessageList() ):
 				else:
 					
 					tag = parts[0]
-					if not _validateTagFormat(tag):
+					if not validate_tag_format(tag):
 						return None
 
 					dicc = parts[1]
-					if not _validateDiccionaryFormat(dicc):
+					if not _validate_dictionary_format(dicc):
 						return None
 
 					attr = parts[2]
-					if not _validateAttributeFormat(attr):
+					if not validate_attribute_format(attr):
 						return None
 
 			return data[1]
 
 
-def readSourceFromFile(tempFile):
-	fileline = tempFile.readline()
+def read_source_from_file(temp_file):
+	fileline = temp_file.readline()
 	if fileline is None:
 		return None
 	else:
-		return readSourceFromString(fileline)
+		return read_source_from_string(fileline)
 	
 
 
-def isblank(mystring):
+def is_blank(mystring):
 	if mystring and mystring.strip():
 		return False
 	return True

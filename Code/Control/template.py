@@ -10,405 +10,433 @@ from Utils import utils
 from Utils.utils import eprint
 from Control.scraper import Scraper
 
-from Model.offer import Offer
+from Model.offer import UnprocessedOffer
 from Control.store import Store
 
 
+
 class Template:
-	
-	def __init__(self, jobCenter, funcFilename, urlBase, period, areaUrl, \
-							 areasSource, numOffSource, linksPerPage, numSources, listSources):
-
-		self.jobCenter = jobCenter
-		self.funcFilename = funcFilename
-		self.urlBase = urlBase
-		self.period = period
-		self.areaUrl = areaUrl
-		self.areasSource = areasSource
-		self.numOffSource = numOffSource
-		self.linksPerPage = linksPerPage
-		self.numSources = numSources
-		self.listSources = listSources
-
-		self.module = None
-
-
-	@staticmethod
-	def readAttributesFromFile(file,mainList):
-		file.readline() #Global:
-			
-		jobCenter = utils.readTextFromFile(file)
-		if jobCenter is None: mainList.addMsg("Failed to read the jobcenter", MessageList.ERR)
-
-		funcFilename = utils.readTextFromFile(file)
-		if funcFilename is None: mainList.addMsg("Failed to read the functions filename", MessageList.ERR)
-
-		urlBase = utils.readUrlFromFile(file)
-		if urlBase is None: mainList.addMsg("Failed to read the url Base", MessageList.ERR)
-
-		period = utils.readTextFromFile(file)
-		if period is None: mainList.addMsg("Failed to read the period", MessageList.ERR)
-
-		areaUrl = utils.readUrlFromFile(file)
-		if areaUrl is None: mainList.addMsg("Failed to read the url to get areas", MessageList.ERR)
+  
+  def __init__(self, job_center, func_filename, url_base, period, area_url, \
+               areas_source, num_offSource, links_per_page, numSources, list_sources):
+
+    self.job_center = job_center
+    self.func_filename = func_filename
+    self.url_base = url_base
+    self.period = period
+    self.area_url = area_url
+    self.areas_source = areas_source
+    self.num_offSource = num_offSource
+    self.links_per_page = links_per_page
+    self.numSources = numSources
+    self.list_sources = list_sources
+
+    self.module = None
+
+
+  @staticmethod
+  def read_attributes_from_file(file,main_list):
+    file.readline() #Global:
+      
+    job_center = utils.readTextFromFile(file)
+    if job_center is None: main_list.add_msg("Failed to read the jobcenter", MessageList.ERR)
+
+    func_filename = utils.readTextFromFile(file)
+    if func_filename is None: main_list.add_msg("Failed to read the functions filename", MessageList.ERR)
+
+    url_base = utils.readUrlFromFile(file)
+    if url_base is None: main_list.add_msg("Failed to read the url Base", MessageList.ERR)
+
+    period = utils.readTextFromFile(file)
+    if period is None: main_list.add_msg("Failed to read the period", MessageList.ERR)
+
+    area_url = utils.readUrlFromFile(file)
+    if area_url is None: main_list.add_msg("Failed to read the url to get areas", MessageList.ERR)
 
-		areasSource = utils.readSourceFromFile(file)
-		if areasSource is None: mainList.addMsg("Failed to read the source to get areas", MessageList.ERR)
+    areas_source = utils.readSourceFromFile(file)
+    if areas_source is None: main_list.add_msg("Failed to read the source to get areas", MessageList.ERR)
 
-		numOffSource = utils.readSourceFromFile(file)
-		if numOffSource is None: mainList.addMsg("Failed to read the source to get the number of offers", MessageList.ERR)
+    num_offSource = utils.readSourceFromFile(file)
+    if num_offSource is None: main_list.add_msg("Failed to read the source to get the number of offers", MessageList.ERR)
 
-		linksPerPage = utils.readIntFromFile(file)
-		if linksPerPage is None: mainList.addMsg("Failed to read the number of links per page", MessageList.ERR)
+    links_per_page = utils.readIntFromFile(file)
+    if links_per_page is None: main_list.add_msg("Failed to read the number of links per page", MessageList.ERR)
 
-		numSources = utils.readIntFromFile(file)
-		if numSources is None: mainList.addMsg("Failed to read the number of sources to get offers", MessageList.ERR)
-		else:
-			listSources = []
-			for i in range(0, numSources):
-				offSource = utils.readSourceFromFile(file)
-				if offSource is None:	mainList.addMsg("Failed to read the offer source #"+ str(i+1), MessageList.ERR)
-				else: listSources.append(offSource)
-			
-		if mainList.size() is not 0:
-			return None
-		else:
-			return jobCenter, funcFilename, urlBase, period, areaUrl, areasSource, numOffSource, linksPerPage, numSources, listSources	
+    numSources = utils.readIntFromFile(file)
+    if numSources is None: main_list.add_msg("Failed to read the number of sources to get offers", MessageList.ERR)
+    else:
+      list_sources = []
+      for i in range(0, numSources):
+        offSource = utils.readSourceFromFile(file)
+        if offSource is None: main_list.add_msg("Failed to read the offer source #"+ str(i+1), MessageList.ERR)
+        else: list_sources.append(offSource)
+      
+    if main_list.size() is not 0:
+      return None
+    else:
+      return job_center, func_filename, url_base, period, area_url, areas_source, num_offSource, links_per_page, numSources, list_sources  
 
 
-
-	@classmethod
-	def fromFile(cls, file,mainList):
-		attributes = cls.readAttributesFromFile(file, mainList)
-		if attributes is None:
-			return None
-		else:
-			return cls(*attributes)
-
-
-	def getAreas(self,mainList):
-		try:
-			web = requests.get(self.areaUrl)
-			soup = bs4.BeautifulSoup(web.text,"lxml")
-		except:
-			mainList.setTitle("Cannot connect: "+ self.areaUrl,MessageList.ERR)
-			return None
-		
-		scraper = Scraper(soup,self.areasSource)
-		data = scraper.scrap()
-
-		areas = data[0]
+
+  @classmethod
+  def fromFile(cls, file,main_list):
+    attributes = cls.read_attributes_from_file(file, main_list)
+    if attributes is None:
+      return None
+    else:
+      return cls(*attributes)
+
+
+  def get_areas(self,main_list):
+    try:
+      web = requests.get(self.area_url)
+      soup = bs4.BeautifulSoup(web.text,"lxml")
+    except:
+      main_list.set_title("Cannot connect: "+ self.area_url,MessageList.ERR)
+      return None
+    
+    scraper = Scraper(soup,self.areas_source)
+    data = scraper.scrap()
+
+    areas = data[0]
+
+    #print(areas)
+    #areas = ["medicina-salud"]
+    #areas = ["/empleos-area-salud-medicina-y-farmacia.html"]
 
-		#print(areas)
-		#areas = ["medicina-salud"]
-		#areas = ["/empleos-area-salud-medicina-y-farmacia.html"]
+    if areas is None:
+      main_list.set_title("Failed to scrap areas. Check areas source",MessageList.ERR)
+      return None
+    else:
+      main_list.set_title(str(len(areas)) + " Areas obtained",MessageList.INF)
+      return areas
 
-		if areas is None:
-			mainList.setTitle("Failed to scrap areas. Check areas source",MessageList.ERR)
-			return None
-		else:
-			mainList.setTitle(str(len(areas)) + " Areas obtained",MessageList.INF)
-			return areas
 
+  def get_num_offers(self,date_url,main_list):
+    try:
+      web = requests.get(date_url)
+      soup = bs4.BeautifulSoup(web.text,"lxml")
+    except:
+      main_list.add_msg("Cannot access to the url " + date_url,MessageList.ERR)
+      return None
 
-	def getNumOffers(self,dateUrl,mainList):
-		try:
-			web = requests.get(dateUrl)
-			soup = bs4.BeautifulSoup(web.text,"lxml")
-		except:
-			mainList.addMsg("Cannot access to the url " + dateUrl,MessageList.ERR)
-			return None
+    scraper = Scraper(soup, self.num_offSource)
 
-		scraper = Scraper(soup, self.numOffSource)
+    data = scraper.scrap()
 
-		data = scraper.scrap()
+    num_off = data[0]
+      
 
-		numOff = data[0]
-			
+    try:
+      num_off = int(num_off.split()[0])
+    except:
+      main_list.add_msg("value obtained is not a number",MessageList.ERR)
+      num_off = None
 
-		try:
-			numOff = int(numOff.split()[0])
-		except:
-			mainList.addMsg("value obtained is not a number",MessageList.ERR)
-			numOff = None
+    if num_off is None:
+      main_list.set_title("Fail scraping number of offers.",MessageList.ERR)
+      return None
 
-		if numOff is None:
-			mainList.setTitle("Fail scraping number of offers.",MessageList.ERR)
-			return None
+    return num_off
 
-		return numOff
 
+  def get_offers_from_page_url(self,page_url):
 
-	def getOffersFromPageUrl(self,pageUrl):
+    try:
+      web = requests.get(page_url)
+      soup = bs4.BeautifulSoup(web.text,"lxml")
 
-		try:
-			web = requests.get(pageUrl)
-			soup = bs4.BeautifulSoup(web.text,"lxml")
+    except:
+      eprint("Cannot access to the url: "+ page_url + "\n")
+      return None
 
-		except:
-			eprint("Cannot access to the url: "+ pageUrl + "\n")
-			return None
 
+    tot_links = []
+    tot_dates = []
 
-		totLinks = []
-		totDates = []
+    for source in self.list_sources:
+      levels = source.split('->')
+      index = 0
 
-		for source in self.listSources:
-			levels = source.split('->')
-			index = 0
+      scraper = Scraper(soup,source)
+      data = scraper.scrap()
 
-			scraper = Scraper(soup,source)
-			data = scraper.scrap()
+      off_links = data[0]
+      dates = data[1]
+        
 
-			offLinks = data[0]
-			dates = data[1]
-				
+      if off_links is None or len(off_links) == 0:
+        #Useless source
+        eprint("No offers obtained using Source: " + source)
+        continue
 
-			if offLinks is None or len(offLinks) == 0:
-				#Useless source
-				eprint("No offers obtained using Source: " + source)
-				continue
+      else:
+        #Remember:offLink must be a list
 
-			else:
-				#Remember:offLink must be a list
+        for index, link in enumerate(off_links):
+          if not link in tot_links:
+            tot_links.append(link)
+            tot_dates.append(dates[index])
 
-				for index, link in enumerate(offLinks):
-					if not link in totLinks:
-						totLinks.append(link)
-						totDates.append(dates[index])
+    tot_offers = []
+    for index,link in enumerate(tot_links):
+      eprint("    Offer #"+str(index+1))
 
-		totOffers = []
-		for index,link in enumerate(totLinks):
-			eprint("		Offer #"+str(index+1))
+      try:
+        link_url = self.module.make_link_url(link,page_url)
+      except:
+        main_list.set_title("make_link_url is not working propertly", MessageList.ERR)
+        return None
 
-			try:
-				linkUrl = self.module.makeLinkUrl(link,pageUrl)
-			except:
-				mainList.setTitle("makeLinkUrl is not working propertly", MessageList.ERR)
-				return None
+      offer = self.get_offer_from_link(link_url)
 
-			offer = self.getOfferFromLink(linkUrl)
+      if offer is not None:
+        pass_time = tot_dates[index]
+        #check!
+        pub_date = self.to_publication_date(pass_time)
+        offer.month = pub_date.month
+        offer.year = pub_date.year
+        tot_offers.append(offer)
+      else:
+        tot_offers.append(offer)
 
-			if offer is not None:
-				passTime = totDates[index]
-				offer.pubDate = self.toPublicationDate(passTime)
-				totOffers.append(offer)
-			else:
-				totOffers.append(offer)
+    return tot_offers
+
 
-		return totOffers
+  def get_offers_from_period_url(self,period_url, main_list):
 
+    msg_list = MessageList()
+    self.num_off = self.get_num_offers(period_url,msg_list)
+    main_list.add_msg_list(msg_list)
 
-	def getOffersFromPeriodUrl(self,periodUrl, mainList):
+    if self.num_off is None:
+      return None
 
-		msgList = MessageList()
-		self.numOff = self.getNumOffers(periodUrl,msgList)
-		mainList.addMsgList(msgList)
+    main_list.add_msg("Número de ofertas encontradas: " + str(self.num_off),MessageList.INF)
 
-		if self.numOff is None:
-			return None
+    max = 2000
+    num_pag = 0
+    total_offers = []
 
-		mainList.addMsg("Number of Offers filtered: " + str(self.numOff),MessageList.INF)
+    while num_pag < max and len(total_offers) < self.num_off:
+      num_pag += 1
 
-		max = 2000
-		numPag = 0
-		totalOffers = []
+      try:
+        page_url = self.module.make_page_url(num_pag,period_url)
+      except:
+        main_list.set_title("make_page_url is not working propertly", MessageList.ERR)
+        #Abort everything
+        return None #Return total_offers if you dont wanna abort all
 
-		while numPag < max and len(totalOffers) < self.numOff:
-			numPag += 1
+      eprint("  Page #"+str(num_pag))
+      offers = self.get_offers_from_page_url(page_url)
+      eprint("")
 
-			try:
-				pageUrl = self.module.makePageUrl(numPag,periodUrl)
-			except:
-				mainList.setTitle("makePageUrl is not working propertly", MessageList.ERR)
-				#Abort everything
-				return None #Return totalOffers if you dont wanna abort all
+      if offers is None:
+        #Error page
+        break
+      else:
+        total_offers += offers
+        if len(offers)!=self.links_per_page and len(total_offers)!=self.num_off:
+          main_list.add_msg("Unexpected number of offers at page #"+ str(num_pag), MessageList.INF)
+
+    main_list.set_title(str(len(total_offers)) + " offers obtained in total (Invalid included)",MessageList.INF)
+    return total_offers
+          
+  #Must be sent to Functions
+  def to_publication_date(self, pass_time):
+    cur_date = datetime.datetime.now()
+  
+    if pass_time == "Ayer":
+      pub_date= cur_date - datetime.timedelta(days = 1)
+      return pub_date
+  
+    parts = pass_time.split()
 
-			eprint("	Page #"+str(numPag))
-			offers = self.getOffersFromPageUrl(pageUrl)
-			eprint("")
-
-			if offers is None:
-				#Error page
-				break
-			else:
-				totalOffers += offers
-				if len(offers)!=self.linksPerPage and len(totalOffers)!=self.numOff:
-					mainList.addMsg("Unexpected number of offers at page #"+ str(numPag), MessageList.INF)
-
-		mainList.setTitle(str(len(totalOffers)) + " offers obtained in total (Invalid included)",MessageList.INF)
-		return totalOffers
-					
-	#Must be sent to Functions
-	def toPublicationDate(self, passTime):
-		curDate = datetime.datetime.now()
-	
-		if passTime == "Ayer":
-			pubDate= curDate - datetime.timedelta(days = 1)
-			return pubDate
-	
-		parts = passTime.split()
-
-		type = parts[2]
-		value = int(parts[1])
-
-		if type in ['segundos','segundo']:
-			pubDate = curDate - datetime.timedelta(seconds = value)
-
-		if type in ['minutos', 'minuto']:
-			pubDate = curDate - datetime.timedelta(minutes = value)
-
-		if type in ['hora', 'horas']:
-			pubDate = curDate - datetime.timedelta(hours = value)
-
-		if type in ["día", "días"]:
-			pubDate = curDate - datetime.timedelta(days = value)
-
-		if type in ["semana", "semanas"]:
-			pubDate = curDate - datetime.timedelta(weeks = value)
-
-		if type in ["mes", "meses"]:
-			pubDate = curDate - datetime.timedelta(days = value*30)
-		
-		return pubDate
-	
-	def getOffersFromAreaUrl(self,areaUrl,mainList):
-
-		periodUrl = self.module.makePeriodUrl(self.period,areaUrl)
-		try:
-			periodUrl = self.module.makePeriodUrl(self.period,areaUrl)
-		except:
-			mainList.setTitle("makePeriodUrl function is not working propertly",MessageList.ERR)
-			return None
-
-		msgList = MessageList()
-		offers = self.getOffersFromPeriodUrl(periodUrl,msgList)
-		mainList.addMsgList(msgList)
-
-		if offers is None:
-			mainList.setTitle("Cannot obtain offers",MessageList.ERR)
-			return None
-
-		else:
-			validOffers = []
-			for offer in offers:
-				if offer is not None:
-					validOffers.append(offer)
-
-			mainList.setTitle(str(len(validOffers))+ " valid offers selected",MessageList.INF)
-			return validOffers
-
-
-	def execute(self,mainList):
-
-		db=  Store()
-		db.connect(self.jobCenter)
-
-		#Importing Custom Functions
-		msgList = MessageList()
-		mod = customImport(self.funcFilename,msgList)
-		mainList.addMsgList(msgList)
-
-		if mod is not None:
-			self.module = mod
-
-			msgList = MessageList()
-			areas = self.getAreas(msgList)
-			mainList.addMsgList(msgList)
-
-			if areas is not None:
-				
-				try:
-					urls = self.module.makeAreaUrls(areas,self.urlBase)
-					areaUrls = list(urls)
-				except:
-					mainList.addMsg("makeAreaUrls function is not working propertly",MessageList.ERR)
-					mainList.setTitle("Failed to execute Template "+ self.jobCenter, MessgaeList.ERR)
-					return None
-
-				for index,areaUrl in enumerate(areaUrls):
-					
-					mainList.addMsg("Area #"+str(index+1),MessageList.INF)
-					mainList.addMsg(areaUrl,MessageList.INF)
-					msgList = MessageList()
-					eprint("Area #"+str(index+1)+"   "+areaUrl)
-					offers = self.getOffersFromAreaUrl(areaUrl,msgList)
-					eprint("------------------------------------------------------------------------------")
-					mainList.addMsgList(msgList)
-
-					if offers is not None:
-						msgList = MessageList()
-						db.loadOffers(offers, self.jobCenter,msgList)
-						mainList.addMsgList(msgList)
-
-				db.setCurIndex(self.jobCenter)
-				mainList.setTitle("Template " + self.jobCenter + " executed.", MessageList.INF)
-				return 
-
-		mainList.setTitle("Failed to execute Template " +self.jobCenter,MessageList.ERR)
-		return
-		
-
-def customImport(filename, mainList):
-
-	modname = "Functions." + filename
-
-	try:
-		mod = importlib.import_module(modname)
-	except:
-		mainList.setTitle("Incorrect function module filename", MessageList.ERR)
-		return None
-
-	#Check function existence
-	customFunctions = dir(mod)
-
-	if not "makeAreaUrls" in customFunctions:
-		mainList.addMsg("Missing makeAreaUrls function",MessageList.ERR)
-
-	if not "makePeriodUrl" in customFunctions:
-		mainList.addMsg("Missing makePeriodUrl function", MessageList.ERR)
-
-	if not "makePageUrl" in customFunctions:
-		mainList.addMsg("Missing makePageUrl function",MessageList.ERR)
-
-	if not "makeLinkUrl" in customFunctions:
-		mainList.addMsg("Missing makeLinkUrl function",MessageList.ERR)
-
-	if mainList.size() is not 0:
-		mainList.setTitle("Fail importing function file", MessageList.ERR)
-		return None
+    type = parts[2]
+    value = int(parts[1])
+
+    if type in ['segundos','segundo']:
+      pub_date = cur_date - datetime.timedelta(seconds = value)
+
+    if type in ['minutos', 'minuto']:
+      pub_date = cur_date - datetime.timedelta(minutes = value)
+
+    if type in ['hora', 'horas']:
+      pub_date = cur_date - datetime.timedelta(hours = value)
+
+    if type in ["día", "días"]:
+      pub_date = cur_date - datetime.timedelta(days = value)
+
+    if type in ["semana", "semanas"]:
+      pub_date = cur_date - datetime.timedelta(weeks = value)
+
+    if type in ["mes", "meses"]:
+      pub_date = cur_date - datetime.timedelta(days = value*30)
+    
+    return pub_date
+  
+  def get_offers_from_area_url(self,area_url,main_list):
+
+    period_url = self.module.make_period_url(self.period,area_url)
+    try:
+      period_url = self.module.make_period_url(self.period,area_url)
+    except:
+      main_list.set_title("make_period_url function is not working propertly",MessageList.ERR)
+      return None
+
+    msg_list = MessageList()
+    offers = self.get_offers_from_period_url(period_url,msg_list)
+    main_list.add_msg_list(msg_list)
+
+    if offers is None:
+      main_list.set_title("No se pudo obtener las ofertas",MessageList.ERR)
+      return None
+
+    else:
+      valid_offers = []
+      for offer in offers:
+        if offer is not None:
+          valid_offers.append(offer)
+
+      main_list.set_title(str(len(valid_offers))+ " ofertas validas seleccionadas",MessageList.INF)
+      return valid_offers
+
+
+  def execute(self,main_list):
+
+    UnprocessedOffer.connectToDatabase(self.job_center)
+
+    #Importing Custom Functions
+    msg_list = MessageList()
+    mod = custom_import(self.func_filename,msg_list)
+    main_list.add_msg_list(msg_list)
+
+    if mod is not None:
+      self.module = mod
+
+      msg_list = MessageList()
+      areas = self.get_areas(msg_list)
+      main_list.add_msg_list(msg_list)
+
+      if areas is not None:
+        try:
+          urls = self.module.make_area_urls(areas,self.url_base)
+          area_urls = list(urls)
+        except:
+          main_list.add_msg("La funcion make_area_urls no esta funcionando correctamente",MessageList.ERR)
+          main_list.set_title("La plantilla falló al ejecutarse"+ self.job_center, MessageList.ERR)
+          return None
+
+        for index,area_url in enumerate(area_urls):
+          
+          main_list.add_msg("Area #"+str(index+1),MessageList.INF)
+          main_list.add_msg(area_url,MessageList.INF)
+          msg_list = MessageList()
+          eprint("Area #"+str(index+1)+"   "+area_url)
+          offers = self.get_offers_from_area_url(area_url,msg_list)
+          eprint("------------------------------------------------------------------------------")
+          main_list.add_msg_list(msg_list)
+
+          if offers is not None:
+            msg_list = MessageList()
+            load_offers(offers, self.job_center,msg_list)
+            main_list.add_msg_list(msg_list)
+
+        main_list.set_title("La plantilla " + self.job_center + " se ejecutó correctamente.", MessageList.INF)
+        return 
+
+    main_list.set_title("La plantilla " +self.job_center + " falló al ejecutarse",MessageList.ERR)
+    return
+    
+
+
+def load_offers(offers, main_list):
+  error_loading = False
+  cnt_load = 0
+  cnt_disc = 0
+  cnt_err = 0
+
+  for offer in offers:
+    inserted = offer.insert()
+    if inserted is None:
+      cnt_err += 1
+      error_loading = True
+    else:
+      if inserted:
+        cnt_load += 1
+      else:
+        cnt_disc += 1
+
+	main_list.add_msg(str(cnt_load)+ " Offers succesfully loaded to database", MessageList.INF)
+	main_list.add_msg(str(cnt_disc)+ " Offers discarted because of duplication in database", MessageList.INF)
+	main_list.add_msg(str(cnt_err) + " Offers failed to load to database", MessageList.ERR)
+
+	if error_loading:
+		main_list.set_title("Some offers couldn't be loaded. Check detail file", MessageList.ERR)
 	else:
-		mainList.setTitle("Function file imported", MessageList.INF)
-		return mod 
+		main_list.set_title("All offers were loaded", MessageList.INF)
+
+
+
+def custom_import(filename, main_list):
+
+  mod_name = "Functions." + filename
+
+  try:
+    mod = importlib.import_module(mod_name)
+  except:
+    main_list.set_title("Incorrect function module filename", MessageList.ERR)
+    return None
+
+  #Check function existence
+  custom_functions = dir(mod)
+
+  if not "make_area_urls" in custom_functions:
+    main_list.add_msg("Missing make_area_urls function",MessageList.ERR)
+
+  if not "make_period_url" in custom_functions:
+    main_list.add_msg("Missing make_period_url function", MessageList.ERR)
+
+  if not "make_page_url" in custom_functions:
+    main_list.add_msg("Missing make_page_url function",MessageList.ERR)
+
+  if not "make_link_url" in custom_functions:
+    main_list.add_msg("Missing make_link_url function",MessageList.ERR)
+
+  if main_list.size() is not 0:
+    main_list.set_title("Fail importing function file", MessageList.ERR)
+    return None
+  else:
+    main_list.set_title("Function file imported", MessageList.INF) return mod 
 
 
 
 
 #------------------------------------------------------------------------------------------------
 class FeaturesSource:
-	def __init__(self,namesSource, valuesSource):
-		self.namesSource = namesSource
-		self.valuesSource = valuesSource
+  def __init__(self,namesSource, valuesSource):
+    self.namesSource = namesSource
+    self.valuesSource = valuesSource
 
-	
 
-	@classmethod
-	def fromFile(cls, file, mainList):
-		fileline = file.readline()
-		if fileline is None or utils.isblank(fileline) :
-			return None
-			
-		names = utils.readSourceFromString(fileline,mainList)
-		if names is None:
-			mainList.addMsg("Failed to read names", MessageList.ERR)
-		values = utils.readSourceFromFile(file)
-		if values is None:
-			mainList.addMsg("Failed to read values", MessageList.ERR)
+  @classmethod
+  def fromFile(cls, file, main_list):
+    fileline = file.readline()
+    if fileline is None or utils.isblank(fileline) :
+      return None
+      
+    names = utils.readSourceFromString(fileline,main_list)
+    if names is None:
+      main_list.add_msg("Failed to read names", MessageList.ERR)
+    values = utils.readSourceFromFile(file)
+    if values is None:
+      main_list.add_msg("Failed to read values", MessageList.ERR)
 
-		if mainList.containErrors():
-			return None
-		else:
-			return cls(names,values)
+    if main_list.containErrors():
+      return None
+    else:
+      return cls(names,values)
 
 
 
@@ -418,86 +446,90 @@ class FeaturesSource:
 #------------------------------------------------------------------------------------------------
 class OfferTemplate(Template):
 
-	def __init__(self,globalAttributes, descSource, featSources):
+  def __init__(self,global_attributes, desc_source, featSources):
 
-		Template.__init__(self,*globalAttributes)
-		self.descSource = descSource
-		self.featSources = featSources
-	
+    Template.__init__(self,*global_attributes)
+    self.desc_source = desc_source
+    self.featSources = featSources
+  
 
-	@staticmethod
-	def readAttributesFromFile(file,mainList):
-		globalAttr = Template.readAttributesFromFile(file,mainList)
-		file.readline() #newline
-		file.readline() #Offer Structure:
+  @staticmethod
+  def read_attributes_from_file(file,main_list):
+    global_attr = Template.read_attributes_from_file(file,main_list)
+    file.readline() #newline
+    file.readline() #Offer Structure:
 
-		descSource = utils.readSourceFromFile(file)
-		if descSource is None:
-			mainList.addMsg("Failed to read the offer description source", MessageList.ERR)
+    desc_source = utils.readSourceFromFile(file)
+    if desc_source is None:
+      main_list.add_msg("Failed to read the offer description source", MessageList.ERR)
 
-		featuresSources = []
-		while True:
-			msgList = MessageList()
-			featuresSource = FeaturesSource.fromFile(file,msgList)
-		
-			if featuresSource is None:
-				if msgList.containErrors():
-					msgList.setTitle("Failed to read features Source #"+ str(len(featuresSources)+1),MessageList.ERR)
-					mainList.addMsgList(msgList)
+    featuresSources = []
+    while True:
+      msg_list = MessageList()
+      featuresSource = FeaturesSource.fromFile(file,msg_list)
+    
+      if featuresSource is None:
+        if msg_list.containErrors():
+          msg_list.set_title("Failed to read features Source #"+ str(len(featuresSources)+1),MessageList.ERR)
+          main_list.add_msg_list(msg_list)
 
-				break
-			else:
+        break
+      else:
 
-				featuresSources.append(featuresSource)
+        featuresSources.append(featuresSource)
 
-		if not mainList.containErrors():
-			mainList.setTitle("All Offer Template Attributes are OK :)",MessageList.INF)
-			return globalAttr, descSource, featuresSources
-		else:
-			mainList.setTitle("Some Offer Template Attributes are WRONG :(",MessageList.ERR)
-			return None
-
-
-
-	def getDataFromSource(self, soup, source):
-		if source == "":
-			return None
-
-		else:
-			if (type(source) is list):
-				return source
-
-			scraper = Scraper(soup, source)
-			data = scraper.scrap()[0]
-			return data
+    if not main_list.containErrors():
+      main_list.set_title("All Offer Template Attributes are OK :)",MessageList.INF)
+      return global_attr, desc_source, featuresSources
+    else:
+      main_list.set_title("Some Offer Template Attributes are WRONG :(",MessageList.ERR)
+      return None
 
 
-	def getOfferFromLink(self,link):
 
-		try:
-			web = requests.get(link)
-			soup = bs4.BeautifulSoup(web.text,"lxml")
+  def get_data_from_source(self, soup, source):
+    if source == "":
+      return None
 
-		except:
-			eprint("Cannot access to the link "+link)
-			return None
+    else:
+      if (type(source) is list):
+        return source
 
-		description = self.getDataFromSource(soup,self.descSource)
-		if description is None:	eprint("  Description source problem. INVALID OFFER")
-		if description == "": eprint("  Empty description. INVALID OFFER")
+      scraper = Scraper(soup, source)
+      data = scraper.scrap()[0]
+      return data
 
 
-		if description is None or description == "":
-			eprint("Link: "+ link)
-			return None
-		else:
-			offer = Offer(description)
+  def get_offer_from_link(self,link):
 
-			for featSource in self.featSources:
-				names = self.getDataFromSource(soup, featSource.namesSource)
-				values = self.getDataFromSource(soup, featSource.valuesSource)
+    try:
+      web = requests.get(link)
+      soup = bs4.BeautifulSoup(web.text,"lxml")
 
-				for idx in range(min(len(names),len(values))):
-					offer.addFeature(names[idx],values[idx])
+    except:
+      eprint("Cannot access to the link "+link)
+      return None
 
-			return offer
+
+  #Oh no 2
+
+
+    description = self.get_data_from_source(soup,self.desc_source)
+    if description is None: eprint("  Description source problem. INVALID OFFER")
+    if description == "": eprint("  Empty description. INVALID OFFER")
+
+
+    if description is None or description == "":
+      eprint("Link: "+ link)
+      return None
+    else:
+      offer = Offer(description)
+
+      for featSource in self.featSources:
+        names = self.get_data_from_source(soup, featSource.namesSource)
+        values = self.get_data_from_source(soup, featSource.valuesSource)
+
+        for idx in range(min(len(names),len(values))):
+          offer.addFeature(names[idx],values[idx])
+
+      return offer

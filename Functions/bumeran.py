@@ -1,34 +1,34 @@
-def makeAreaUrls(areas,urlBase):
+def make_area_urls(areas,url_base):
 
 	urls = []
 	for area in areas:
-		url = urlBase + area
+		url = url_base + area
 		urls.append(url)
 
 	return urls
 
-def makePeriodUrl(period, url):
-	periodUrl = url[:-5] #delete .html
-	periodUrl += "-publicacion-"+period
-	periodUrl += ".html"
+def make_period_url(period, url):
+	period_url = url[:-5] #delete .html
+	period_url += "-publicacion-"+period
+	period_url += ".html"
 
-	return periodUrl
+	return period_url
 
 
-def makePageUrl(pageNum, url):
-	if pageNum == 1:
+def make_page_url(page_num, url):
+	if page_num == 1:
 		return url
 	else:
-		pageUrl = url[:-5] #delete .html
-		pageUrl += "-pagina-" + str(pageNum)
-		pageUrl += ".html"
+		page_url = url[:-5] #delete .html
+		page_url += "-pagina-" + str(page_num)
+		page_url += ".html"
 
-		return pageUrl
+		return page_url
 
 
-def makeLinkUrl(link, url):
-	linkUrl = "http://bumeran.com.pe" + link
-	return linkUrl
+def make_link_url(link, url):
+	link_url = "http://bumeran.com.pe" + link
+	return link_url
 	
 	
 

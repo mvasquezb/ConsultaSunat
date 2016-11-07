@@ -1,5 +1,5 @@
-def makeAreaUrls(areas,urlBase):
-	str = urlBase
+def make_area_urls(areas,url_base):
+	str = url_base
 	str += "/de-"
 	str += areas[0]
 
@@ -10,60 +10,57 @@ def makeAreaUrls(areas,urlBase):
 
 
 
-def makePeriodUrl(period,url):
-	periodUrl = url + "/publicado-" + period
-	return periodUrl
+def make_period_url(period,url):
+	period_url = url + "/publicado-" + period
+	return period_url
 
 
 
-def makePageUrl(pageNum, url):
-	if pageNum == 1:
+def make_page_url(page_num, url):
+	if page_num == 1:
 		return url
 	else:
-		newUrl= url + "?page=" + str(pageNum)
-		return newUrl
+		new_url= url + "?page=" + str(page_num)
+		return new_url
 
 
-def makeLinkUrl(link, url):
+def make_link_url(link, url):
 	return link
-
 		
 
-
-
 #Must be sent to Functions
-def toPublicationDate(passTime):
-		curDate = datetime.date.today()
+def to_publication_date(pass_time):
+		cur_date = datetime.date.today()
 
-		if passTime == "Ayer":
-			pubDate= curDate - datetime.timedelta(days = 1)
-			return pubDate
+		if pass_time == "Ayer":
+			pub_date= cur_date - datetime.timedelta(days = 1)
+			return pub_date
 
 
-		parts = passTime.split()
+		parts = pass_time.split()
 
 		type = parts[2]
 		value = int(parts[1])
 
 		if type in ['segundos','segundo']:
-			pubDate = curDate - datetime.timedelta(seconds = value)
+			pub_date = cur_date - datetime.timedelta(seconds = value)
 
 		if type in ['minutos', 'minuto']:
-			pubDate = curDate - datetime.timedelta(minutes = value)
+			pub_date = cur_date - datetime.timedelta(minutes = value)
 
 		if type in ['hora', 'horas']:
-			pubDate = curDate - datetime.timedelta(hours = value)
+			pub_date = cur_date - datetime.timedelta(hours = value)
 
 		if type in ["día", "días"]:
-			pubDate = curDate - datetime.timedelta(days = value)
+			pub_date = cur_date - datetime.timedelta(days = value)
 
 		if type in ["semana", "semanas"]:
-			pubDate = curDate - datetime.timedelta(weeks = value)
+			pub_date = cur_date - datetime.timedelta(weeks = value)
 
 		if type in ["mes", "meses"]:
-			pubDate = curDate - datetime.timedelta(months = value)
+			pub_date = cur_date - datetime.timedelta(months = value)
 		
-		return pubDate
+		return pub_date
 
 
 
