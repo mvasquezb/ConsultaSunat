@@ -1,0 +1,32 @@
+Global:
+Job Center:                 |Ministerio del Trabajo|
+Functions Filename:         |cas.py|
+URL Base:                   |http://silnet.trabajo.gob.pe:8080/empleoperu/Pedido.do?method=filtrolistaAllVacPub|
+#
+# CAS no soporta búsqueda por periodos, placeholder: x
+#
+Period:                     |x|
+#
+# CAS no soporta búsqueda por áreas
+#
+Areas URL:                  |x|
+Areas Source:               |x|
+#
+# CAS no tiene número de ofertas visible
+#
+Number of Offers Source:    |x|
+#
+# CAS tiene todos las convocatorias en una sola página
+# Estas se "cargan" con javascript, así que no hay necesidad de paginación
+#
+Links per Page:             |15|
+Number of Sources:          |2|
+Offer Source:               |* li\{"id":"demo"}\->4 div\{}\->1 a\{}\href\|
+Offer Location:             |* li\{"id":"demo"}\->3 div\{}\->1 p\{}\|
+
+Offer Structure:
+Description:                |1 div\{"id":"texto3"}\|
+Feature Names:              |["Empresa"]|
+Feature Values:             |1 div\{"id":"textoTitulo"}\->1 div\{"id":"texto1s"}\->1 p\{}\->1 b\{}\|
+Feature Names:              |["Titulo"]|
+Feature Values:             |1 div\{"id":"textoTitulo"}\->1 p\{}\->1 b\{}\|

@@ -11,24 +11,27 @@ from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 
 def read_url_from_file(temp_file):
-	str = temp_file.readline()
-	data = str.split('|')
+	str = read_text_from_file(temp_file)
 
-	err = False
-	if (len(data)!=3):
+	if str is None:
 		return None
 	else:
 		validate = URLValidator()
 		try:
-			validate(data[1])
+			validate(str)
 		except ValidationError:
 			return None
 
-		return data[1]
+		return str
 
 
 def read_text_from_file(temp_file):
-	str = temp_file.readline()
+	str = temp_file.readline().strip()
+
+	# Soporta comentarios
+	while str[0] == '#':
+		str = temp_file.readline().strip()
+
 	data = str.split('|')
 
 	err = False
@@ -40,15 +43,13 @@ def read_text_from_file(temp_file):
 		
 
 def read_int_from_file(temp_file):
-	str = temp_file.readline()
-	data = str.split('|')
-
-	err = False
-	if(len(data)!=3):
+	str = read_text_from_file(temp_file)
+	
+	if str is None:
 		return None
 	else:
 		try:
-			val = int(data[1])
+			val = int(str)
 		except:
 			return None
 		return val
@@ -98,8 +99,7 @@ def validate_string_source(source):
 
 
 
-def read_source_from_string(strdata	,main_list = MessageList() ):
-
+def read_source_from_string(strdata, main_list = MessageList()):
 
 	data = strdata.split('|')
 
