@@ -101,7 +101,7 @@ class Template:
     areas = data[0]
 
     #print(areas)
-    #areas = ["medicina-salud"] #Test Aptitus
+    areas = ["medicina-salud"] #Test Aptitus
     #areas = ["/empleos-area-salud-medicina-y-farmacia.html"] #Test Bumeran
 
     if areas is None:
@@ -340,7 +340,7 @@ class Template:
 
           if offers is not None:
             msg_list = MessageList()
-            load_offers(offers, self.job_center,msg_list)
+            load_offers(offers,msg_list)
             main_list.add_msg_list(msg_list)
 
         main_list.set_title("La plantilla " + self.job_center + " se ejecutó correctamente.", MessageList.INF)

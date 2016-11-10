@@ -2,7 +2,7 @@ Global:
 Job Center:             |Aptitus|
 Functions Filename:     |aptitus|
 URL Base:               |http://aptitus.com/buscar-trabajo-en-peru|
-Period:                 |ultima-quincena|
+Period:                 |hoy|
 Areas URL:              |http://aptitus.com/buscar-trabajo-en-peru|
 Areas Source:           |1 ul\{"data-key":"areas"}\->* label\{}\->1 input\{}\value|
 Number of Offers Source:|1 section\{"class":"grid_search_results"}\->1 h1\{}\|

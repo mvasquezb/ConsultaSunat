@@ -1,0 +1,22 @@
+Area #1   http://aptitus.com/buscar-trabajo-en-peru/de-medicina-salud
+  Page #1
+    Offer #1
+    Offer #2
+    Offer #3
+    Offer #4
+    Offer #5
+    Offer #6
+
+------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "webScraping.py", line 143, in <module>
+    main()
+  File "webScraping.py", line 133, in main
+    template.execute(msg_list)
+  File "../Control/template.py", line 343, in execute
+    load_offers(offers,msg_list)
+  File "../Control/template.py", line 361, in load_offers
+    inserted = offer.insert()
+  File "../Model/offer.py", line 170, in insert
+    result = UnprocessedOffer.session.execute(cmd, [id,year,month])j
+NameError: name 'year' is not defined

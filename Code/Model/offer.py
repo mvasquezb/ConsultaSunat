@@ -167,8 +167,9 @@ class UnprocessedOffer(Offer):
           SELECT * FROM {0} WHERE id = %s and year = %s and month = %s;
           """.format(findTable)
             
+    result = UnprocessedOffer.session.execute(cmd, [self.id,self.year,self.month])
     try:
-      result = UnprocessedOffer.session.execute(cmd, [id,year,month])
+      pass
     except:
       return None
 
@@ -180,8 +181,9 @@ class UnprocessedOffer(Offer):
             (%s,%s,%s,%s);
             """.format(findTable)
 
+      UnprocessedOffer.session.execute(cmd, [self.id,self.year, self.month,self.features])
       try:
-        UnprocessedOffer.session.execute(cmd, [self.id,self.year, self.month,self.features])
+        pass
       except:
         eprint("")
         eprint("Error al insertar en la tabla de ofertas por id")
@@ -198,8 +200,9 @@ class UnprocessedOffer(Offer):
             """.format(storeTable)
 
 
+      UnprocessedOffer.session.execute(cmd, [self.auto_process, self.date_process, self.year, self.month, self.id, self.features])
       try:
-        UnprocessedOffer.session.execute(cmd, [self.auto_process, self.date_process, self.year, self.month, self.id, self.features])
+        pass
       except:
         eprint("")
         eprint("Error al ejecutar un comand cql para insertar la oferta no procesada.")
