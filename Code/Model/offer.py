@@ -15,6 +15,7 @@ class Offer:
 
   @classmethod
   def connectToDatabase(cls,source):
+    source = source.lower()
     cluster = Cluster()
     cls.session = cluster.connect(source)
 

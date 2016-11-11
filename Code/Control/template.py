@@ -11,8 +11,8 @@ from Utils.utils import eprint
 from Control.scraper import Scraper
 
 from Model.offer import UnprocessedOffer
-from Control.store import Store
 
+from Control import textProcessor as tp # TP tu terror
 
 
 class Template:
@@ -101,7 +101,7 @@ class Template:
     areas = data[0]
 
     #print(areas)
-    areas = ["medicina-salud"] #Test Aptitus
+    #areas = ["medicina-salud"] #Test Aptitus
     #areas = ["/empleos-area-salud-medicina-y-farmacia.html"] #Test Bumeran
 
     if areas is None:
@@ -305,6 +305,7 @@ class Template:
 
   def execute(self,main_list):
 
+    print(self.job_center)
     UnprocessedOffer.connectToDatabase(self.job_center)
 
     #Importing Custom Functions
@@ -461,7 +462,11 @@ class OfferTemplate(Template):
     file.readline() #Offer Structure:
 
     id_features = utils.read_source_from_string(file.readline())
-    id_features.sort()
+    id_feat = []
+    for feature in id_features:
+        id_feat.append(feature.lower())
+
+    id_features = id_feat
 
     features_sources = []
     while True:
@@ -517,7 +522,7 @@ class OfferTemplate(Template):
       values = self.get_data_from_source(soup, feat_source.values_source)
 
       for idx in range(min(len(names), len(values))):
-        features[names[idx]] = values[idx]
+        features[names[idx].lower()] = values[idx]
         
 
     #Get id
@@ -527,11 +532,16 @@ class OfferTemplate(Template):
         id += features[id_feat] + ' '
       except:
         id += ' '
+        #Hardcoding!!!!
+        if id_feat == "descripción":
+            eprint("    Descripción vacía. Oferta INVÁLIDA")
+            eprint("    Link: ", link)
+            return None
 
-
-    id = utils.clean_whitespaces(id)
+    id = tp.preprocess(id)
     if id =="": 
-      eprint("  Empty description. INVALID OFFER")
+      eprint("    ID vacío. Oferta INVÁLIDA")
+      eprint("    Link: ", link)
       return None
     else:
       offer = UnprocessedOffer(0,0,id,True, 0, features)

@@ -162,16 +162,9 @@ def is_blank(mystring):
     return False
   return True
   
-#def stemText(self,text):
-#  newText = ""
-#  for word in text.split():
-#    wordStemmed = Processor.STEMMER.stem(word)
-#    newText += wordStemmed + ' '
-#
-#  return newText.strip()
-#
-#
 def clean_whitespaces(text):
   return ' '.join(text.split())
+
+
 
 

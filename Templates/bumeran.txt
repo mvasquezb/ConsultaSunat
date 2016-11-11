@@ -1,22 +1,20 @@
 Global:
-Job Center:							|Bumeran|
-Functions Filename:			|bumeran|
-URL Base:								|http://bumeran.com.pe|
-Period:									|menor-a-15-dias|
-Areas URL:							|http://bumeran.com.pe/postulantes/directorio.bum|
-Areas Source:						|1 div\{"class":"span16"}\->2 div\{"class":"row"}\->* li\{}\->1 a\{}\href|
-Number of Offers Source:|1 div\{"class":"letra-chica"}\->1 strong\{}\|
-Links per Page:					|15|
-Number of Sources:			|1|
-Offer Sources & Date:		|* a\{"class":"aviso_box"}\href->1 h3\{"class":"aviso_cuando"}\|
+Job Center:               |Bumeran|
+Functions Filename:       |bumeran|
+URL Base:                 |http://bumeran.com.pe|
+Period:                   |menor-a-15-dias|
+Areas URL:                |http://bumeran.com.pe/postulantes/directorio.bum|
+Areas Source:             |1 div\{"class":"span16"}\->2 div\{"class":"row"}\->* li\{}\->1 a\{}\href|
+Number of Offers Source:  |1 div\{"class":"letra-chica"}\->1 strong\{}\|
+Links per Page:           |15|
+Number of Sources:        |1|
+Offer Sources & Date:     |* a\{"class":"aviso_box"}\href->1 h3\{"class":"aviso_cuando"}\|
 
 Offer Structure:
-Description:						|1 div\{"id":"contenido_aviso"}\|
-Feature Names:					|1 table\{"class":"aviso-resumen-datos"}\->* th\{}\|
-Feature Values:					|1 table\{"class":"aviso-resumen-datos"}\->* td\{}\|
-Feature Names:					|["Titulo"]|
-Feature Values:					|* h2\{"class":"h2"}\|
-
-
-
-
+ID_features:              |['descripción','título']|
+Feature Names:            |['descripción']|
+Feature Values:           |1 div\{"id":"contenido_aviso"}\|
+Feature Names:            |1 table\{"class":"aviso-resumen-datos"}\->* th\{}\|
+Feature Values:           |1 table\{"class":"aviso-resumen-datos"}\->* td\{}\|
+Feature Names:            |['título']|
+Feature Values:           |* h2\{"class":"h2"}\|
