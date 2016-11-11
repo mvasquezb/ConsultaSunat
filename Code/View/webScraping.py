@@ -136,7 +136,7 @@ def main():
   main_list.show_all(0,sys.stdout)
   sys.stdout.flush()
 
-  #send_email(sender, password, receiver, out)
+  send_email(sender, password, receiver, out)
 
 
 if __name__ == "__main__":

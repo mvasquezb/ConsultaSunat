@@ -6,19 +6,33 @@ Resumen:
  
  INFO: La plantilla Foo se ejecutó correctamente.
   INFO: Function file imported
-  INFO: 30 Areas obtained
+  INFO: 1 Areas obtained
   INFO: Area #1
-  INFO: http://aptitus.com/buscar-trabajo-en-peru/de-comercial-ventas--operaciones--atencion-al-cliente--call-center-telemarketing--produccion--administracion-y-finanzas--abastecimiento-y-logistica--mantenimiento--seguridad--educacion-docencia-e-investigacion--medicina-salud--transporte--gastronomia--sistemas-ti--contabilidad--marketing-publicidad--proyectos--hoteleria-turismo--recursos-humanos--legal--diseno--ingenieria--gerencia-direccion--comercio-exterior--auditoria--relaciones-institucionales-publicas--administracion-servicios-generales--almacen--ventas--otros
-  INFO: 8479 ofertas validas seleccionadas
-   INFO: 8639 offers obtained in total (Invalid included)
+  INFO: http://bumeran.com.pe/empleos-area-salud-medicina-y-farmacia.html
+  INFO: 213 ofertas validas seleccionadas
+   INFO: 213 offers obtained in total (Invalid included)
     
-    INFO: Número de ofertas encontradas: 8631
-    INFO: Unexpected number of offers at page #94
+    INFO: Número de ofertas encontradas: 210
+    INFO: Unexpected number of offers at page #1
+    INFO: Unexpected number of offers at page #2
+    INFO: Unexpected number of offers at page #3
+    INFO: Unexpected number of offers at page #4
+    INFO: Unexpected number of offers at page #5
+    INFO: Unexpected number of offers at page #6
+    INFO: Unexpected number of offers at page #7
+    INFO: Unexpected number of offers at page #8
+    INFO: Unexpected number of offers at page #9
+    INFO: Unexpected number of offers at page #10
+    INFO: Unexpected number of offers at page #11
+    INFO: Unexpected number of offers at page #12
+    INFO: Unexpected number of offers at page #13
+    INFO: Unexpected number of offers at page #14
+    INFO: Unexpected number of offers at page #15
  
  
   INFO: All offers were loaded
-   INFO: 6227 Offers succesfully loaded to database
-   INFO: 2252 Offers discarted because of duplication in database
+   INFO: 192 Offers succesfully loaded to database
+   INFO: 21 Offers discarted because of duplication in database
    ERROR: 0 Offers failed to load to database
  
  

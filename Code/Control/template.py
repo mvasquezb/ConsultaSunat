@@ -102,7 +102,7 @@ class Template:
 
     #print(areas)
     #areas = ["medicina-salud"] #Test Aptitus
-    #areas = ["/empleos-area-salud-medicina-y-farmacia.html"] #Test Bumeran
+    areas = ["/empleos-area-salud-medicina-y-farmacia.html"] #Test Bumeran
 
     if areas is None:
       main_list.set_title("Failed to scrap areas. Check areas source",MessageList.ERR)
@@ -520,6 +520,7 @@ class OfferTemplate(Template):
     for feat_source in self.feat_sources:
       names = self.get_data_from_source(soup, feat_source.names_source)
       values = self.get_data_from_source(soup, feat_source.values_source)
+      print(values)
 
       for idx in range(min(len(names), len(values))):
         features[names[idx].lower()] = values[idx]
