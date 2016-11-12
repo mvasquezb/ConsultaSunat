@@ -22,7 +22,7 @@ Number of Offers Source:    |x|
 Links per Page:             |15|
 Number of Sources:          |2|
 Offer Source:               |* li\{"id":"demo"}\->4 div\{}\->1 a\{}\href\|
-Offer Location:             |* li\{"id":"demo"}\->3 div\{}\->1 p\{}\|
+Offer Location Source:      |* li\{"id":"demo"}\->3 div\{}\->1 p\{}\|
 
 Offer Structure:
 Description:                |1 div\{"id":"texto3"}\|
