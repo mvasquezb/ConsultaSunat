@@ -16,7 +16,6 @@ from Control import textProcessor as tp # TP tu terror
 
 
 class Template:
-  
   def __init__(self, job_center, func_filename, url_base, period, area_url, \
                areas_source, num_offSource, links_per_page, num_sources, list_sources):
 
@@ -96,7 +95,7 @@ class Template:
       return None
     
     scraper = Scraper(soup,self.areas_source)
-    data = scraper.scrap()
+    data = scraper.scrape()
 
     areas = data[0]
 
@@ -105,7 +104,7 @@ class Template:
     #areas = ["/empleos-area-salud-medicina-y-farmacia.html"] #Test Bumeran
 
     if areas is None:
-      main_list.set_title("Failed to scrap areas. Check areas source",MessageList.ERR)
+      main_list.set_title("Failed to scrape areas. Check areas source",MessageList.ERR)
       return None
     else:
       main_list.set_title(str(len(areas)) + " Areas obtained",MessageList.INF)
@@ -122,7 +121,7 @@ class Template:
 
     scraper = Scraper(soup, self.num_offSource)
 
-    data = scraper.scrap()
+    data = scraper.scrape()
 
     num_off = data[0]
       
@@ -159,7 +158,7 @@ class Template:
       index = 0
 
       scraper = Scraper(soup,source)
-      data = scraper.scrap()
+      data = scraper.scrape()
 
       off_links = data[0]
       dates = data[1]
@@ -501,7 +500,7 @@ class OfferTemplate(Template):
         return source
 
       scraper = Scraper(soup, source)
-      data = scraper.scrap()[0]
+      data = scraper.scrape()[0]
       return data
 
 

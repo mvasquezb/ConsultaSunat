@@ -9,11 +9,11 @@ class Scraper:
 		self.results = []
 
 
-	def scrap(self):
+	def scrape(self):
 		self.levels = self.source.split('->')
 		index = 0
 
-		data = self.scrap_rec(self.main_tag,index)
+		data = self.scrape_rec(self.main_tag,index)
 		self.results.append(data)
 		return self.results
 
@@ -54,7 +54,7 @@ class Scraper:
 
 		else:
 			for tag in tag_list:
-				data = self.scrap_rec(tag,index+1)
+				data = self.scrape_rec(tag,index+1)
 				data_list.append(data)
 			return data_list
 
@@ -83,12 +83,12 @@ class Scraper:
 			return data
 		else:
 			try:
-				data = self.scrap_rec(tag_list[idx_tag-1], index+1)
+				data = self.scrape_rec(tag_list[idx_tag-1], index+1)
 			except:
 				data = None
 			return data
 
-	def scrap_rec(self, soup, index):
+	def scrape_rec(self, soup, index):
 
 		TAGIDX = 0
 		DICIDX = 1
