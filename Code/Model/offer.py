@@ -1,8 +1,7 @@
 import sys
 from cassandra.cluster import Cluster
 sys.path.append("..") 
-from utils import Const
-import utils
+from Utils import utils
 import uuid
 from pyexcel_ods import get_data
 
@@ -16,6 +15,7 @@ class Offer:
 
   @classmethod
   def connectToDatabase(cls,source):
+    source = source.lower()
     cluster = Cluster()
     cls.session = cluster.connect(source)
 
@@ -39,7 +39,7 @@ class UnprocessedOffer(Offer):
     try:
       rows = cls.session.execute(cmd, [auto_process])
     except:
-      return Const.FAIL
+      return False
 
     offers = []
     rows = list(rows)
@@ -65,7 +65,7 @@ class UnprocessedOffer(Offer):
       print("Error al leer el archivo de excel. Archivo no encontrado")
       print("Por favor revise que el nombre del archivo sea el correcto.")
       print("--------------------------")
-      return Const.FAIL
+      return False
 
     sheets = list(wb.items())
     sheet = sheets[0][1]  # 0-> First sheet, 1-> Sheet data
@@ -88,7 +88,7 @@ class UnprocessedOffer(Offer):
                    Formato incorrecto".format(r))
             print("Por favor revise que la oferta contenga una fecha de publicación \
                    y que esta se encuentre en el formato dd/mm/yyyy")
-            return Const.FAIL
+            return False
           month = dt.month
           year = dt.year
         else:
@@ -123,9 +123,9 @@ class UnprocessedOffer(Offer):
       print("Error al ejecutar un comando cql para crear la tabla de ofertas no procesadas.")
       print("Por favor, revise el nombre de la tabla o su conexión con la base de datos")
       print("---------------------")
-      return Const.FAIL
+      return False
 
-    return Const.DONE
+    return True
 
   def disable_auto_process(self,auto_process):
 
@@ -157,7 +157,7 @@ class UnprocessedOffer(Offer):
       UnprocessedOffer.session.execute(cmd_insert, [False, datetime.now().date(),
                                                     self.year, self.month, self.id, self.features])
 
-    return Const.DONE
+    return True
 
   def insert(self):
 
@@ -168,8 +168,9 @@ class UnprocessedOffer(Offer):
           SELECT * FROM {0} WHERE id = %s and year = %s and month = %s;
           """.format(findTable)
             
+    result = UnprocessedOffer.session.execute(cmd, [self.id,self.year,self.month])
     try:
-      result = UnprocessedOffer.session.execute(cmd, [id,year,month])
+      pass
     except:
       return None
 
@@ -181,8 +182,9 @@ class UnprocessedOffer(Offer):
             (%s,%s,%s,%s);
             """.format(findTable)
 
+      UnprocessedOffer.session.execute(cmd, [self.id,self.year, self.month,self.features])
       try:
-        UnprocessedOffer.session.execute(cmd, [self.id,self.year, self.month,self.features])
+        pass
       except:
         eprint("")
         eprint("Error al insertar en la tabla de ofertas por id")
@@ -199,8 +201,9 @@ class UnprocessedOffer(Offer):
             """.format(storeTable)
 
 
+      UnprocessedOffer.session.execute(cmd, [self.auto_process, self.date_process, self.year, self.month, self.id, self.features])
       try:
-        UnprocessedOffer.session.execute(cmd, [self.auto_process, self.date_process, self.year, self.month, self.id, self.features])
+        pass
       except:
         eprint("")
         eprint("Error al ejecutar un comand cql para insertar la oferta no procesada.")
