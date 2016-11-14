@@ -1,5 +1,5 @@
 Global:
-Job Center:               |Foo|
+Job Center:               |Bumeran|
 Functions Filename:       |bumeran|
 URL Base:                 |http://bumeran.com.pe|
 Period:                   |menor-a-15-dias|
