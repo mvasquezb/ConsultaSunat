@@ -1,20 +1,22 @@
 Global:
-Job Center:             |Aptitus|
-Functions Filename:     |aptitus|
-URL Base:               |http://aptitus.com/buscar-trabajo-en-peru|
-Period:                 |hoy|
-Areas URL:              |http://aptitus.com/buscar-trabajo-en-peru|
-Areas Source:           |1 ul\{"data-key":"areas"}\->* label\{}\->1 input\{}\value|
-Number of Offers Source:|1 section\{"class":"grid_search_results"}\->1 h1\{}\|
-Links per Page:         |20|
-Number of Sources:      |1|
-Offer Sources & Date:   |* a\{"class":"jobs_ads"}\href->1 div\{"class":"jobs_ads_options"}\->1 span\{}\|
+Job Center:                 |Aptitus|
+Functions Filename:         |aptitus|
+URL Base:                   |http://aptitus.com/buscar-trabajo-en-peru|
+Period:                     |hoy|
+Areas URL:                  |http://aptitus.com/buscar-trabajo-en-peru|
+Areas Source:               |1 ul\{"data-key":"areas"}\->* label\{}\->1 input\{}\value|
+Number of Offers Source:    |1 section\{"class":"grid_search_results"}\->1 h1\{}\|
+Links per Page:             |20|
+Number of Sources:          |1|
+Offer Sources & Date:       |* a\{"class":"jobs_ads"}\href->1 div\{"class":"jobs_ads_options"}\->1 span\{}\|
 
 Offer Structure:
-ID_features:            |['descripción','título','requisitos']|
-Feature Names:          |* *\{"class":"job_box_title"}\|
-Feature Values:         |* div\{"class":"job_box_information"}\|
-Feature Names:          |['título']|
-Feature Values:         |* h1\{"class":"job_description_title"}\|
-Feature Names:          |["json"]|
-Feature values:         |1 body\{}\->* script\{"type":"text/javascript"}\|
+ID_features:                |['descripción','título','requisitos']|
+# First Level Features:       |0|
+#
+Feature Names:              |* *\{"class":"job_box_title"}\|
+Feature Values:             |* div\{"class":"job_box_information"}\|
+Feature Names:              |['título']|
+Feature Values:             |* h1\{"class":"job_description_title"}\->1 label\{}\|
+Feature Names:              |["json"]|
+Feature values:             |1 body\{}\->* script\{"type":"text/javascript"}\|

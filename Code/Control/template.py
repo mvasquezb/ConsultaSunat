@@ -35,34 +35,56 @@ class Template:
 
   @staticmethod
   def read_attributes_from_file(file,main_list):
+    """
+    Método que obtiene los atributos globales de una plantilla desde un archivo.
+    Algunos atributos no están presentes en la plantilla, así que son marcados por
+    un valor que determina si son opcionales o no. Si lo son, quedan en None, si no,
+    se considera como un error.
+    Como este método devuelve None cuando hay errores, en el resto de métodos (llamados por
+    execute) considero que si son None, son opcionales
+    """
     file.readline() #Global:
       
-    job_center = utils.read_text_from_file(file)
-    if job_center is None: main_list.add_msg("Failed to read the jobcenter", MessageList.ERR)
+    job_center, _ = utils.read_text_from_file(file)
+    if job_center is None: 
+      main_list.add_msg("Failed to read the jobcenter", MessageList.ERR)
 
-    func_filename = utils.read_text_from_file(file)
-    if func_filename is None: main_list.add_msg("Failed to read the functions filename", MessageList.ERR)
+    func_filename, _ = utils.read_text_from_file(file)
+    if func_filename is None: 
+      main_list.add_msg("Failed to read the functions filename", MessageList.ERR)
 
-    url_base = utils.read_url_from_file(file)
-    if url_base is None: main_list.add_msg("Failed to read the url Base", MessageList.ERR)
+    url_base, _ = utils.read_url_from_file(file)
+    if url_base is None: 
+      main_list.add_msg("Failed to read the url Base", MessageList.ERR)
 
-    period = utils.read_text_from_file(file)
-    if period is None: main_list.add_msg("Failed to read the period", MessageList.ERR)
+    period, optional = utils.read_text_from_file(file)
+    msg_type = MessageList.INF if optional else MessageList.ERR 
+    if period is None:
+      main_list.add_msg("Failed to read the period", msg_type)
 
-    area_url = utils.read_url_from_file(file)
-    if area_url is None: main_list.add_msg("Failed to read the url to get areas", MessageList.ERR)
+    area_url, optional = utils.read_url_from_file(file)
+    msg_type = MessageList.INF if optional else MessageList.ERR
+    if area_url is None:
+      main_list.add_msg("Failed to read the url to get areas", msg_type)
 
-    areas_source = utils.read_source_from_file(file)
-    if areas_source is None: main_list.add_msg("Failed to read the source to get areas", MessageList.ERR)
+    areas_source, optional = utils.read_source_from_file(file)
+    msg_type = MessageList.INF if optional else MessageList.ERR
+    if areas_source is None: 
+      main_list.add_msg("Failed to read the source to get areas", msg_type)
 
-    num_offSource = utils.read_source_from_file(file)
-    if num_offSource is None: main_list.add_msg("Failed to read the source to get the number of offers", MessageList.ERR)
+    num_offSource, optional = utils.read_source_from_file(file)
+    msg_type = MessageList.INF if optional else MessageList.ERR
+    if num_offSource is None: 
+      main_list.add_msg("Failed to read the source to get the number of offers", msg_type)
 
-    links_per_page = utils.read_int_from_file(file)
-    if links_per_page is None: main_list.add_msg("Failed to read the number of links per page", MessageList.ERR)
+    links_per_page, optional = utils.read_int_from_file(file)
+    msg_type = MessageList.INF if optional else MessageList.ERR
+    if links_per_page is None: 
+      main_list.add_msg("Failed to read the number of links per page", msg_type)
 
     num_sources = utils.read_int_from_file(file)
-    if num_sources is None: main_list.add_msg("Failed to read the number of sources to get offers", MessageList.ERR)
+    if num_sources is None: 
+      main_list.add_msg("Failed to read the number of sources to get offers", MessageList.ERR)
     else:
       list_sources = []
       for i in range(0, num_sources):
@@ -70,7 +92,7 @@ class Template:
         if offSource is None: main_list.add_msg("Failed to read the offer source #"+ str(i+1), MessageList.ERR)
         else: list_sources.append(offSource)
       
-    if main_list.size() is not 0:
+    if main_list.contains_errors():
       return None
     else:
       return job_center, func_filename, url_base, period, area_url, areas_source, num_offSource, links_per_page, num_sources, list_sources  
@@ -86,15 +108,25 @@ class Template:
       return cls(*attributes)
 
 
-  def get_areas(self,main_list):
+  def get_areas(self, main_list):
+    """
+    Método que obtiene la lista de enlaces a las áreas de las convocatorias
+    Devuelve una tupla (areas, optional). Donde:
+    areas = Lista de enlaces a las áreas o None
+    optional = Indica si no es un error cuando areas es None
+    """
+    if self.area_url is None:
+      main_list.set_title("Not scraping areas: Optional", MessageList.INF)
+      return None, True
+    
     try:
       web = requests.get(self.area_url)
       soup = bs4.BeautifulSoup(web.text,"lxml")
     except:
-      main_list.set_title("Cannot connect: "+ self.area_url,MessageList.ERR)
-      return None
+      main_list.set_title("Cannot connect: " + self.area_url, MessageList.ERR)
+      return None, False
     
-    scraper = Scraper(soup,self.areas_source)
+    scraper = Scraper(soup, self.areas_source)
     data = scraper.scrape()
 
     areas = data[0]
@@ -104,19 +136,19 @@ class Template:
     #areas = ["/empleos-area-salud-medicina-y-farmacia.html"] #Test Bumeran
 
     if areas is None:
-      main_list.set_title("Failed to scrape areas. Check areas source",MessageList.ERR)
-      return None
+      main_list.set_title("Failed to scrape areas. Check areas source", MessageList.ERR)
+      return None, False
     else:
-      main_list.set_title(str(len(areas)) + " Areas obtained",MessageList.INF)
-      return areas
+      main_list.set_title(str(len(areas)) + " Areas obtained", MessageList.INF)
+      return areas, False
 
 
-  def get_num_offers(self,date_url,main_list):
+  def get_num_offers(self, date_url, main_list):
     try:
       web = requests.get(date_url)
       soup = bs4.BeautifulSoup(web.text,"lxml")
     except:
-      main_list.add_msg("Cannot access to the url " + date_url,MessageList.ERR)
+      main_list.add_msg("Cannot access the url " + date_url,MessageList.ERR)
       return None
 
     scraper = Scraper(soup, self.num_offSource)
@@ -275,9 +307,7 @@ class Template:
     
     return pub_date
   
-  def get_offers_from_area_url(self,area_url,main_list):
-
-    period_url = self.module.make_period_url(self.period,area_url)
+  def get_offers_from_area_url(self, area_url, main_list):
     try:
       period_url = self.module.make_period_url(self.period,area_url)
     except:
@@ -309,23 +339,23 @@ class Template:
 
     #Importing Custom Functions
     msg_list = MessageList()
-    mod = custom_import(self.func_filename,msg_list)
+    mod = custom_import(self.func_filename, msg_list)
     main_list.add_msg_list(msg_list)
 
     if mod is not None:
       self.module = mod
 
       msg_list = MessageList()
-      areas = self.get_areas(msg_list)
+      areas, optional = self.get_areas(msg_list)
       main_list.add_msg_list(msg_list)
 
-      if areas is not None:
+      if areas is not None or optional:
         try:
           urls = self.module.make_area_urls(areas,self.url_base)
           area_urls = list(urls)
         except:
-          main_list.add_msg("La funcion make_area_urls no esta funcionando correctamente",MessageList.ERR)
-          main_list.set_title("La plantilla falló al ejecutarse"+ self.job_center, MessageList.ERR)
+          main_list.add_msg("La funcion make_area_urls no esta funcionando correctamente", MessageList.ERR)
+          main_list.set_title("La plantilla falló al ejecutarse" + self.job_center, MessageList.ERR)
           return None
 
         for index,area_url in enumerate(area_urls):
@@ -347,7 +377,6 @@ class Template:
         return 
 
     main_list.set_title("La plantilla " +self.job_center + " falló al ejecutarse",MessageList.ERR)
-    return
     
 
 
@@ -423,18 +452,18 @@ class FeaturesSource:
 
   @classmethod
   def fromFile(cls, file, main_list):
-    fileline = file.readline()
+    fileline, _ = utils.read_text_from_file(file)
     if fileline is None or utils.is_blank(fileline) :
       return None
       
-    names = utils.read_source_from_string(fileline,main_list)
+    names = utils.read_source_from_string(fileline, main_list)
     if names is None:
       main_list.add_msg("Failed to read names", MessageList.ERR)
-    values = utils.read_source_from_file(file)
+    values, _ = utils.read_source_from_file(file)
     if values is None:
       main_list.add_msg("Failed to read values", MessageList.ERR)
 
-    if main_list.contain_errors():
+    if main_list.contains_errors():
       return None
     else:
       return cls(names,values)
@@ -447,11 +476,12 @@ class FeaturesSource:
 #------------------------------------------------------------------------------------------------
 class OfferTemplate(Template):
 
-  def __init__(self,global_attributes, id_features, feat_sources):
+  def __init__(self, global_attributes, id_features, feat_sources, first_level_sources):
 
     Template.__init__(self,*global_attributes)
     self.id_features = id_features
     self.feat_sources = feat_sources
+    self.first_level_sources = first_level_sources
   
 
   @staticmethod
@@ -464,16 +494,29 @@ class OfferTemplate(Template):
     id_feat = []
     for feature in id_features:
         id_feat.append(feature.lower())
-
+    
     id_features = id_feat
-
+    # First level features (Front page)
+    num_first_features = read_int_from_file(file)
+    first_level_sources = []
+    for i in range(0, num_first_features):
+      msg_list = MessageList()
+      features = FeaturesSource.fromFile(file, msg_list)
+      if features is None:
+        if msg_list.contains_errors():
+          msg_list.set_title("Failed to read first level features Source #{num}".format(num=i), MessageList.ERR)
+          main_list.add_msg_list(msg_list)
+        break
+      first_level_sources.append(features)
+    
+    # Back features (Full posting)
     features_sources = []
     while True:
       msg_list = MessageList()
       features_source = FeaturesSource.fromFile(file,msg_list)
     
       if features_source is None:
-        if msg_list.contain_errors():
+        if msg_list.contains_errors():
           msg_list.set_title("Failed to read features Source #"+ str(len(features_sources)+1),MessageList.ERR)
           main_list.add_msg_list(msg_list)
 
@@ -482,9 +525,9 @@ class OfferTemplate(Template):
 
         features_sources.append(features_source)
 
-    if not main_list.contain_errors():
+    if not main_list.contains_errors():
       main_list.set_title("All Offer Template Attributes are OK :)",MessageList.INF)
-      return global_attr, id_features, features_sources
+      return global_attr, id_features, features_sources, first_level_sources
     else:
       main_list.set_title("Some Offer Template Attributes are WRONG :(",MessageList.ERR)
       return None

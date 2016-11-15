@@ -3,30 +3,35 @@ Job Center:                 |Ministerio del Trabajo|
 Functions Filename:         |cas.py|
 URL Base:                   |http://silnet.trabajo.gob.pe:8080/empleoperu/Pedido.do?method=filtrolistaAllVacPub|
 #
-# CAS no soporta búsqueda por periodos, placeholder: x
+# CAS no soporta búsqueda por periodos
 #
-Period:                     |x|
+Period:                     |optional:|
 #
 # CAS no soporta búsqueda por áreas
 #
-Areas URL:                  |x|
-Areas Source:               |x|
+Areas URL:                  |optional:|
+Areas Source:               |optional:|
 #
 # CAS no tiene número de ofertas visible
 #
-Number of Offers Source:    |x|
+Number of Offers Source:    |optional:|
 #
 # CAS tiene todos las convocatorias en una sola página
 # Estas se "cargan" con javascript, así que no hay necesidad de paginación
 #
-Links per Page:             |15|
-Number of Sources:          |2|
+Links per Page:             |optional:15|
+Number of Sources:          |1|
 Offer Source:               |* li\{"id":"demo"}\->4 div\{}\->1 a\{}\href\|
-Offer Location Source:      |* li\{"id":"demo"}\->3 div\{}\->1 p\{}\|
 
 Offer Structure:
-Description:                |1 div\{"id":"texto3"}\|
-Feature Names:              |["Empresa"]|
+# ID_features:                |['ubicacion', 'descripcion', 'empresa', 'titulo']
+ID_features:                |['descripcion', 'empresa', 'titulo']
+# First Level Features:       |1|
+# Feature Names:              |["ubicacion"]|
+# Feature Values:             |* li\{"id":"demo"}\->3 div\{}\->1 p\{}\|
+Feature Names:              |["descripcion"]|
+Feature Values:             |1 div\{"id":"texto3"}\|
+Feature Names:              |["empresa"]|
 Feature Values:             |1 div\{"id":"textoTitulo"}\->1 div\{"id":"texto1s"}\->1 p\{}\->1 b\{}\|
-Feature Names:              |["Titulo"]|
+Feature Names:              |["titulo"]|
 Feature Values:             |1 div\{"id":"textoTitulo"}\->1 p\{}\->1 b\{}\|

@@ -1,3 +1,5 @@
+import datetime
+
 def make_area_urls(areas,url_base):
 	str = url_base
 	str += "/de-"

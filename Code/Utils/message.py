@@ -36,12 +36,12 @@ class MessageList:
 		return len(self.list) ==0
 	
 
-	def contain_errors(self):
+	def contains_errors(self):
 		if self.title.type == MessageList.ERR:
 			return True
 		else:
 			for msgList in self.list:
-				if msgList.contain_errors():
+				if msgList.contains_errors():
 					return True
 
 			return False
