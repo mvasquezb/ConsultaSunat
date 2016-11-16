@@ -82,13 +82,13 @@ class Template:
     if links_per_page is None: 
       main_list.add_msg("Failed to read the number of links per page", msg_type)
 
-    num_sources = utils.read_int_from_file(file)
+    num_sources, _ = utils.read_int_from_file(file)
     if num_sources is None: 
       main_list.add_msg("Failed to read the number of sources to get offers", MessageList.ERR)
     else:
       list_sources = []
       for i in range(0, num_sources):
-        offSource = utils.read_source_from_file(file)
+        offSource, _ = utils.read_source_from_file(file)
         if offSource is None: main_list.add_msg("Failed to read the offer source #"+ str(i+1), MessageList.ERR)
         else: list_sources.append(offSource)
       
@@ -145,10 +145,10 @@ class Template:
 
   def get_num_offers(self, date_url, main_list):
     """
-    Método que obtiene el número de convocatorias en el periodo
-    Devuelve una tupla (num_offers, optional). Donde:
-    num_offers = El número de ofertas o None
-    optional = Indica si no es un error cuando areas es None
+    Obtains number of offers in the specified period
+    Returns a tuple (num_offers, optional). Where:
+    num_offers = The number of offers or None
+    optional = Whether the missing value should be considered an error
     """
     if self.num_offSource is None:
       main_list.set_title("Not scraping number of offers: Optional", MessageList.INF)
@@ -178,11 +178,9 @@ class Template:
 
 
   def get_offers_from_page_url(self, page_url):
-
     try:
       web = requests.get(page_url)
       soup = bs4.BeautifulSoup(web.text, "lxml")
-
     except:
       eprint("Cannot access to the url: "+ page_url + "\n")
       return None
@@ -199,10 +197,12 @@ class Template:
       data = scraper.scrape()
 
       off_links = data[0]
-      dates = data[1]
-        
+      try:
+        dates = data[1]
+      except IndexError:
+        dates = None
 
-      if off_links is None or len(off_links) == 0:
+      if off_links is None or type(off_links) is not list or len(off_links) == 0:
         #Useless source
         eprint("No offers obtained using Source: " + source)
         continue
@@ -213,11 +213,12 @@ class Template:
         for index, link in enumerate(off_links):
           if not link in tot_links:
             tot_links.append(link)
-            tot_dates.append(dates[index])
+            if dates is not None:
+              tot_dates.append(dates[index])
 
     tot_offers = []
     for index, link in enumerate(tot_links):
-      eprint("    Offer #"+str(index+1))
+      eprint("    Offer #" + str(index + 1))
 
       try:
         link_url = self.module.make_link_url(link, page_url)
@@ -228,14 +229,26 @@ class Template:
       offer = self.get_offer_from_link(link_url)
 
       if offer is not None:
-        pass_time = tot_dates[index]
+        if dates is not None:
+          pass_time = tot_dates[index]
+        else:
+          # If dates is None, attempt to get publication date from description
+          try:
+            pass_time = offer.features['descripción']
+          except KeyError:
+            main_list.set_title("Can't find 'descripción' field to get publication date", MessageList.ERR)
+            return None
         #check!
-        pub_date = self.to_publication_date(pass_time)
+        try:
+          pub_date = self.module.to_publication_date(pass_time)
+        except:
+          main_list.add_msg("to_publication_date function is not working properly", MessageList.ERR)
+          return None
+
         offer.month = pub_date.month
         offer.year = pub_date.year
-        tot_offers.append(offer)
-      else:
-        tot_offers.append(offer)
+
+      tot_offers.append(offer)
 
     return tot_offers
 
@@ -243,29 +256,30 @@ class Template:
   def get_offers_from_period_url(self, period_url, main_list):
 
     msg_list = MessageList()
-    self.num_off, optional = self.get_num_offers(period_url, msg_list)
+    self.num_off, num_off_is_optional = self.get_num_offers(period_url, msg_list)
     main_list.add_msg_list(msg_list)
 
-    if self.num_off is None and not optional:
+    if self.num_off is None and not num_off_is_optional:
       return None
 
+    self.num_off = 0 if self.num_off is None else self.num_off
     main_list.add_msg("Número de ofertas encontradas: " + str(self.num_off), MessageList.INF)
 
     max = 2000
     num_pag = 0
     total_offers = []
-    self.num_off = max
-    while num_pag < max and len(total_offers) < self.num_off:
+
+    while num_pag < max and (len(total_offers) < self.num_off or num_off_is_optional):
       num_pag += 1
 
       try:
         page_url = self.module.make_page_url(num_pag, period_url)
       except:
-        main_list.set_title("make_page_url is not working propertly", MessageList.ERR)
+        main_list.set_title("make_page_url is not working properly", MessageList.ERR)
         #Abort everything
         return None #Return total_offers if you dont wanna abort all
 
-      eprint("  Page #"+str(num_pag))
+      eprint("  Page #" + str(num_pag))
       offers = self.get_offers_from_page_url(page_url)
       eprint("")
 
@@ -274,8 +288,8 @@ class Template:
         break
       else:
         total_offers += offers
-        if len(offers)!=self.links_per_page and len(total_offers)!=self.num_off:
-          main_list.add_msg("Unexpected number of offers at page #"+ str(num_pag), MessageList.INF)
+        if len(offers) != self.links_per_page and len(total_offers) != self.num_off:
+          main_list.add_msg("Unexpected number of offers at page #" + str(num_pag), MessageList.INF)
 
     main_list.set_title(str(len(total_offers)) + " offers obtained in total (Invalid included)", MessageList.INF)
     return total_offers
@@ -341,7 +355,7 @@ class Template:
   def execute(self, main_list):
 
     print(self.job_center)
-    UnprocessedOffer.connectToDatabase(self.job_center)
+    #UnprocessedOffer.connectToDatabase(self.job_center)
 
     #Importing Custom Functions
     msg_list = MessageList()
@@ -376,8 +390,8 @@ class Template:
 
           if offers is not None:
             msg_list = MessageList()
-            load_offers(offers, msg_list)
-            main_list.add_msg_list(msg_list)
+            #load_offers(offers, msg_list)
+            #main_list.add_msg_list(msg_list)
 
         main_list.set_title("La plantilla " + self.job_center + " se ejecutó correctamente.", MessageList.INF)
         return 
@@ -439,7 +453,10 @@ def custom_import(filename, main_list):
   if not "make_link_url" in custom_functions:
     main_list.add_msg("Missing make_link_url function", MessageList.ERR)
 
-  if main_list.size() is not 0:
+  if not "to_publication_date" in custom_functions:
+    main_list.add_msg("Missing to_publication_date function", MessageList.ERR)
+
+  if main_list.contains_errors():
     main_list.set_title("Fail importing function file", MessageList.ERR)
     return None
   else:
@@ -496,14 +513,14 @@ class OfferTemplate(Template):
     file.readline() #newline
     file.readline() #Offer Structure:
 
-    id_features = utils.read_source_from_string(file.readline())
+    id_features, _ = utils.read_source_from_file(file)
     id_feat = []
     for feature in id_features:
         id_feat.append(feature.lower())
-    
+
     id_features = id_feat
     # First level features (Front page)
-    num_first_features = read_int_from_file(file)
+    num_first_features, _ = utils.read_int_from_file(file)
     first_level_sources = []
     for i in range(0, num_first_features):
       msg_list = MessageList()
@@ -513,7 +530,8 @@ class OfferTemplate(Template):
           msg_list.set_title("Failed to read first level features Source #{num}".format(num=i), MessageList.ERR)
           main_list.add_msg_list(msg_list)
         break
-      first_level_sources.append(features)
+      else:
+        first_level_sources.append(features)
     
     # Back features (Full posting)
     features_sources = []
@@ -523,12 +541,11 @@ class OfferTemplate(Template):
     
       if features_source is None:
         if msg_list.contains_errors():
-          msg_list.set_title("Failed to read features Source #"+ str(len(features_sources)+1), MessageList.ERR)
+          msg_list.set_title("Failed to read features Source #" + str(len(features_sources)+1), MessageList.ERR)
           main_list.add_msg_list(msg_list)
 
         break
       else:
-
         features_sources.append(features_source)
 
     if not main_list.contains_errors():
@@ -554,16 +571,24 @@ class OfferTemplate(Template):
 
 
   def get_offer_from_link(self, link):
-
     try:
       web = requests.get(link)
       soup = bs4.BeautifulSoup(web.text, "lxml")
-
     except:
       eprint("Cannot access to the link "+link)
       return None
 
+    # First Level Features
+    first_feats = {}
+    for source in self.first_level_sources:
+      names = self.get_data_from_source(soup, source.names_source)
+      values = self.get_data_from_source(soup, source.values_source)
+      print(values)
 
+      for idx in range(min(len(names), len(values))):
+        first_feats[names[idx].lower()] = values[idx]
+
+    # Back Features (Full posting)
     features = {}
     for feat_source in self.feat_sources:
       names = self.get_data_from_source(soup, feat_source.names_source)
@@ -572,7 +597,10 @@ class OfferTemplate(Template):
 
       for idx in range(min(len(names), len(values))):
         features[names[idx].lower()] = values[idx]
-        
+    
+    # Merge both dictionaries
+    for key, value in first_feats.items():
+      features[key] = value
 
     #Get id
     id = ""
@@ -595,6 +623,3 @@ class OfferTemplate(Template):
     else:
       offer = UnprocessedOffer(0, 0, id, True, 0, features)
       return offer
-
-
-

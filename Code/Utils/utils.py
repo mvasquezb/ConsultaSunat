@@ -13,14 +13,14 @@ from django.core.exceptions import ValidationError
 def read_url_from_file(temp_file):
     str, optional = read_text_from_file(temp_file)
 
-    if str is None:
-        return None
+    if str is None and not optional:
+        return None, False
     else:
         validate = URLValidator()
         try:
             validate(str)
         except ValidationError:
-            return None
+            return None, False
 
         return str, optional
 

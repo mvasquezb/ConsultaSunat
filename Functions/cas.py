@@ -6,15 +6,15 @@ from collections import namedtuple
 
 def make_area_urls(areas, url_base):
     """
-    Genera una lista de links de cada área
-    Como Centro de Empleo no soporta áreas, solo se devuelve el base
+    Generates url for specified area
+    Not supported by CAS postings
     """
     return [url_base]
 
 def make_period_url(period, url_base):
     """
-    Genera un link para el periodo especificado
-    Como Centro de Empleo no soporta periodos, solo se devuelve el base
+    Generates url for specified period
+    CAS: not supported, only returns base url
     """
     return url_base
 
@@ -22,22 +22,22 @@ def make_period_url(period, url_base):
 
 def make_page_url(page_num, url_base):
     """
-    Genera un link para la página especificada
-    Como Centro de Empleo carga todas las convocatorias de inmediato,
-    no es necesario
+    Generates a url for the specified page number
+    Unnecessary for CAS postings since the site loads all offers every time
+    and just **shows** them using javascript
     """
     return url_base
 
 
 def make_link_url(link, url_base):
     """
-    Genera el link absoluto de una oferta a partir del relativo y la base
+    Generates an offer's url using the relative one and a base
     """
     tokens = url_base.split('/')
     tokens[-1] = link
     return '/'.join(tokens)
         
-# Extracción de fechas de publicación de cada convocatoria de CAS
+# Publication date extraction for a CAS posting
 
 PubDate = namedtuple('PubDate', ['month', 'year'])
 
@@ -103,10 +103,10 @@ def get_match_group(src, pattern, matchNumber=0, groupNumber=1):
 
     match = matches[matchNumber]
     try:
-        # Si hay varios grupos
+        # Several capture groups
         if isinstance(match, tuple):
             return match[groupNumber-1]
-        # Si solo hay un grupo
+        # Only one group
         return match
     except:
         return None
@@ -148,7 +148,7 @@ def get_publicacion_en(src):
     date = get_month_year(date_str)
     return date
 
-# Ordenados por número de ocurrencias
+# Sorted by number of occurrences
 FILTERS = [
     get_clean_date,
     get_a_partir_del,
@@ -157,27 +157,25 @@ FILTERS = [
     get_publicacion_en,
 ]
 
-def get_date_from_description_CAS(desc):
-    # Remueve tildes y convierte a mayúsculas
+def to_publication_date(desc):
+    # Remove accents and convert to uppercase
     desc = remove_accents(desc, case='upper')
 
-    # Remueve requerimientos
+    # Remove 'Requerimientos' section
     index_detalle = desc.find("DETALLE:")
     if index_detalle != -1:
         desc = desc[index_detalle + len('DETALLE:'):].strip()
 
-    # Remueve todo a partir de la cantidad de vacantes
+    # Remove everything after 'DETALLE' section
     desc = re.compile("(CANTIDAD DE )?VACANTES:.*\n.*").sub('', desc).strip()
 
-    # Pasa cada descripción por cada filtro de la lista hasta que la fecha sea válida
+    # Apply each filter for the description until a date is found
     fecha = None
     for func in FILTERS:
         fecha = func(desc)
         if fecha != None:
             break
     else:
-        # Si no se encuentra la fecha, se asigna la del mes actual
+        # If no date is found, current one is assigned
         fecha = datetime.date.today()
     return fecha
-
-#TODO: to_publication_date()
