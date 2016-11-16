@@ -1,4 +1,8 @@
+import json
+import re
+import dateparser
 import datetime
+from collections import namedtuple
 
 def make_area_urls(areas, url_base):
     """
@@ -34,11 +38,6 @@ def make_link_url(link, url_base):
     return '/'.join(tokens)
         
 # Extracción de fechas de publicación de cada convocatoria de CAS
-import json
-import re
-import dateparser
-import datetime
-from collections import namedtuple
 
 PubDate = namedtuple('PubDate', ['month', 'year'])
 

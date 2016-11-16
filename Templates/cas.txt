@@ -5,16 +5,16 @@ URL Base:                   |http://silnet.trabajo.gob.pe:8080/empleoperu/Pedido
 #
 # CAS no soporta búsqueda por periodos
 #
-Period:                     |optional:|
+Period:                     |optional|
 #
 # CAS no soporta búsqueda por áreas
 #
-Areas URL:                  |optional:|
-Areas Source:               |optional:|
+Areas URL:                  |optional|
+Areas Source:               |optional|
 #
 # CAS no tiene número de ofertas visible
 #
-Number of Offers Source:    |optional:|
+Number of Offers Source:    |optional|
 #
 # CAS tiene todos las convocatorias en una sola página
 # Estas se "cargan" con javascript, así que no hay necesidad de paginación

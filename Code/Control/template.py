@@ -34,7 +34,7 @@ class Template:
 
 
   @staticmethod
-  def read_attributes_from_file(file,main_list):
+  def read_attributes_from_file(file, main_list):
     """
     Método que obtiene los atributos globales de una plantilla desde un archivo.
     Algunos atributos no están presentes en la plantilla, así que son marcados por
@@ -100,7 +100,7 @@ class Template:
 
 
   @classmethod
-  def fromFile(cls, file,main_list):
+  def fromFile(cls, file, main_list):
     attributes = cls.read_attributes_from_file(file, main_list)
     if attributes is None:
       return None
@@ -121,7 +121,7 @@ class Template:
     
     try:
       web = requests.get(self.area_url)
-      soup = bs4.BeautifulSoup(web.text,"lxml")
+      soup = bs4.BeautifulSoup(web.text, "lxml")
     except:
       main_list.set_title("Cannot connect: " + self.area_url, MessageList.ERR)
       return None, False
@@ -144,38 +144,44 @@ class Template:
 
 
   def get_num_offers(self, date_url, main_list):
+    """
+    Método que obtiene el número de convocatorias en el periodo
+    Devuelve una tupla (num_offers, optional). Donde:
+    num_offers = El número de ofertas o None
+    optional = Indica si no es un error cuando areas es None
+    """
+    if self.num_offSource is None:
+      main_list.set_title("Not scraping number of offers: Optional", MessageList.INF)
+      return None, True
     try:
       web = requests.get(date_url)
-      soup = bs4.BeautifulSoup(web.text,"lxml")
+      soup = bs4.BeautifulSoup(web.text, "lxml")
     except:
-      main_list.add_msg("Cannot access the url " + date_url,MessageList.ERR)
-      return None
+      main_list.add_msg("Cannot access the url " + date_url, MessageList.ERR)
+      return None, False
 
     scraper = Scraper(soup, self.num_offSource)
-
     data = scraper.scrape()
-
     num_off = data[0]
-      
 
     try:
       num_off = int(num_off.split()[0])
     except:
-      main_list.add_msg("value obtained is not a number",MessageList.ERR)
-      num_off = None
+      main_list.add_msg("value obtained is not a number", MessageList.ERR)
+      num_off = None, False
 
     if num_off is None:
-      main_list.set_title("Fail scraping number of offers.",MessageList.ERR)
-      return None
+      main_list.set_title("Fail scraping number of offers.", MessageList.ERR)
+      return None, False
 
-    return num_off
+    return num_off, False
 
 
-  def get_offers_from_page_url(self,page_url):
+  def get_offers_from_page_url(self, page_url):
 
     try:
       web = requests.get(page_url)
-      soup = bs4.BeautifulSoup(web.text,"lxml")
+      soup = bs4.BeautifulSoup(web.text, "lxml")
 
     except:
       eprint("Cannot access to the url: "+ page_url + "\n")
@@ -189,7 +195,7 @@ class Template:
       levels = source.split('->')
       index = 0
 
-      scraper = Scraper(soup,source)
+      scraper = Scraper(soup, source)
       data = scraper.scrape()
 
       off_links = data[0]
@@ -210,11 +216,11 @@ class Template:
             tot_dates.append(dates[index])
 
     tot_offers = []
-    for index,link in enumerate(tot_links):
+    for index, link in enumerate(tot_links):
       eprint("    Offer #"+str(index+1))
 
       try:
-        link_url = self.module.make_link_url(link,page_url)
+        link_url = self.module.make_link_url(link, page_url)
       except:
         main_list.set_title("make_link_url is not working propertly", MessageList.ERR)
         return None
@@ -234,26 +240,26 @@ class Template:
     return tot_offers
 
 
-  def get_offers_from_period_url(self,period_url, main_list):
+  def get_offers_from_period_url(self, period_url, main_list):
 
     msg_list = MessageList()
-    self.num_off = self.get_num_offers(period_url,msg_list)
+    self.num_off, optional = self.get_num_offers(period_url, msg_list)
     main_list.add_msg_list(msg_list)
 
-    if self.num_off is None:
+    if self.num_off is None and not optional:
       return None
 
-    main_list.add_msg("Número de ofertas encontradas: " + str(self.num_off),MessageList.INF)
+    main_list.add_msg("Número de ofertas encontradas: " + str(self.num_off), MessageList.INF)
 
     max = 2000
     num_pag = 0
     total_offers = []
-
+    self.num_off = max
     while num_pag < max and len(total_offers) < self.num_off:
       num_pag += 1
 
       try:
-        page_url = self.module.make_page_url(num_pag,period_url)
+        page_url = self.module.make_page_url(num_pag, period_url)
       except:
         main_list.set_title("make_page_url is not working propertly", MessageList.ERR)
         #Abort everything
@@ -271,7 +277,7 @@ class Template:
         if len(offers)!=self.links_per_page and len(total_offers)!=self.num_off:
           main_list.add_msg("Unexpected number of offers at page #"+ str(num_pag), MessageList.INF)
 
-    main_list.set_title(str(len(total_offers)) + " offers obtained in total (Invalid included)",MessageList.INF)
+    main_list.set_title(str(len(total_offers)) + " offers obtained in total (Invalid included)", MessageList.INF)
     return total_offers
           
   #Must be sent to Functions
@@ -287,7 +293,7 @@ class Template:
     type = parts[2]
     value = int(parts[1])
 
-    if type in ['segundos','segundo']:
+    if type in ['segundos', 'segundo']:
       pub_date = cur_date - datetime.timedelta(seconds = value)
 
     if type in ['minutos', 'minuto']:
@@ -309,17 +315,17 @@ class Template:
   
   def get_offers_from_area_url(self, area_url, main_list):
     try:
-      period_url = self.module.make_period_url(self.period,area_url)
+      period_url = self.module.make_period_url(self.period, area_url)
     except:
-      main_list.set_title("make_period_url function is not working propertly",MessageList.ERR)
+      main_list.set_title("make_period_url function is not working propertly", MessageList.ERR)
       return None
 
     msg_list = MessageList()
-    offers = self.get_offers_from_period_url(period_url,msg_list)
+    offers = self.get_offers_from_period_url(period_url, msg_list)
     main_list.add_msg_list(msg_list)
 
     if offers is None:
-      main_list.set_title("No se pudo obtener las ofertas",MessageList.ERR)
+      main_list.set_title("No se pudo obtener las ofertas", MessageList.ERR)
       return None
 
     else:
@@ -328,11 +334,11 @@ class Template:
         if offer is not None:
           valid_offers.append(offer)
 
-      main_list.set_title(str(len(valid_offers))+ " ofertas validas seleccionadas",MessageList.INF)
+      main_list.set_title(str(len(valid_offers))+ " ofertas validas seleccionadas", MessageList.INF)
       return valid_offers
 
 
-  def execute(self,main_list):
+  def execute(self, main_list):
 
     print(self.job_center)
     UnprocessedOffer.connectToDatabase(self.job_center)
@@ -351,32 +357,32 @@ class Template:
 
       if areas is not None or optional:
         try:
-          urls = self.module.make_area_urls(areas,self.url_base)
+          urls = self.module.make_area_urls(areas, self.url_base)
           area_urls = list(urls)
         except:
           main_list.add_msg("La funcion make_area_urls no esta funcionando correctamente", MessageList.ERR)
           main_list.set_title("La plantilla falló al ejecutarse" + self.job_center, MessageList.ERR)
           return None
 
-        for index,area_url in enumerate(area_urls):
+        for index, area_url in enumerate(area_urls):
           
-          main_list.add_msg("Area #"+str(index+1),MessageList.INF)
-          main_list.add_msg(area_url,MessageList.INF)
+          main_list.add_msg("Area #"+str(index+1), MessageList.INF)
+          main_list.add_msg(area_url, MessageList.INF)
           msg_list = MessageList()
           eprint("Area #"+str(index+1)+"   "+area_url)
-          offers = self.get_offers_from_area_url(area_url,msg_list)
+          offers = self.get_offers_from_area_url(area_url, msg_list)
           eprint("------------------------------------------------------------------------------")
           main_list.add_msg_list(msg_list)
 
           if offers is not None:
             msg_list = MessageList()
-            load_offers(offers,msg_list)
+            load_offers(offers, msg_list)
             main_list.add_msg_list(msg_list)
 
         main_list.set_title("La plantilla " + self.job_center + " se ejecutó correctamente.", MessageList.INF)
         return 
 
-    main_list.set_title("La plantilla " +self.job_center + " falló al ejecutarse",MessageList.ERR)
+    main_list.set_title("La plantilla " +self.job_center + " falló al ejecutarse", MessageList.ERR)
     
 
 
@@ -422,16 +428,16 @@ def custom_import(filename, main_list):
   custom_functions = dir(mod)
 
   if not "make_area_urls" in custom_functions:
-    main_list.add_msg("Missing make_area_urls function",MessageList.ERR)
+    main_list.add_msg("Missing make_area_urls function", MessageList.ERR)
 
   if not "make_period_url" in custom_functions:
     main_list.add_msg("Missing make_period_url function", MessageList.ERR)
 
   if not "make_page_url" in custom_functions:
-    main_list.add_msg("Missing make_page_url function",MessageList.ERR)
+    main_list.add_msg("Missing make_page_url function", MessageList.ERR)
 
   if not "make_link_url" in custom_functions:
-    main_list.add_msg("Missing make_link_url function",MessageList.ERR)
+    main_list.add_msg("Missing make_link_url function", MessageList.ERR)
 
   if main_list.size() is not 0:
     main_list.set_title("Fail importing function file", MessageList.ERR)
@@ -445,7 +451,7 @@ def custom_import(filename, main_list):
 
 #------------------------------------------------------------------------------------------------
 class FeaturesSource:
-  def __init__(self,names_source, values_source):
+  def __init__(self, names_source, values_source):
     self.names_source = names_source
     self.values_source = values_source
 
@@ -466,7 +472,7 @@ class FeaturesSource:
     if main_list.contains_errors():
       return None
     else:
-      return cls(names,values)
+      return cls(names, values)
 
 
 
@@ -478,15 +484,15 @@ class OfferTemplate(Template):
 
   def __init__(self, global_attributes, id_features, feat_sources, first_level_sources):
 
-    Template.__init__(self,*global_attributes)
+    Template.__init__(self, *global_attributes)
     self.id_features = id_features
     self.feat_sources = feat_sources
     self.first_level_sources = first_level_sources
   
 
   @staticmethod
-  def read_attributes_from_file(file,main_list):
-    global_attr = Template.read_attributes_from_file(file,main_list)
+  def read_attributes_from_file(file, main_list):
+    global_attr = Template.read_attributes_from_file(file, main_list)
     file.readline() #newline
     file.readline() #Offer Structure:
 
@@ -513,11 +519,11 @@ class OfferTemplate(Template):
     features_sources = []
     while True:
       msg_list = MessageList()
-      features_source = FeaturesSource.fromFile(file,msg_list)
+      features_source = FeaturesSource.fromFile(file, msg_list)
     
       if features_source is None:
         if msg_list.contains_errors():
-          msg_list.set_title("Failed to read features Source #"+ str(len(features_sources)+1),MessageList.ERR)
+          msg_list.set_title("Failed to read features Source #"+ str(len(features_sources)+1), MessageList.ERR)
           main_list.add_msg_list(msg_list)
 
         break
@@ -526,10 +532,10 @@ class OfferTemplate(Template):
         features_sources.append(features_source)
 
     if not main_list.contains_errors():
-      main_list.set_title("All Offer Template Attributes are OK :)",MessageList.INF)
+      main_list.set_title("All Offer Template Attributes are OK :)", MessageList.INF)
       return global_attr, id_features, features_sources, first_level_sources
     else:
-      main_list.set_title("Some Offer Template Attributes are WRONG :(",MessageList.ERR)
+      main_list.set_title("Some Offer Template Attributes are WRONG :(", MessageList.ERR)
       return None
 
 
@@ -547,11 +553,11 @@ class OfferTemplate(Template):
       return data
 
 
-  def get_offer_from_link(self,link):
+  def get_offer_from_link(self, link):
 
     try:
       web = requests.get(link)
-      soup = bs4.BeautifulSoup(web.text,"lxml")
+      soup = bs4.BeautifulSoup(web.text, "lxml")
 
     except:
       eprint("Cannot access to the link "+link)
@@ -587,7 +593,7 @@ class OfferTemplate(Template):
       eprint("    Link: ", link)
       return None
     else:
-      offer = UnprocessedOffer(0,0,id,True, 0, features)
+      offer = UnprocessedOffer(0, 0, id, True, 0, features)
       return offer
 
 

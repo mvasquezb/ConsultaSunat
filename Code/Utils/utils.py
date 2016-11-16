@@ -43,10 +43,12 @@ def read_text_from_file(temp_file):
     except:
         return None, False
     
-    optional = value.startswith('optional:')
-    value = value[len('optional:'):]
-    if value == '':
-        value = None
+    optional = value.startswith('optional')
+    if optional:
+        value = value[len('optional'):]
+        value = value[1:] if value != '' else ''
+
+    value = value if value != '' else None
 
     return value, optional
 
