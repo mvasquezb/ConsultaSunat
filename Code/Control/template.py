@@ -17,7 +17,7 @@ from Control import textProcessor as tp # TP tu terror
 
 class Template:
   def __init__(self, job_center, func_filename, url_base, period, area_url, \
-               areas_source, num_offSource, links_per_page, num_sources, list_sources):
+               areas_source, num_offSource, links_per_page, num_sources, list_sources, first_level_sources):
 
     self.job_center = job_center
     self.func_filename = func_filename
@@ -29,6 +29,7 @@ class Template:
     self.links_per_page = links_per_page
     self.num_sources = num_sources
     self.list_sources = list_sources
+    self.first_level_sources = first_level_sources
 
     self.module = None
 
@@ -89,13 +90,27 @@ class Template:
       list_sources = []
       for i in range(0, num_sources):
         offSource, _ = utils.read_source_from_file(file)
-        if offSource is None: main_list.add_msg("Failed to read the offer source #"+ str(i+1), MessageList.ERR)
+        if offSource is None: main_list.add_msg("Failed to read the offer source #" + str(i+1), MessageList.ERR)
         else: list_sources.append(offSource)
-      
+    
+    # First level features (Front page)
+    num_first_features, _ = utils.read_int_from_file(file)
+    first_level_sources = []
+    for i in range(0, num_first_features):
+      msg_list = MessageList()
+      features = FeaturesSource.fromFile(file, msg_list)
+      if features is None:
+        if msg_list.contains_errors():
+          msg_list.set_title("Failed to read first level features Source #{num}".format(num=i), MessageList.ERR)
+          main_list.add_msg_list(msg_list)
+        break
+      else:
+        first_level_sources.append(features)
+
     if main_list.contains_errors():
       return None
     else:
-      return job_center, func_filename, url_base, period, area_url, areas_source, num_offSource, links_per_page, num_sources, list_sources  
+      return job_center, func_filename, url_base, period, area_url, areas_source, num_offSource, links_per_page, num_sources, list_sources, first_level_sources  
 
 
 
@@ -181,8 +196,9 @@ class Template:
     try:
       web = requests.get(page_url)
       soup = bs4.BeautifulSoup(web.text, "lxml")
-    except:
-      eprint("Cannot access to the url: "+ page_url + "\n")
+    except Exception as e:
+      eprint(e)
+      eprint("Cannot access the url: "+ page_url + "\n")
       return None
 
 
@@ -216,17 +232,24 @@ class Template:
             if dates is not None:
               tot_dates.append(dates[index])
 
+    tot_first_features = self.get_first_level_features(soup, len(tot_links))
+    
     tot_offers = []
     for index, link in enumerate(tot_links):
       eprint("    Offer #" + str(index + 1))
-
+      
       try:
         link_url = self.module.make_link_url(link, page_url)
       except:
-        main_list.set_title("make_link_url is not working propertly", MessageList.ERR)
+        main_list.set_title("make_link_url is not working properly", MessageList.ERR)
         return None
 
-      offer = self.get_offer_from_link(link_url)
+      # Get first level features for this link (offer)
+      features = None
+      if tot_first_features is not None and len(tot_first_features) > index:
+        features = tot_first_features[index]
+
+      offer = self.get_offer_from_link(link_url, features)
 
       if offer is not None:
         if dates is not None:
@@ -247,9 +270,8 @@ class Template:
 
         offer.month = pub_date.month
         offer.year = pub_date.year
-
       tot_offers.append(offer)
-
+      
     return tot_offers
 
 
@@ -264,8 +286,8 @@ class Template:
 
     self.num_off = 0 if self.num_off is None else self.num_off
     main_list.add_msg("Número de ofertas encontradas: " + str(self.num_off), MessageList.INF)
-
-    max = 2000
+    
+    max = 2000 if self.links_per_page is not None else 1
     num_pag = 0
     total_offers = []
 
@@ -396,8 +418,28 @@ class Template:
         main_list.set_title("La plantilla " + self.job_center + " se ejecutó correctamente.", MessageList.INF)
         return 
 
-    main_list.set_title("La plantilla " +self.job_center + " falló al ejecutarse", MessageList.ERR)
+    main_list.set_title("La plantilla " + self.job_center + " falló al ejecutarse", MessageList.ERR)
     
+  def get_first_level_features(self, soup, num_offers):
+    """
+    Method that gets all first level features to later add them to each offer
+    """
+    tot_first_features = [{} for i in range(0, num_offers)]
+    for source in self.first_level_sources:
+      names = self.get_data_from_source(soup, source.names_source)
+      # Values is either a list of features (one for each offer)
+      # or just one feature to assign to all the offers
+      values = self.get_data_from_source(soup, source.values_source)
+      print("Names: ", names)
+      print("Values: ", values)
+      
+      for index, features in enumerate(tot_first_features):
+        for name in names:
+          value = values if type(values) is not list else values[index]
+          features[name] = value
+
+    return tot_first_features
+
 
 
 def load_offers(offers, main_list):
@@ -499,12 +541,11 @@ class FeaturesSource:
 #------------------------------------------------------------------------------------------------
 class OfferTemplate(Template):
 
-  def __init__(self, global_attributes, id_features, feat_sources, first_level_sources):
+  def __init__(self, global_attributes, id_features, feat_sources):
 
     Template.__init__(self, *global_attributes)
     self.id_features = id_features
     self.feat_sources = feat_sources
-    self.first_level_sources = first_level_sources
   
 
   @staticmethod
@@ -519,19 +560,6 @@ class OfferTemplate(Template):
         id_feat.append(feature.lower())
 
     id_features = id_feat
-    # First level features (Front page)
-    num_first_features, _ = utils.read_int_from_file(file)
-    first_level_sources = []
-    for i in range(0, num_first_features):
-      msg_list = MessageList()
-      features = FeaturesSource.fromFile(file, msg_list)
-      if features is None:
-        if msg_list.contains_errors():
-          msg_list.set_title("Failed to read first level features Source #{num}".format(num=i), MessageList.ERR)
-          main_list.add_msg_list(msg_list)
-        break
-      else:
-        first_level_sources.append(features)
     
     # Back features (Full posting)
     features_sources = []
@@ -550,7 +578,7 @@ class OfferTemplate(Template):
 
     if not main_list.contains_errors():
       main_list.set_title("All Offer Template Attributes are OK :)", MessageList.INF)
-      return global_attr, id_features, features_sources, first_level_sources
+      return global_attr, id_features, features_sources
     else:
       main_list.set_title("Some Offer Template Attributes are WRONG :(", MessageList.ERR)
       return None
@@ -561,16 +589,15 @@ class OfferTemplate(Template):
     if source == "":
       return None
 
-    else:
-      if (type(source) is list):
-        return source
+    if (type(source) is list):
+      return source
 
-      scraper = Scraper(soup, source)
-      data = scraper.scrape()[0]
-      return data
+    scraper = Scraper(soup, source)
+    data = scraper.scrape()[0]
+    return data
 
 
-  def get_offer_from_link(self, link):
+  def get_offer_from_link(self, link, first_level_features):
     try:
       web = requests.get(link)
       soup = bs4.BeautifulSoup(web.text, "lxml")
@@ -578,28 +605,19 @@ class OfferTemplate(Template):
       eprint("Cannot access to the link "+link)
       return None
 
-    # First Level Features
-    first_feats = {}
-    for source in self.first_level_sources:
-      names = self.get_data_from_source(soup, source.names_source)
-      values = self.get_data_from_source(soup, source.values_source)
-      print(values)
-
-      for idx in range(min(len(names), len(values))):
-        first_feats[names[idx].lower()] = values[idx]
-
     # Back Features (Full posting)
     features = {}
     for feat_source in self.feat_sources:
       names = self.get_data_from_source(soup, feat_source.names_source)
       values = self.get_data_from_source(soup, feat_source.values_source)
-      print(values)
+      print("Names: ", names)
+      print("Values: ", values)
 
       for idx in range(min(len(names), len(values))):
         features[names[idx].lower()] = values[idx]
     
-    # Merge both dictionaries
-    for key, value in first_feats.items():
+    # Merge features dictionaries
+    for key, value in first_level_features.items():
       features[key] = value
 
     #Get id

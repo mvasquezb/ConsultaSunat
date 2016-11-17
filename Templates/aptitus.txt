@@ -9,11 +9,10 @@ Number of Offers Source:    |1 section\{"class":"grid_search_results"}\->1 h1\{}
 Links per Page:             |20|
 Number of Sources:          |1|
 Offer Sources & Date:       |* a\{"class":"jobs_ads"}\href->1 div\{"class":"jobs_ads_options"}\->1 span\{}\|
+First Level Features:       |0|
 
 Offer Structure:
 ID_features:                |['descripción','título','requisitos']|
-# First Level Features:       |0|
-#
 Feature Names:              |* *\{"class":"job_box_title"}\|
 Feature Values:             |* div\{"class":"job_box_information"}\|
 Feature Names:              |['título']|

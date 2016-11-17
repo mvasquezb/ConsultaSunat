@@ -20,7 +20,7 @@ def read_url_from_file(temp_file):
         try:
             validate(str)
         except ValidationError:
-            return None, False
+            return None, optional
 
         return str, optional
 
@@ -118,7 +118,6 @@ def read_source_from_string(data, main_list = MessageList()):
     levels = data.split('->')
     for level in levels:
       parts = level.split('\\')
-
       if (len(parts)!=3):
         return None
       else:
@@ -133,7 +132,6 @@ def read_source_from_string(data, main_list = MessageList()):
         attr = parts[2]
         if not validate_attribute_format(attr):
           return None
-
     return data
 
 

@@ -19,20 +19,20 @@ import datetime
 
 def create_template(temp_filename, main_list):
   try:
-    temp_file = open(temp_filename, 'r')
+    temp_file = open(temp_filename,'r')
   except OSError:
-    main_list.set_title("Plantilla no encontrada", MessageList.ERR)
+    main_list.set_title("Plantilla no encontrada",MessageList.ERR)
     return None
 
   msg_list = MessageList()
-  template = OfferTemplate.fromFile(temp_file, msg_list)
+  template = OfferTemplate.fromFile(temp_file,msg_list)
   main_list.add_msg_list(msg_list)
 
   if template is None:
-    main_list.set_title("No se pudo inicializar la plantilla", MessageList.ERR)
+    main_list.set_title("No se pudo inicializar la plantilla",MessageList.ERR)
     return None
   else:
-    main_list.set_title("Plantilla creada", MessageList.INF)
+    main_list.set_title("Plantilla creada",MessageList.INF)
     return template
 
 
@@ -58,7 +58,7 @@ def send_email(sender, password, receiver, filename):
   s = smtplib.SMTP('smtp.gmail.com', 587)
   s.starttls()
   try:
-    s.login(sender, password)
+    s.login(sender,password)
     s.send_message(msg)
   except:
     print("No se pudo enviar el correo por error en el usuario o contraseña")
@@ -88,19 +88,23 @@ def read_config_file(main_list):
     else:
       filename = add_template_path(filename)
       filenames.append(filename)
-  
-  if check_config_values(sender, password, receiver, out, filenames):
-    main_list.set_title("Archivo de configuracion leído correctamente", MessageList.INF)
+
+  if check_config_values(sender, password, receiver, out,filenames):
+    main_list.set_title("Archivo de configuracion leído correctamente",MessageList.INF)
     return sender, password, receiver, out, filenames
   else:
-    main_list.set_title("Valores incorrectos en el archivo de configuración", MessageList.ERR)
+    main_list.set_title("Valores incorrectos en el archivo de configuración",MessageList.ERR)
     return None
 
 
 def check_config_values(sender, password, receiver, out, filenames):
   if sender is None or password is None or receiver is None or out is None :
     return False
-  return not len(filenames) == 0
+  if len(filenames)==0:
+    return False
+
+  return True
+    
 
 
 def add_template_path(filename):
@@ -117,8 +121,8 @@ def main():
   main_list.add_msg_list(msg_list)
 
   sys.stdout = open("summary.txt", 'w')
-  sys.stderr = open(out, 'w')
-  
+  sys.stderr = open(out,'w')
+    
   for filename in filenames:
     msg_list = MessageList()
     template = create_template(filename, msg_list)
@@ -129,7 +133,7 @@ def main():
       template.execute(msg_list)
       main_list.add_msg_list(msg_list)
 
-  main_list.show_all(0, sys.stdout)
+  main_list.show_all(0,sys.stdout)
   sys.stdout.flush()
 
   send_email(sender, password, receiver, out)

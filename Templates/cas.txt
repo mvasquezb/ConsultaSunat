@@ -15,18 +15,24 @@ Number of Offers Source:    |optional|
 #
 # CAS tiene todos las convocatorias en una sola página
 # Estas se "cargan" con javascript, así que no hay necesidad de paginación
-Links per Page:             |optional:15|
+Links per Page:             |optional|
 Number of Sources:          |1|
-Offer Source:               |* li\{"id":"demo"}\->4 div\{}\->1 a\{}\href\|
+Offer Source:               |* li\{"id":"demo"}\->4 div\{}\->1 a\{}\href|
+First Level Features:       |1|
+#
+# Es necesario especificar cada feature de primer nivel por su cuenta (Un par Feature Name, Feature Values)
+# Es menos eficiente, pero permite mejor control en este caso
+Feature Name:              |["ubicación"]|
+#
+# En esta fuente, la iteración (*) significa obtener todos los valores (uno por cada oferta)
+# Mientras que la selección de un índice (\d+) significa que se le asigna ese valor (el mismo) a todas las ofertas
+Feature Values:             |* li\{"id":"demo"}\->3 div\{}\->1 p\{}\|
 
 Offer Structure:
-ID_features:                |['ubicacion', 'descripcion', 'empresa', 'titulo']
-First Level Features:       |1|
-Feature Names:              |["ubicacion"]|
-Feature Values:             |* li\{"id":"demo"}\->3 div\{}\->1 p\{}\|
+ID_features:                |['ubicación', 'descripción', 'empresa', 'título']
 Feature Names:              |["descripción"]|
 Feature Values:             |1 div\{"id":"texto3"}\|
 Feature Names:              |["empresa"]|
-Feature Values:             |1 div\{"id":"textoTitulo"}\->1 div\{"id":"texto1s"}\->1 p\{}\->1 b\{}\|
-Feature Names:              |["titulo"]|
+Feature Values:             |1 div\{"id":"principal"}\->1 div\{"id":"texto1s"}\->1 p\{}\->1 b\{}\|
+Feature Names:              |["título"]|
 Feature Values:             |1 div\{"id":"textoTitulo"}\->1 p\{}\->1 b\{}\|

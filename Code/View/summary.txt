@@ -1,3 +1,0 @@
-False
-False
-btpucp_sistema1@pucp.pe btpucp1-2016 martin.vasquezb@pucp.pe detail.txt ['../../Templates/cas.txt']

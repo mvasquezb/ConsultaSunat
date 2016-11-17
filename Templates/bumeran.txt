@@ -9,11 +9,10 @@ Number of Offers Source:    |1 div\{"class":"letra-chica"}\->1 strong\{}\|
 Links per Page:             |15|
 Number of Sources:          |1|
 Offer Sources & Date:       |* a\{"class":"aviso_box"}\href->1 h3\{"class":"aviso_cuando"}\|
+First Level Features:       |0|
 
 Offer Structure:
 ID_features:                |['descripción','título']|
-# First Level Features:       |0|
-#
 Feature Names:              |['descripción']|
 Feature Values:             |* div\{"id":"contenido_aviso"}\|
 Feature Names:              |1 table\{"class":"aviso-resumen-datos"}\->* th\{}\|
