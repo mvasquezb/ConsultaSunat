@@ -271,7 +271,7 @@ class Template:
         offer.month = pub_date.month
         offer.year = pub_date.year
       tot_offers.append(offer)
-      
+
     return tot_offers
 
 
@@ -377,7 +377,7 @@ class Template:
   def execute(self, main_list):
 
     print(self.job_center)
-    #UnprocessedOffer.connectToDatabase(self.job_center)
+    UnprocessedOffer.connectToDatabase(self.job_center)
 
     #Importing Custom Functions
     msg_list = MessageList()
@@ -412,8 +412,8 @@ class Template:
 
           if offers is not None:
             msg_list = MessageList()
-            #load_offers(offers, msg_list)
-            #main_list.add_msg_list(msg_list)
+            load_offers(offers, msg_list)
+            main_list.add_msg_list(msg_list)
 
         main_list.set_title("La plantilla " + self.job_center + " se ejecutó correctamente.", MessageList.INF)
         return 
