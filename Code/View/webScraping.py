@@ -75,14 +75,14 @@ def read_config_file(main_list):
     main_list.set_title("Configuration file not found", MessageList.ERR)
     return None
 
-  sender = utils.read_text_from_file(conf_file)
-  password = utils.read_text_from_file(conf_file)
-  receiver = utils.read_text_from_file(conf_file)
-  out = utils.read_text_from_file(conf_file)
+  sender, _ = utils.read_text_from_file(conf_file)
+  password, _ = utils.read_text_from_file(conf_file)
+  receiver, _ = utils.read_text_from_file(conf_file)
+  out, _ = utils.read_text_from_file(conf_file)
 
   filenames = []
   while True:
-    filename = utils.read_text_from_file(conf_file)
+    filename, _ = utils.read_text_from_file(conf_file)
     if filename is None:
       break
     else:

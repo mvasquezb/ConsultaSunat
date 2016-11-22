@@ -11,59 +11,67 @@ from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 
 def read_url_from_file(temp_file):
-  str = temp_file.readline()
-  data = str.split('|')
+    str, optional = read_text_from_file(temp_file)
 
-  err = False
-  if (len(data)!=3):
-    return None
-  else:
-    validate = URLValidator()
-    try:
-      validate(data[1])
-    except ValidationError:
-      return None
+    if str is None and not optional:
+        return None, False
+    else:
+        validate = URLValidator()
+        try:
+            validate(str)
+        except ValidationError:
+            return None, optional
 
-    return data[1]
+        return str, optional
 
 
 def read_text_from_file(temp_file):
-  str = temp_file.readline()
-  data = str.split('|')
+    str = temp_file.readline().strip()
 
-  err = False
+    if str == '':
+        return None, False
+    
+    # Soporta comentarios
+    while str[0] == '#':
+        str = temp_file.readline().strip()
 
-  if (len(data)!=3):
-    return None
-  else:
-    return data[1]
+    data = str.split('|')
+
+    # parse text
+    try:
+        value = data[1]
+    except:
+        return None, False
+    
+    optional = value.startswith('optional')
+    if optional:
+        value = value[len('optional'):]
+        value = value[1:] if value != '' else ''
+
+    value = value if value != '' else None
+
+    return value, optional
+
     
 
 def read_int_from_file(temp_file):
-  str = temp_file.readline()
-  data = str.split('|')
-
-  err = False
-  if(len(data)!=3):
-    return None
-  else:
+    str, optional = read_text_from_file(temp_file)
+    
+    if str is None:
+        return None, optional
+    
     try:
-      val = int(data[1])
+        return int(str), optional
     except:
-      return None
-    return val
-
+        return None, optional
 
 def validate_tag_format(tag):
   tag_parts = tag.split()
-  if len(tag_parts) is not 2:
+  if len(tag_parts) != 2:
     return False
   else:
     index = tag_parts[0]
-    if index.isdigit() or index == '*':
-      return True
-    else:
-      return False
+    return index.isdigit() or index == '*'
 
 
 def validate_dictionary_format(dictionary):
@@ -72,10 +80,7 @@ def validate_dictionary_format(dictionary):
   except:
     return False
 
-  if type(dictionary) is dict:
-    return True
-  else:
-    return False
+  return isinstance(dictionary, dict)
 
 def validate_attribute_format(attr):
   return attr.isalpha() or attr == ""
@@ -96,75 +101,53 @@ def validate_string_source(source):
   else:
     return False
 
-
-
-def read_source_from_string(strdata ,main_list = MessageList() ):
-
-
-  data = strdata.split('|')
-
-  if (len(data)!=3):
-    return None
-  else:
+def read_source_from_string(data, main_list = MessageList()):
+  if data is None:
+      return None
       
-    if validate_string_source(data[1]):
-      list_data = eval(data[1])
+  if validate_string_source(data):
+    try:  
+      list_data = eval(data)
       if type(list_data) is list:
         main_list.add_msg("Using list data from template: " + str(list_data),MessageList.INF)
         return list_data
-
-      try:  
-        list_data = eval(data[1])
-        if type(list_data) is list:
-          main_list.add_msg("Using list data from template: " + str(list_data),MessageList.INF)
-          return list_data
-
-      except:
-        return None
-
+    except:
+      return None
         
-    else:
-
-      levels = data[1].split('->')
-      for level in levels:
-        parts = level.split('\\')
-
-        if (len(parts)!=3):
+  else:
+    levels = data.split('->')
+    for level in levels:
+      parts = level.split('\\')
+      if (len(parts)!=3):
+        return None
+      else:
+        tag = parts[0]
+        if not validate_tag_format(tag):
           return None
-        else:
-          
-          tag = parts[0]
-          if not validate_tag_format(tag):
-            return None
 
-          dicc = parts[1]
-          if not validate_dictionary_format(dicc):
-            return None
+        dicc = parts[1]
+        if not validate_dictionary_format(dicc):
+          return None
 
-          attr = parts[2]
-          if not validate_attribute_format(attr):
-            return None
-
-      return data[1]
+        attr = parts[2]
+        if not validate_attribute_format(attr):
+          return None
+    return data
 
 
 def read_source_from_file(temp_file):
-  fileline = temp_file.readline()
-  if fileline is None:
-    return None
+  value, optional = read_text_from_file(temp_file)
+  if value is None:
+    return None, optional
   else:
-    return read_source_from_string(fileline)
+    return read_source_from_string(value), optional
   
 
 
 def is_blank(mystring):
   if mystring and mystring.strip():
-    return False
+      return False
   return True
   
 def clean_whitespaces(text):
   return ' '.join(text.split())
-
-
-
-

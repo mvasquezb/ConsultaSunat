@@ -8,13 +8,13 @@ from pyexcel_ods import get_data
 class Offer:
   session = None
 
-  def __init__(self,year = 0, month = 0, id = ""):
+  def __init__(self, year = 0, month = 0, id = ""):
     self.year = year
     self.month = month
     self.id = id
 
   @classmethod
-  def connectToDatabase(cls,source):
+  def connectToDatabase(cls, source):
     source = source.lower()
     cluster = Cluster()
     cls.session = cluster.connect(source)
@@ -26,7 +26,7 @@ from datetime import datetime
 class UnprocessedOffer(Offer):
 
   def __init__(self, year=0, month=0, id = "", auto_process = True, date_process=0, features = {}):
-    Offer.__init__(self,year,month, id)
+    Offer.__init__(self, year, month, id)
     self.auto_process = auto_process
     self.date_process = date_process
     self.features = features
@@ -57,7 +57,7 @@ class UnprocessedOffer(Offer):
 
 
   @classmethod
-  def fromExcel(cls,filename):
+  def fromExcel(cls, filename):
     try:
       wb = get_data(filename)
     except:
@@ -74,10 +74,10 @@ class UnprocessedOffer(Offer):
     num_rows = len(sheet)
       
     offers = []
-    for r in range(1,num_rows):
+    for r in range(1, num_rows):
       id = ""
       features = {}
-      for c in range(0,num_columns):
+      for c in range(0, num_columns):
         feature = columns[c]
         if feature == "Job: Posting Date":
           try:
@@ -112,8 +112,8 @@ class UnprocessedOffer(Offer):
           year int,
           month int,
           id text,
-          features map<text,text>,
-          PRIMARY KEY(auto_process,date_process, year, month, id));
+          features map<text, text>,
+          PRIMARY KEY(auto_process, date_process, year, month, id));
           """
 
     try:
@@ -127,7 +127,7 @@ class UnprocessedOffer(Offer):
 
     return True
 
-  def disable_auto_process(self,auto_process):
+  def disable_auto_process(self, auto_process):
 
     cmd_delete = """
                  DELETE FROM unprocessed_offers WHERE
@@ -142,7 +142,7 @@ class UnprocessedOffer(Offer):
                  INSERT INTO unprocessed_offers
                  (auto_process, date_process, year, month, id, features)
                  VALUES
-                 (%s,%s,%s,%s,%s,%s);
+                 (%s, %s, %s, %s, %s, %s);
                  """
 
 
@@ -152,7 +152,7 @@ class UnprocessedOffer(Offer):
 
     if not auto_process:
       UnprocessedOffer.session.execute(cmd_insert, [False, self.date_process,
-                                                    self.year, self.month, self.id,self.features])
+                                                    self.year, self.month, self.id, self.features])
     else:
       UnprocessedOffer.session.execute(cmd_insert, [False, datetime.now().date(),
                                                     self.year, self.month, self.id, self.features])
@@ -168,7 +168,7 @@ class UnprocessedOffer(Offer):
           SELECT * FROM {0} WHERE id = %s and year = %s and month = %s;
           """.format(findTable)
             
-    result = UnprocessedOffer.session.execute(cmd, [self.id,self.year,self.month])
+    result = UnprocessedOffer.session.execute(cmd, [self.id, self.year, self.month])
     try:
       pass
     except:
@@ -179,10 +179,10 @@ class UnprocessedOffer(Offer):
             INSERT INTO {0}
             (id, year, month, features)
             VALUES
-            (%s,%s,%s,%s);
+            (%s, %s, %s, %s);
             """.format(findTable)
 
-      UnprocessedOffer.session.execute(cmd, [self.id,self.year, self.month,self.features])
+      UnprocessedOffer.session.execute(cmd, [self.id, self.year, self.month, self.features])
       try:
         pass
       except:
@@ -197,7 +197,7 @@ class UnprocessedOffer(Offer):
             INSERT INTO {0}
             (auto_process, date_process, year, month, id, features)
             VALUES
-            (%s,%s,%s,%s,%s,%s);
+            (%s, %s, %s, %s, %s, %s);
             """.format(storeTable)
 
 
@@ -214,6 +214,3 @@ class UnprocessedOffer(Offer):
       return True
     else:
       return False
-
-
-

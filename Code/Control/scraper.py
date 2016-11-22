@@ -2,24 +2,24 @@ import bs4
 
 class Scraper:
 	
-	def __init__(self, main_tag,source):
+	def __init__(self, main_tag, source):
 		self.main_tag = main_tag
 		self.source = source
 		self.levels = []
 		self.results = []
 
 
-	def scrap(self):
+	def scrape(self):
 		self.levels = self.source.split('->')
 		index = 0
 
-		data = self.scrap_rec(self.main_tag,index)
+		data = self.scrape_rec(self.main_tag, index)
 		self.results.append(data)
 		return self.results
 
 
 
-	def is_final_lvl(self,actual_index):
+	def is_final_lvl(self, actual_index):
 		return actual_index==(len(self.levels)-1)
 
 
@@ -29,7 +29,7 @@ class Scraper:
 			cls_search = dict["class"]
 			tag_list = soup.find_all(class_ = cls_search)
 		else:
-			tag_list = soup.find_all(tag,dict)
+			tag_list = soup.find_all(tag, dict)
 
 		data_list = []
 		if (attr != ""):
@@ -54,14 +54,14 @@ class Scraper:
 
 		else:
 			for tag in tag_list:
-				data = self.scrap_rec(tag,index+1)
+				data = self.scrape_rec(tag, index+1)
 				data_list.append(data)
 			return data_list
 
 
-	def get_value(self,soup, idx_tag, tag, dict, attr, index):
+	def get_value(self, soup, idx_tag, tag, dict, attr, index):
 
-		tag_list = soup.find_all(tag,dict)
+		tag_list = soup.find_all(tag, dict)
 
 		if (attr != ""):
 			try:
@@ -83,12 +83,12 @@ class Scraper:
 			return data
 		else:
 			try:
-				data = self.scrap_rec(tag_list[idx_tag-1], index+1)
+				data = self.scrape_rec(tag_list[idx_tag-1], index+1)
 			except:
 				data = None
 			return data
 
-	def scrap_rec(self, soup, index):
+	def scrape_rec(self, soup, index):
 
 		TAGIDX = 0
 		DICIDX = 1
@@ -110,9 +110,9 @@ class Scraper:
 			return self.get_list(soup, tag, dict, attr, index)
 		else:
 			idx_tag = self.get_index(tag_format)
-			return self.get_value(soup,idx_tag, tag,dict, attr, index)
+			return self.get_value(soup, idx_tag, tag, dict, attr, index)
 
-	def is_iterative(self,tag_format):
+	def is_iterative(self, tag_format):
 		return tag_format[0] == '*'
 
 	def get_index(self, tag_format):
