@@ -13,7 +13,37 @@ Utilizar `pip` o `pip3` según corresponda para instalar las bibliotecas para Py
 
 ## Configuración
 
-Para ajustar el proceso de extracción a cada centro de empleo (y a sus sitios web), se hace uso de una plantilla donde se especifica dónde encontrar las funciones específicas de ese centro, dónde encontrar las convocatorias, etc.    
+### Global
+
+Para notificar al usuario, se envía un correo al finalizar la ejecución del programa, donde se incluyen los resultados del web scraping.
+El envío de este correo se puede configurar a través del archivo de `config`, que tiene los siguientes campos:
+
+* Remitente:
+
+        correo-envio@correo.com
+
+* Contraseña de la cuenta de correo del remitente
+
+        mi_contraseña
+
+* Destinatario
+
+        correo-recepcion@correo.com
+
+* Archivo de reporte detallado
+
+        salida-detalle.txt
+
+* Lista de archivos de plantilla (buscados en Templates)
+
+        centro1.txt
+        centro2.txt
+
+El formato de este archivo sigue las pautas expuestas en la siguiente sección.
+
+### Por centro de empleo
+
+Para ajustar el proceso de extracción a cada centro de empleo (y a sus sitios web), se hace uso de una plantilla donde se especifica dónde encontrar las funciones específicas de ese centro, dónde encontrar las convocatorias, etc.
 
 Cada línea que contiene datos debe contener un indicador del dato que se va a definir y el dato encerrado en barras verticales: `|`.
 Dependiendo del centro de empleo, algunos datos son opcionales. Por ejemplo, si la página no lo soporta.
@@ -27,11 +57,11 @@ Por cada área de desempeño, se busca por cada periodo de publicación, todas l
 
 ### Tipos de dato soportados
 
-* texto
-* enteros
-* urls
-* listas (con el formato de python)
-* html
+* Texto plano
+* Números enteros
+* URLs
+* Listas (con el formato de python)
+* Estructura html
 
 #### Datos de texto plano
 
@@ -104,3 +134,5 @@ Para ejecutar este programa, debe trasladarse al directorio `Code/View` y ejecut
     python webScraping.py
 
 Utilizar `python` o `python3` según corresponda para ejecutar Python 3.
+
+Se pueden ver los resultados en los archivos `View/summary.txt` y aquel definido en el archivo de configuración.
