@@ -17,7 +17,7 @@ from Control import textProcessor as tp # TP tu terror
 
 class Template:
   def __init__(self, job_center, func_filename, url_base, period, area_url, \
-               areas_source, num_offSource, links_per_page, num_sources, list_sources, first_level_sources):
+               areas_source, num_offSource, links_per_page, num_sources, list_sources, date_feature, first_level_sources):
 
     self.job_center = job_center
     self.func_filename = func_filename
@@ -29,6 +29,7 @@ class Template:
     self.links_per_page = links_per_page
     self.num_sources = num_sources
     self.list_sources = list_sources
+    self.date_feature = date_feature
     self.first_level_sources = first_level_sources
 
     self.module = None
@@ -93,6 +94,11 @@ class Template:
         if offSource is None: main_list.add_msg("Failed to read the offer source #" + str(i+1), MessageList.ERR)
         else: list_sources.append(offSource)
     
+    # Date feature
+    date_feature, optional = utils.read_text_from_file(file)
+    if date_feature is None and not optional:
+      main_list.add_msg("Failed to read feature from which to extract date", MessageList.ERR)
+
     # First level features (Front page)
     num_first_features, _ = utils.read_int_from_file(file)
     first_level_sources = []
@@ -110,7 +116,7 @@ class Template:
     if main_list.contains_errors():
       return None
     else:
-      return job_center, func_filename, url_base, period, area_url, areas_source, num_offSource, links_per_page, num_sources, list_sources, first_level_sources  
+      return job_center, func_filename, url_base, period, area_url, areas_source, num_offSource, links_per_page, num_sources, list_sources, date_feature, first_level_sources  
 
 
 
@@ -192,13 +198,13 @@ class Template:
     return num_off, False
 
 
-  def get_offers_from_page_url(self, page_url):
+  def get_offers_from_page_url(self, page_url, main_list, limit=-1):
     try:
       web = requests.get(page_url)
       soup = bs4.BeautifulSoup(web.text, "lxml")
     except Exception as e:
       eprint(e)
-      eprint("Cannot access the url: "+ page_url + "\n")
+      eprint("Cannot access the url: " + page_url + "\n")
       return None
 
 
@@ -236,6 +242,10 @@ class Template:
     
     tot_offers = []
     for index, link in enumerate(tot_links):
+      # If limit is negative, it is essentially ignored
+      if limit >= 0 and index >= limit:
+        break
+
       eprint("    Offer #" + str(index + 1))
       
       try:
@@ -255,11 +265,11 @@ class Template:
         if dates is not None:
           pass_time = tot_dates[index]
         else:
-          # If dates is None, attempt to get publication date from description
+          # If dates is None, attempt to get publication date from self.date_feature
           try:
-            pass_time = offer.features['descripción']
+            pass_time = offer.features[self.date_feature]
           except KeyError:
-            main_list.set_title("Can't find 'descripción' field to get publication date", MessageList.ERR)
+            main_list.set_title("Can't find '{feature}' field to get publication date".format(feature=self.date_feature), MessageList.ERR)
             return None
         #check!
         try:
@@ -302,7 +312,7 @@ class Template:
         return None #Return total_offers if you dont wanna abort all
 
       eprint("  Page #" + str(num_pag))
-      offers = self.get_offers_from_page_url(page_url)
+      offers = self.get_offers_from_page_url(page_url, main_list)
       eprint("")
 
       if offers is None:
@@ -315,39 +325,6 @@ class Template:
 
     main_list.set_title(str(len(total_offers)) + " offers obtained in total (Invalid included)", MessageList.INF)
     return total_offers
-          
-  #Must be sent to Functions
-  def to_publication_date(self, pass_time):
-    cur_date = datetime.datetime.now()
-  
-    if pass_time == "Ayer":
-      pub_date= cur_date - datetime.timedelta(days = 1)
-      return pub_date
-  
-    parts = pass_time.split()
-
-    type = parts[2]
-    value = int(parts[1])
-
-    if type in ['segundos', 'segundo']:
-      pub_date = cur_date - datetime.timedelta(seconds = value)
-
-    if type in ['minutos', 'minuto']:
-      pub_date = cur_date - datetime.timedelta(minutes = value)
-
-    if type in ['hora', 'horas']:
-      pub_date = cur_date - datetime.timedelta(hours = value)
-
-    if type in ["día", "días"]:
-      pub_date = cur_date - datetime.timedelta(days = value)
-
-    if type in ["semana", "semanas"]:
-      pub_date = cur_date - datetime.timedelta(weeks = value)
-
-    if type in ["mes", "meses"]:
-      pub_date = cur_date - datetime.timedelta(days = value*30)
-    
-    return pub_date
   
   def get_offers_from_area_url(self, area_url, main_list):
     try:
@@ -476,7 +453,8 @@ def custom_import(filename, main_list):
 
   try:
     mod = importlib.import_module(mod_name)
-  except:
+  except Exception as e:
+    main_list.add_msg(str(e), MessageList.ERR)
     main_list.set_title("Incorrect function module filename", MessageList.ERR)
     return None
 

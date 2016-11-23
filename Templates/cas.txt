@@ -18,6 +18,7 @@ Number of Offers Source:    |optional|
 Links per Page:             |optional|
 Number of Sources:          |1|
 Offer Source:               |* li\{"id":"demo"}\->4 div\{}\->1 a\{}\href|
+Date Feature:               |descripción|
 First Level Features:       |1|
 #
 # Es necesario especificar cada feature de primer nivel por su cuenta (Un par Feature Name, Feature Values)
@@ -31,8 +32,8 @@ Feature Values:             |* li\{"id":"demo"}\->3 div\{}\->1 p\{}\|
 Offer Structure:
 ID_features:                |['ubicación', 'descripción', 'empresa', 'título']
 Feature Names:              |["descripción"]|
-Feature Values:             |1 div\{"id":"texto3"}\|
+Feature Values:             |* div\{"id":"texto3"}\|
 Feature Names:              |["empresa"]|
-Feature Values:             |1 div\{"id":"principal"}\->1 div\{"id":"texto1s"}\->1 p\{}\->1 b\{}\|
+Feature Values:             |* div\{"id":"principal"}\->1 div\{"id":"texto1s"}\->1 p\{}\->1 b\{}\|
 Feature Names:              |["título"]|
-Feature Values:             |1 div\{"id":"textoTitulo"}\->1 p\{}\->1 b\{}\|
+Feature Values:             |* div\{"id":"textoTitulo"}\->1 p\{}\->1 b\{}\|
