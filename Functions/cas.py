@@ -142,7 +142,7 @@ def get_rango_fechas(src):
 def get_publicacion_en(src):
     regex = "publicacion en [^:]*:\s+([^\.|,|\\n|\\r]*)"
     date_str = get_match_group(src, regex)
-
+    
     if date_str is None:
         return None
     date = get_month_year(date_str)
