@@ -89,9 +89,14 @@ Links per Page:             |optional|
 # 
 Number of Sources:          |1|
 # 
-# Estructuras donde encontrar las convocatorias
+# Estructuras donde encontrar las convocatorias (deben coincidir con el Number of Sources)
 # 
 Offer Sources:              |* a\{"class":"jobs_ads"}\href->1 div\{"class":"jobs_ads_options"}\->1 span\{}\|
+#
+# Feature a partir del cual obtener la fecha de publicación si no se encuentra definida en alguna de las estructuras 
+# previamente especificadas. Dato tipo texto
+#
+Date Feature:               |optional|
 # 
 # Número de features en primer nivel (antes de entrar a la página
 # de la convocatoria)

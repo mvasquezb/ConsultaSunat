@@ -113,7 +113,7 @@ def add_template_path(filename):
 
 
 def main():
-
+  
   main_list = MessageList("Resumen:")
   msg_list = MessageList()
 
