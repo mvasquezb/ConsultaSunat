@@ -2,7 +2,7 @@ Global:
 Job Center:                 |Bumeran|
 Functions Filename:         |bumeran|
 URL Base:                   |http://bumeran.com.pe|
-Period:                     |menor-a-15-dias|
+Period:                     |menor-a-1-mes|
 Areas URL:                  |http://bumeran.com.pe/postulantes/directorio.bum|
 Areas Source:               |1 div\{"class":"span16"}\->2 div\{"class":"row"}\->* li\{}\->1 a\{}\href|
 Number of Offers Source:    |1 div\{"class":"letra-chica"}\->1 strong\{}\|

@@ -11,3 +11,6 @@ __pycache__/
 .vscode/
 Code/View/detail.txt
 Code/View/summary.txt
+*.png
+*.log
+*.xml
