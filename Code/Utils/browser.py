@@ -4,6 +4,8 @@ import contextlib
 from PIL import Image
 import pyocr
 import requests
+import bs4
+import sys
 
 @contextlib.contextmanager
 def browse(driver):
@@ -34,18 +36,19 @@ def get_text_from_image(image):
 
 def get_captcha_image(driver, frame_elem):
     img_xpath = '//img[@src="captcha?accion=image"]'
+    driver.switch_to.frame(frame_elem)
     try:
-        driver.switch_to.frame(frame_elem)
         driver.save_screenshot('image.png')
         img_elem = driver.find_element_by_xpath(img_xpath)
-    except NoSuchElementException:
-        print("Element", img_xpath, "not found")
+    except NoSuchElementException as e:
+        print(e)
         return ''
 
     loc = img_elem.location
     size = img_elem.size
     captcha = get_subimage('image.png', loc, size)
     captcha.save('captcha.png')
+    driver.switch_to_default_content()
 
     return captcha
 
@@ -55,12 +58,48 @@ def get_captcha_text(driver, frame_elem):
         return ''
     return get_text_from_image(captcha)
 
+def save_results(driver, filename):
+    result_frame = driver.find_element_by_xpath('//frame[@src="frameResultadoBusqueda.html"]')
+    driver.switch_to.frame(result_frame)
+    source = driver.page_source
+    with open(filename, 'w') as f:
+        f.write(source)
+    driver.switch_to_default_content()
+
+def parse_results_file(filename):
+    with open(filename, 'r') as f:
+        text = f.read()
+    html = bs4.BeautifulSoup(text, "lxml")
+    print(html)
+    return None
+
 def get_data_by_ruc(driver, search_frame, ruc, captcha):
-    ruc_input = search_frame.find_element_by_name('search1')
-    captcha_input = search_frame.find_element_by_name('codigo')
-    
+    driver.switch_to.frame(search_frame)
+    try:
+        ruc_input = driver.find_element_by_xpath('//input[@name="search1"]')
+        captcha_input = driver.find_element_by_xpath('//input[@name="codigo"]')
+        submit_btn = driver.find_element_by_xpath('//input[@value="Buscar"]')
+    except NoSuchElementException as e:
+        print(e)
+        return None
+
+    ruc_input.send_keys(str(ruc))
+    captcha_input.send_keys(str(captcha))
+    submit_btn.click()
+    driver.save_screenshot('image2.png')
+    driver.implicitly_wait(10)
+
+    driver.switch_to_default_content()
+
+    save_results(driver, 'frame.xml')
+
+    data = parse_results_file('frame.xml')
+
+    return data
 
 def main():
+    if len(sys.argv) != 2:
+        print("Usage")
     url_sunat = 'http://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias'
     search_frame_xpath = '//frame[@src="frameCriterioBusqueda.jsp"]'
 
@@ -68,22 +107,24 @@ def main():
         driver.get(url_sunat)
         try:
             search_frame = driver.find_element_by_xpath(search_frame_xpath)
-        except Exception as e:
+        except NoSuchElementException as e:
             print(e)
-            exit(1)
+            return
+
         captcha = get_captcha_text(driver, search_frame)
         print("Text in captcha:", captcha)
         if not captcha:
             print("Error reading captcha")
-            exit(1)
-
-        driver.switch_to_default_content()
+            return
         
         ruc = '20331066703'
+        data = None
         try:
             data = get_data_by_ruc(driver, search_frame, ruc, captcha)
-        except Exception as e:
+        except NoSuchElementException as e:
             print(e)
+
+        print(data)
 
 if __name__ == '__main__':
     main()
