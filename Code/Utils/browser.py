@@ -6,6 +6,7 @@ import pyocr
 import requests
 import bs4
 import sys
+import re
 
 @contextlib.contextmanager
 def browse(driver):
@@ -66,12 +67,27 @@ def save_results(driver, filename):
         f.write(source)
     driver.switch_to_default_content()
 
+def get_estado_contribuyente(bsObj):
+    lst = bsObj.find_all('td', {'class':'bgn'}, text=re.compile('estado\s+del?\s+contribuyente:\s*', re.IGNORECASE))
+    estado_tag = lst[0].find_next('td')
+    return estado_tag.get_text().strip()
+
+def get_condicion_contribuyente(bsObj):
+    lst = bsObj.find_all('td', {'class':'bgn'}, text=re.compile('condición\s+del\s+contribuyente:\s*', re.IGNORECASE))
+    print(lst)
+    cond_tag = lst[0].find_next('td')
+    return cond_tag.get_text().strip()
+
 def parse_results_file(filename):
     with open(filename, 'r') as f:
         text = f.read()
     html = bs4.BeautifulSoup(text, "lxml")
-    print(html)
-    return None
+    
+    data = {}
+    data['Estado'] = get_estado_contribuyente(html)
+    data['Condicion'] = get_condicion_contribuyente(html)
+
+    return data
 
 def get_data_by_ruc(driver, search_frame, ruc, captcha):
     driver.switch_to.frame(search_frame)
@@ -98,8 +114,6 @@ def get_data_by_ruc(driver, search_frame, ruc, captcha):
     return data
 
 def main():
-    if len(sys.argv) != 2:
-        print("Usage")
     url_sunat = 'http://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias'
     search_frame_xpath = '//frame[@src="frameCriterioBusqueda.jsp"]'
 
