@@ -41,9 +41,9 @@ def browse(driver):
     driver.quit()
 
 def main(argv=None):
+    #argv = ['20331066703', '20141528069', '20159253539', '20217932565']
     args = arg_parser.parse_args(argv)
     # User defined
-    #ruc_list = [20331066703, 20141528069, 20159253539, 20217932565]
     ruc_list = args.ruc
     max_retries = args.retries
     outfile = args.outfile
