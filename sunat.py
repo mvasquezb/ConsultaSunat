@@ -12,9 +12,35 @@ import logging
 import logging.config
 from datetime import datetime
 import json
+import tempfile
+import argparse
 
 logging.config.fileConfig('logging.conf')
 logger = logging.getLogger('sunat')
+
+arg_parser = argparse.ArgumentParser(
+    description="Get RUC information through SUNAT"
+)
+# Only one for now
+arg_parser.add_argument(
+    'ruc', 
+    #nargs='+', 
+    type=int, 
+    #help='Lista de RUCs con los cuales realizar las consultas',
+    help='RUC to query SUNAT with',
+)
+arg_parser.add_argument(
+    '--retries',
+    type=int,
+    default=5,
+    help='Limit number of retries'
+)
+arg_parser.add_argument(
+    '-o',
+    '--outfile',
+    default='sunat-results.txt',
+    help='Where to save the results'
+)
 
 """
 Tipo CIIU que define una actividad economica de un contribyente
@@ -323,7 +349,6 @@ def get_data_by_ruc(driver, search_frame, ruc, captcha):
     ruc_input.send_keys(str(ruc))
     captcha_input.send_keys(str(captcha))
     submit_btn.click()
-    driver.save_screenshot('image2.png')
     driver.implicitly_wait(10)
 
     driver.switch_to_default_content()
@@ -338,15 +363,17 @@ def get_data_by_ruc(driver, search_frame, ruc, captcha):
 
 def main():
     search_frame_xpath = '//frame[@src="frameCriterioBusqueda.jsp"]'
-
+    
+    args = arg_parser.parse_args()
     # User defined
     #ruc = '20331066703'
     #ruc = '20141528069'
-    ruc = '20159253539'
+    #ruc = '20159253539'
     #ruc = '20217932565'
-    max_retries = 5
-    filename = 'resultado.txt'
-
+    ruc = args.ruc
+    max_retries = args.retries
+    filename = args.outfile
+    
     retry = True
     num_retries = 0
     with browse(webdriver.PhantomJS()) as driver:
