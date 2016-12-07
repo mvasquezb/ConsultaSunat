@@ -7,3 +7,5 @@ __pycache__/
 *.log
 *.png
 *.xml
+*.txt
+!pip-requirements.txt
