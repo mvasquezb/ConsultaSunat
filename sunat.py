@@ -41,8 +41,7 @@ arg_parser.add_argument(
     default='sunat-results.txt',
     help='Where to save the results'
 )
-arg_parser.print_help()
-exit()
+
 """
 Tipo CIIU que define una actividad economica de un contribyente
 """
@@ -365,13 +364,15 @@ def get_data_by_ruc(driver, search_frame, ruc, captcha):
 def main():
     search_frame_xpath = '//frame[@src="frameCriterioBusqueda.jsp"]'
     
+    args = arg_parser.parse_args()
     # User defined
     #ruc = '20331066703'
     #ruc = '20141528069'
-    ruc = '20159253539'
+    #ruc = '20159253539'
     #ruc = '20217932565'
-    max_retries = 5
-    filename = 'resultado.txt'
+    ruc = args.ruc
+    max_retries = args.retries
+    filename = args.outfile
     
     retry = True
     num_retries = 0
