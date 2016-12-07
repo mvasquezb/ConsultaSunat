@@ -2,10 +2,9 @@ from selenium import webdriver
 import contextlib
 import logging
 import logging.config
-import datetime
-import tempfile
 import argparse
 import json
+import sys
 from sunat import Sunat
 from utils import CustomJSONEncoder
 
@@ -41,8 +40,8 @@ def browse(driver):
     yield driver
     driver.quit()
 
-def main():
-    args = arg_parser.parse_args()
+def main(argv=None):
+    args = arg_parser.parse_args(argv)
     # User defined
     #ruc_list = [20331066703, 20141528069, 20159253539, 20217932565]
     ruc_list = args.ruc
