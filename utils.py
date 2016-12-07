@@ -33,7 +33,7 @@ class CIIU(JSONEnabled):
     Tipo CIIU que define una actividad economica de un contribyente
     """
     def __init__(self, codigo, descripcion, revision=3):
-        self.codigo= codigo
+        self.codigo = codigo
         self.descripcion = descripcion
         self.revision = revision
 
@@ -88,3 +88,21 @@ class DeudaCoactiva(JSONEnabled):
             "entidad_asociada": self.entidad_asociada
         }
     
+class OmisionTributaria(JSONEnabled):
+    """
+    Representa la omision tributaria de un contribuyente
+    """
+    def __init__(self, periodo_tributario, tributo):
+        self.periodo_tributario = periodo_tributario
+        self.tributo = tributo
+
+
+    def json_class(self):
+        return CustomJSONEncoder
+
+    def _json(self):
+        datetime_encode = DateJSONEncoder()
+        return {
+            "periodo_tributario": datetime_encode.default(self.periodo_tributario),
+            "tributo": self.tributo
+        }

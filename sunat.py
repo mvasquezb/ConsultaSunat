@@ -7,10 +7,11 @@ import bs4
 import sys
 import re
 import collections
-import datetime
+from datetime import datetime
 from utils import (
     CIIU,
-    DeudaCoactiva
+    DeudaCoactiva,
+    OmisionTributaria
 )
 
 class Sunat:
@@ -156,10 +157,8 @@ class Sunat:
 
         params['accion'] = accion
         try:
-            print(params)
             res = requests.get(self.url_consulta, params, timeout=5)
         except requests.exceptions.Timeout as e:
-            print(e)
             raise TimeoutException("Couldn't connect to {action} within {time} seconds".format(action=accion, time=5))
         soup = bs4.BeautifulSoup(res.text, 'lxml')
 
@@ -195,8 +194,9 @@ class Sunat:
             raise ValueError("Incorrect number of attributes for '{name}' record".format(name='Deuda Coactiva'))
 
         monto = float(values[0])
-        periodo_tributario = datetime.date(*[ int(val) for val in values[1].split('-') ], 1)
-        fecha = datetime.datetime.strptime(values[2], "%d/%m/%Y")
+        date = [ int(val) for val in values[1].split('-') ]
+        periodo_tributario = datetime(date[0], date[1], 1)
+        fecha = datetime.strptime(values[2], "%d/%m/%Y")
         entidad_asociada = values[3]
 
         return DeudaCoactiva(monto, periodo_tributario, fecha, entidad_asociada)
@@ -208,10 +208,11 @@ class Sunat:
             raise ValueError("Incorrect number of attributes for '{name}' record".format(name='Omision Tributaria'))
 
         periodo_tributario = values[0]
-        periodo_tributario = datetime.date(*[ int(val) for val in periodo_tributario.split('-') ])
+        date = [ int(val) for val in periodo_tributario.split('-') ]
+        periodo_tributario = datetime(date[0], date[1], 1)
         tributo = values[1]
 
-        return (periodo_tributario, tributo)
+        return OmisionTributaria(periodo_tributario, tributo)
 
     def get_acta_prob_from_row(self, row):
         values = [ cell.get_text().strip() for cell in row.find_all('td') ]
@@ -220,7 +221,7 @@ class Sunat:
             raise ValueError("Incorrect number of attributes for '{name}' record".format(name='Acta Probatoria'))
 
         num_acta = int(values[0])
-        fecha = datetime.datetime.strptime(values[1], '%d/%m/%Y')
+        fecha = datetime.strptime(values[1], '%d/%m/%Y')
         lugar = values[2]
         infraccion = values[3]
         desc_infraccion = values[4]
@@ -290,10 +291,7 @@ class Sunat:
             raise ValueError("Error reading captcha: {}".format(captcha))
         return captcha
 
-    def get_basic_information(self, ruc):
-        self.web_driver.get(self.url_consulta)
-        captcha = self.solve_captcha(self.web_driver)
-        search_frame = self.get_search_frame(self.web_driver)
+    def submit_search_form(self, search_frame, ruc, captcha):
         self.web_driver.switch_to.frame(search_frame)
         try:
             ruc_input = self.web_driver.find_element_by_xpath('//input[@name="search1"]')
@@ -305,9 +303,13 @@ class Sunat:
         ruc_input.send_keys(str(ruc))
         captcha_input.send_keys(str(captcha))
         submit_btn.click()
-        self.web_driver.implicitly_wait(10)
         self.web_driver.switch_to_default_content()
 
+    def get_basic_information(self, ruc):
+        self.web_driver.get(self.url_consulta)
+        captcha = self.solve_captcha(self.web_driver)
+        search_frame = self.get_search_frame(self.web_driver)
+        self.submit_search_form(search_frame, ruc, captcha)
         self.save_results('frame.xml')
 
         data = self.parse_results_file('frame.xml')

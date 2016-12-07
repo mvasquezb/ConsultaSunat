@@ -49,11 +49,12 @@ def main():
     max_retries = args.retries
     outfile = args.outfile
     
+    all_data = []
     with browse(webdriver.PhantomJS()) as driver:
         driver.set_page_load_timeout(5)
         sunat = Sunat(driver, logger)
-        all_data = []
         for ruc in ruc_list:
+            logger.info("Started request for RUC: %d", ruc)
             retry = True
             num_retries = 0
             while retry and num_retries < max_retries:
@@ -64,7 +65,10 @@ def main():
                     retry = False
 
             if num_retries >= max_retries:
-                logger.info("Max number of retries reached. Exiting...")
+                logger.info("Max number of retries reached.")
+                logger.info("Request for RUC: %d failed", ruc)
+            else:
+                logger.info("Request for RUC %d completed successfully", ruc)
 
         with open(outfile, 'w') as f:
             json.dump(all_data, f, ensure_ascii=False, indent=2, cls=CustomJSONEncoder)
@@ -73,6 +77,8 @@ def main():
             logger.info("Couldn't complete request for some or all RUC values. Results saved to: %s", outfile)
         else:
             logger.info("Request finished successfully. Results saved to: %s", outfile)
+
+    return all_data
 
 if __name__ == '__main__':
     main()
