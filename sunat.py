@@ -8,6 +8,7 @@ import sys
 import re
 import collections
 from datetime import datetime
+import tempfile
 from utils import (
     CIIU,
     DeudaCoactiva,
@@ -21,6 +22,7 @@ class Sunat:
         self.url_consulta = 'http://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias'
 
     def get_subimage(self, source, loc, size):
+        source.seek(0)
         img = Image.open(source)
 
         left = loc['x']
@@ -46,13 +48,14 @@ class Sunat:
         img_xpath = '//img[@src="captcha?accion=image"]'
         self.web_driver.switch_to.frame(frame_elem)
 
-        self.web_driver.save_screenshot('image.png')
+        img_file = tempfile.NamedTemporaryFile()
+        self.web_driver.save_screenshot(img_file.name)
         img_elem = self.web_driver.find_element_by_xpath(img_xpath)
-
+        
         loc = img_elem.location
         size = img_elem.size
-        captcha = self.get_subimage('image.png', loc, size)
-        captcha.save('captcha.png')
+        captcha = self.get_subimage(img_file, loc, size)
+        #captcha.save('captcha.png')
         self.web_driver.switch_to_default_content()
 
         return captcha
@@ -61,12 +64,12 @@ class Sunat:
         captcha = self.get_captcha_image(frame_elem)
         return self.get_text_from_image(captcha)
 
-    def save_results(self, filename):
+    def save_results(self, fileobj):
         result_frame = self.web_driver.find_element_by_xpath('//frame[@src="frameResultadoBusqueda.html"]')
         self.web_driver.switch_to.frame(result_frame)
         source = self.web_driver.page_source
-        with open(filename, 'w') as f:
-            f.write(source)
+        fileobj.write(source)
+        fileobj.seek(0)
         self.web_driver.switch_to_default_content()
 
     def get_ruc_nombre_contribuyente(self, soup):
@@ -256,9 +259,8 @@ class Sunat:
         data['omision_tributaria'] = self.get_omision_tributaria_contribuyente(params)
         return data
 
-    def parse_results_file(self, filename):
-        with open(filename, 'r') as f:
-            text = f.read()
+    def parse_results_file(self, fileobj):
+        text = fileobj.read()
         html = bs4.BeautifulSoup(text, "lxml")
 
         error = html.find('p', {'class': 'error'})
@@ -310,9 +312,12 @@ class Sunat:
         captcha = self.solve_captcha(self.web_driver)
         search_frame = self.get_search_frame(self.web_driver)
         self.submit_search_form(search_frame, ruc, captcha)
-        self.save_results('frame.xml')
 
-        data = self.parse_results_file('frame.xml')
+        tmp_file = tempfile.TemporaryFile(mode='w+', encoding="utf-8")
+        print(type(tmp_file))
+        self.save_results(tmp_file)
+        data = self.parse_results_file(tmp_file)
+        tmp_file.close()
         return data
 
     def get_all_information(self, ruc):
