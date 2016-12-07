@@ -242,19 +242,18 @@ class Sunat:
         actas = get_extended_info_attr(params, 'getActPro', get_acta_prob_from_row)
         return actas
     """
-    def add_extended_info(self, data):
+    def get_extended_information(self, ruc, nombre):
         """
         Get data hidden through buttons
         """
-        if data is None:
-            return None
-
         params = {
-            'nroRuc': data['ruc'],
-            'desRuc': data['nombre'],
+            'nroRuc': ruc,
+            'desRuc': nombre,
         }
+        data = {}
         data['deuda_coactiva'] = self.get_deuda_coactiva_contribuyente(params)
         data['omision_tributaria'] = self.get_omision_tributaria_contribuyente(params)
+        return data
 
     def parse_results_file(self, filename):
         with open(filename, 'r') as f:
@@ -275,7 +274,26 @@ class Sunat:
 
         return data
 
-    def get_data_by_ruc(self, search_frame, ruc, captcha):
+    def get_search_frame(self, driver):
+        search_frame_xpath = '//frame[@src="frameCriterioBusqueda.jsp"]'
+        try:
+            search_frame = driver.find_element_by_xpath(search_frame_xpath)
+            return search_frame
+        except NoSuchElementException as e:
+            raise NoSuchElementException(eval(e.msg)['errorMessage'])
+
+    def solve_captcha(self, driver):
+        search_frame = self.get_search_frame(driver)
+        captcha = self.get_captcha_text(search_frame)
+        self.logger.info("Text in captcha: %s", captcha)
+        if not captcha or len(captcha) != 4:
+            raise ValueError("Error reading captcha: {}".format(captcha))
+        return captcha
+
+    def get_basic_information(self, ruc):
+        self.web_driver.get(self.url_consulta)
+        captcha = self.solve_captcha(self.web_driver)
+        search_frame = self.get_search_frame(self.web_driver)
         self.web_driver.switch_to.frame(search_frame)
         try:
             ruc_input = self.web_driver.find_element_by_xpath('//input[@name="search1"]')
@@ -288,43 +306,28 @@ class Sunat:
         captcha_input.send_keys(str(captcha))
         submit_btn.click()
         self.web_driver.implicitly_wait(10)
-
         self.web_driver.switch_to_default_content()
 
         self.save_results('frame.xml')
 
         data = self.parse_results_file('frame.xml')
-
-        self.add_extended_info(data)
-
         return data
 
     def get_all_information(self, ruc):
-        search_frame_xpath = '//frame[@src="frameCriterioBusqueda.jsp"]'
         try:
-            self.web_driver.get(self.url_consulta)
+            basic_data = self.get_basic_information(ruc)
+            ext_data = self.get_extended_information(ruc, basic_data['nombre'])
+            data = {}
+            data.update(basic_data)
+            data.update(ext_data)
+            return data
         except TimeoutException:
             self.logger.error("Page load timed out")
             self.logger.info('Waiting before retry...')
             self.web_driver.implicitly_wait(5)
             return None
-
-        try:
-            search_frame = self.web_driver.find_element_by_xpath(search_frame_xpath)
-        except NoSuchElementException as e:
-            self.logger.error("Incorrect xpath for search frame: %s", search_frame_xpath)
-            return None
-
-        captcha = self.get_captcha_text(search_frame)
-        self.logger.info("Text in captcha: %s", captcha)
-        if not captcha or len(captcha) != 4:
-            self.logger.error("Error reading captcha: %s", captcha)
-            return None
-                
-        try:
-            data = self.get_data_by_ruc(search_frame, ruc, captcha)
-            return data
         except Exception as e:
             self.logger.error(e)
             return None
-
+        finally:
+            self.web_driver.switch_to_default_content()

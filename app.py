@@ -63,7 +63,6 @@ def main():
                     all_data.append(data)
                     retry = False
 
-            
             if num_retries >= max_retries:
                 logger.info("Max number of retries reached. Exiting...")
 
@@ -71,7 +70,7 @@ def main():
             json.dump(all_data, f, ensure_ascii=False, indent=2, cls=CustomJSONEncoder)
 
         if len(all_data) < len(ruc_list):
-            logger.info("Couldn't complete request for some RUC values. Results saved to: %s", outfile)
+            logger.info("Couldn't complete request for some or all RUC values. Results saved to: %s", outfile)
         else:
             logger.info("Request finished successfully. Results saved to: %s", outfile)
 
