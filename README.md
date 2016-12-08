@@ -7,7 +7,7 @@ Este es un proyecto en Python 3. Es necesario instalar tesseract y su data de
 entrenamiento (solo inglés es necesario), así como PhantomJS (Deben estar en su PATH).    
 Para instalarlos en Ubuntu y derivados:
 
-    sudo apt-get install tesseract-ocr tesseract-data-eng phantomjs
+    sudo apt-get install tesseract-ocr tesseract-ocr-eng phantomjs
 
 Además se hace uso de varias bibliotecas de Python, que se pueden instalar con `pip`:
 
