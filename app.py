@@ -14,13 +14,16 @@ logger = logging.getLogger('sunat')
 arg_parser = argparse.ArgumentParser(
     description="Get RUC information through SUNAT"
 )
-# Only one for now
-arg_parser.add_argument(
-    'ruc', 
+group = arg_parser.add_mutually_exclusive_group(required=True)
+group.add_argument(
+    '--ruc', 
     nargs='+', 
     type=int, 
-    #help='Lista de RUCs con los cuales realizar las consultas',
-    help='RUC to query SUNAT with',
+    help='RUC list to query SUNAT with',
+)
+group.add_argument(
+    '--name',
+    help='Name to query SUNAT with'
 )
 arg_parser.add_argument(
     '--retries',
@@ -43,7 +46,9 @@ def browse(driver):
 def main(argv=None):
     #argv = ['20331066703', '20141528069', '20159253539', '20217932565']
     args = arg_parser.parse_args(argv)
+
     # User defined
+    name = args.name
     ruc_list = args.ruc
     max_retries = args.retries
     outfile = args.outfile
@@ -52,6 +57,12 @@ def main(argv=None):
     with browse(webdriver.PhantomJS()) as driver:
         driver.set_page_load_timeout(5)
         sunat = Sunat(driver, logger)
+        if name is not None:
+            ruc_list = sunat.get_ruc_list_by_name(name)
+            if ruc_list is None:
+                logger.info("No RUCs matching that name were found")
+                ruc_list = []
+
         for ruc in ruc_list:
             logger.info("Started request for RUC: %d", ruc)
             retry = True
