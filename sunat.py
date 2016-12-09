@@ -9,7 +9,7 @@ import re
 import collections
 from datetime import datetime
 import tempfile
-from utils import (
+from ConsultaSunat.utils import (
     CIIU,
     DeudaCoactiva,
     OmisionTributaria
@@ -293,16 +293,32 @@ class Sunat:
             raise ValueError("Error reading captcha: {}".format(captcha))
         return captcha
 
-    def submit_search_form(self, search_frame, ruc, captcha):
+    def submit_search_form(self, type, value, captcha):
+        search_frame = self.get_search_frame(self.web_driver)
         self.web_driver.switch_to.frame(search_frame)
+        value_input = None
+        type_radio = None
+        if type is not 'ruc' and type is not 'name' and type is not 'dni':
+            raise ValueError("Query type must be one of: ruc, name or dni")
+
         try:
-            ruc_input = self.web_driver.find_element_by_xpath('//input[@name="search1"]')
+            radio_list = self.web_driver.find_elements_by_xpath('//input[@type="radio" and @name="tQuery"]')
+            if type == 'ruc':
+                value_input = self.web_driver.find_element_by_xpath('//input[@name="search1"]')
+                type_radio = radio_list[0]
+            elif type == 'dni':
+                value_input = self.web_driver.find_element_by_xpath('//input[@name="search2"]')
+                type_radio = radio_list[1]
+            elif type == 'name':
+                value_input = self.web_driver.find_element_by_xpath('//input[@name="search3"]')
+                type_radio = radio_list[2]
             captcha_input = self.web_driver.find_element_by_xpath('//input[@name="codigo"]')
             submit_btn = self.web_driver.find_element_by_xpath('//input[@value="Buscar"]')
         except NoSuchElementException as e:
             raise NoSuchElementException(eval(e.msg)['errorMessage'])
 
-        ruc_input.send_keys(str(ruc))
+        type_radio.click()
+        value_input.send_keys(str(value))
         captcha_input.send_keys(str(captcha))
         submit_btn.click()
         self.web_driver.switch_to_default_content()
@@ -310,11 +326,9 @@ class Sunat:
     def get_basic_information(self, ruc):
         self.web_driver.get(self.url_consulta)
         captcha = self.solve_captcha(self.web_driver)
-        search_frame = self.get_search_frame(self.web_driver)
-        self.submit_search_form(search_frame, ruc, captcha)
+        self.submit_search_form('ruc', ruc, captcha)
 
         tmp_file = tempfile.TemporaryFile(mode='w+', encoding="utf-8")
-        print(type(tmp_file))
         self.save_results(tmp_file)
         data = self.parse_results_file(tmp_file)
         tmp_file.close()
@@ -338,3 +352,25 @@ class Sunat:
             return None
         finally:
             self.web_driver.switch_to_default_content()
+
+    #def get_ruc_list_in_frame(self, frame):
+
+
+    def get_ruc_list_by_name(self, name):
+        try:
+            self.web_driver.get(self.url_consulta)
+            captcha = self.solve_captcha(self.web_driver)
+            self.submit_search_form('name', name, captcha)
+            #return self.get_ruc_list_in_frame(result_frame)
+            return []
+        except TimeoutException:
+            self.logger.error("Page load timed out")
+            self.logger.info('Waiting before retry...')
+            self.web_driver.implicitly_wait(5)
+            return None
+        except Exception as e:
+            self.logger.error(e)
+            return None
+        finally:
+            self.web_driver.switch_to_default_content()
+        

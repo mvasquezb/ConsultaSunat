@@ -5,35 +5,44 @@ import logging.config
 import argparse
 import json
 import sys
-from sunat import Sunat
-from utils import CustomJSONEncoder
+from ConsultaSunat.sunat import Sunat
+from ConsultaSunat.utils import CustomJSONEncoder
+import os 
 
-logging.config.fileConfig('logging.conf')
+dir_path = os.path.dirname(os.path.realpath(__file__)) + '/'
+logging.config.fileConfig(dir_path + 'logging.conf')
 logger = logging.getLogger('sunat')
 
-arg_parser = argparse.ArgumentParser(
-    description="Get RUC information through SUNAT"
-)
-# Only one for now
-arg_parser.add_argument(
-    'ruc', 
-    nargs='+', 
-    type=int, 
-    #help='Lista de RUCs con los cuales realizar las consultas',
-    help='RUC to query SUNAT with',
-)
-arg_parser.add_argument(
-    '--retries',
-    type=int,
-    default=5,
-    help='Limit number of retries'
-)
-arg_parser.add_argument(
-    '-o',
-    '--outfile',
-    default='sunat-results.txt',
-    help='Where to save the results'
-)
+def argparse_setup():
+    arg_parser = argparse.ArgumentParser(
+        description="Get RUC information through SUNAT"
+    )
+    group = arg_parser.add_mutually_exclusive_group(required=True)
+    group.add_argument(
+        '--ruc', 
+        nargs='+', 
+        type=int, 
+        help='RUC list to query SUNAT with',
+    )
+    group.add_argument(
+        '--test',
+        action='store_true',
+        help='Test run. Overrides previously declared arguments'
+    )
+    arg_parser.add_argument(
+        '--retries',
+        type=int,
+        default=-1,
+        help='Limit number of retries. Default: indefinite'
+    )
+    arg_parser.add_argument(
+        '-o',
+        '--outfile',
+        default='sunat-results.txt',
+        help='Where to save the results'
+    )
+
+    return arg_parser
 
 @contextlib.contextmanager
 def browse(driver):
@@ -41,29 +50,36 @@ def browse(driver):
     driver.quit()
 
 def main(argv=None):
-    #argv = ['20331066703', '20141528069', '20159253539', '20217932565']
+    arg_parser = argparse_setup()
     args = arg_parser.parse_args(argv)
+
     # User defined
     ruc_list = args.ruc
     max_retries = args.retries
     outfile = args.outfile
     
+    if args.test:
+        ruc_list = [20331066703, 20141528069, 20159253539, 20217932565]
+        outfile = 'sunat-search-test.txt'
+
     all_data = []
     with browse(webdriver.PhantomJS()) as driver:
         driver.set_page_load_timeout(5)
         sunat = Sunat(driver, logger)
+
         for ruc in ruc_list:
             logger.info("Started request for RUC: %d", ruc)
             retry = True
             num_retries = 0
-            while retry and num_retries < max_retries:
+            # If max_retries is not specified, there will be indefinite attempts
+            while retry and (max_retries == -1 or num_retries < max_retries):
                 num_retries += 1
                 data = sunat.get_all_information(ruc)
                 if data is not None:
                     all_data.append(data)
                     retry = False
 
-            if num_retries >= max_retries:
+            if num_retries >= max_retries and max_retries != -1:
                 logger.info("Max number of retries reached.")
                 logger.info("Request for RUC: %d failed", ruc)
             else:
