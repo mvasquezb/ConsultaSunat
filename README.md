@@ -23,8 +23,9 @@ Más detalladamente:
 
 |Parámetro|Descripción|
 |---------|-----------|
-|ruc|Lista de rucs a consultar (1 o más)|
-|--retries retries|Límite de intentos de consulta por RUC (Default: `5`)|
+|--ruc RUC ...|Lista de rucs a consultar (1 o más)<br>No compatible con el parámetro test|
+|--test|Efectúa una ejecución de prueba.<br>No compatible con el parámetro ruc|
+|--retries RETRIES|Límite de intentos de consulta por RUC (Default: número indefinido de intentos)|
 |-o FILE<br>    --outfile FILE|Nombre del archivo donde guardar los resultados (Default: `sunat-results.txt`)|
 
 Se puede hacer uso de esta aplicación de manera independiente:
@@ -33,8 +34,8 @@ Se puede hacer uso de esta aplicación de manera independiente:
 
 Asimismo, se puede importar como módulo dentro de otro script de Python:
 
-    import app
-    data = app.main(['ruc1', 'ruc2', 'ruc3', '--retries', '5', '--outfile', 'resultados.txt'])
+    import ConsultaSunat.app as consulta
+    data = consulta.main(['ruc1', 'ruc2', 'ruc3', '--retries', '5', '--outfile', 'resultados.txt'])
     print(data)
 
 
