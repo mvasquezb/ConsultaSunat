@@ -23,7 +23,8 @@ Más detalladamente:
 
 |Parámetro|Descripción|
 |---------|-----------|
-|ruc|Lista de rucs a consultar (1 o más)|
+|--ruc|Lista de rucs a consultar (1 o más)<br>No compatible con el parámetro Name|
+|--name|Nombre con el cual hacer la consulta (solo 1)<br>No compatible con el parámetro RUC|
 |--retries retries|Límite de intentos de consulta por RUC (Default: `5`)|
 |-o FILE<br>    --outfile FILE|Nombre del archivo donde guardar los resultados (Default: `sunat-results.txt`)|
 
