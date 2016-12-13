@@ -30,12 +30,12 @@ Más detalladamente:
 
 Se puede hacer uso de esta aplicación de manera independiente:
 
-    python app.py ruc1 ruc2 --retries 3 -o resultados.txt
+    python consulta.py ruc1 ruc2 --retries 3 -o resultados.txt
 
 Asimismo, se puede importar como módulo dentro de otro script de Python:
 
-    import ConsultaSunat.app as consulta
-    data = consulta.main(['ruc1', 'ruc2', 'ruc3', '--retries', '5', '--outfile', 'resultados.txt'])
+    from ConsultaSunat import consulta
+    data = consulta.main(['--ruc', 'ruc1', 'ruc2', 'ruc3', '--retries', '5', '--outfile', 'resultados.txt'])
     print(data)
 
 

@@ -9,7 +9,7 @@ import re
 import collections
 from datetime import datetime
 import tempfile
-from ConsultaSunat.utils import (
+from .utils import (
     CIIU,
     DeudaCoactiva,
     OmisionTributaria
@@ -22,7 +22,6 @@ class Sunat:
         self.url_consulta = 'http://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias'
 
     def get_subimage(self, source, loc, size):
-        source.seek(0)
         img = Image.open(source)
 
         left = loc['x']
@@ -37,7 +36,6 @@ class Sunat:
     def get_text_from_image(self, image):
         tools = pyocr.get_available_tools()
         if len(tools) == 0:
-            self.logger.error("No OCR tool found")
             raise ValueError("No OCR tool found")
 
         tool = tools[0]
@@ -55,7 +53,6 @@ class Sunat:
         loc = img_elem.location
         size = img_elem.size
         captcha = self.get_subimage(img_file, loc, size)
-        #captcha.save('captcha.png')
         self.web_driver.switch_to_default_content()
 
         return captcha
@@ -109,7 +106,7 @@ class Sunat:
         return cond_tag.get_text().strip()
 
     def get_ciiu_in_comments(self, soup):
-        comments = comments=soup.find_all(string=lambda text: isinstance(text, bs4.Comment))
+        comments = soup.find_all(string=lambda text: isinstance(text, bs4.Comment))
         
         ciiu = []
         indexSelect = -1
@@ -240,15 +237,10 @@ class Sunat:
     def get_omision_tributaria_contribuyente(self, params):
         ot = self.get_extended_info_attr(params, 'getInfoOT', self.get_ot_from_row)
         return ot
-    """
-    # NOT WORKING: Requires too much customization for now
-    def get_acta_probatoria_contribuyente(params):
-        actas = get_extended_info_attr(params, 'getActPro', get_acta_prob_from_row)
-        return actas
-    """
+    
     def get_extended_information(self, ruc, nombre):
         """
-        Get data hidden through buttons
+        Get extended data
         """
         params = {
             'nroRuc': ruc,
@@ -341,7 +333,6 @@ class Sunat:
             data = {}
             data.update(basic_data)
             data.update(ext_data)
-            return data
         except TimeoutException:
             self.logger.error("Page load timed out")
             self.logger.info('Waiting before retry...')
@@ -352,17 +343,17 @@ class Sunat:
             return None
         finally:
             self.web_driver.switch_to_default_content()
+        return data
 
-    #def get_ruc_list_in_frame(self, frame):
-
+    def get_ruc_list_in_frame(self, frame):
+        return []
 
     def get_ruc_list_by_name(self, name):
         try:
             self.web_driver.get(self.url_consulta)
             captcha = self.solve_captcha(self.web_driver)
             self.submit_search_form('name', name, captcha)
-            #return self.get_ruc_list_in_frame(result_frame)
-            return []
+            ruc_list = self.get_ruc_list_in_frame(result_frame)
         except TimeoutException:
             self.logger.error("Page load timed out")
             self.logger.info('Waiting before retry...')
@@ -373,4 +364,5 @@ class Sunat:
             return None
         finally:
             self.web_driver.switch_to_default_content()
+        return ruc_list
         

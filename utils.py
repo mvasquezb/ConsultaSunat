@@ -10,7 +10,7 @@ class JSONEnabled(metaclass=ABCMeta):
 
     @property
     def json_class(self):
-        return json.CustomJSONEncoder
+        return json.JSONEncoder
 
 
 class DateJSONEncoder(json.JSONEncoder):
@@ -66,6 +66,9 @@ class CIIU(JSONEnabled):
     def __ne__(self, other):
         return not (self == other)
 
+    def __str__(self):
+        return str(self._json())
+
 class DeudaCoactiva(JSONEnabled):
     """
     Representa la deuda coactiva de un contribuyente
@@ -87,6 +90,9 @@ class DeudaCoactiva(JSONEnabled):
             "fecha_inicio": datetime_encode.default(self.fecha_inicio),
             "entidad_asociada": self.entidad_asociada
         }
+
+    def __str__(self):
+        return str(self._json())
     
 class OmisionTributaria(JSONEnabled):
     """
@@ -106,3 +112,6 @@ class OmisionTributaria(JSONEnabled):
             "periodo_tributario": datetime_encode.default(self.periodo_tributario),
             "tributo": self.tributo
         }
+
+    def __str__(self):
+        return str(self._json())

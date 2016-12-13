@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+import sys
+sys.path.append("..")
 from selenium import webdriver
 import contextlib
 import logging
@@ -33,7 +36,7 @@ def argparse_setup():
         '--retries',
         type=int,
         default=-1,
-        help='Limit number of retries. Default: indefinite'
+        help='Limit number of retries. Default: try until success'
     )
     arg_parser.add_argument(
         '-o',
@@ -71,7 +74,7 @@ def main(argv=None):
             logger.info("Started request for RUC: %d", ruc)
             retry = True
             num_retries = 0
-            # If max_retries is not specified, there will be indefinite attempts
+            # If max_retries is not specified, the query is repeated until it succeeds
             while retry and (max_retries == -1 or num_retries < max_retries):
                 num_retries += 1
                 data = sunat.get_all_information(ruc)
