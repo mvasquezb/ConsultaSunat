@@ -137,9 +137,9 @@ class Contribuyente(JSONEnabled):
             "nombre_comercial": self.nombre_comercial,
             "condicion": self.condicion,
             "estado": self.estado,
-            "deuda_coactiva": encoder.default(self.deuda_coactiva),
-            "omision_tributaria": encoder.default(self.omision_tributaria),
-            "ciiu": encoder.default(self.ciiu)
+            "deuda_coactiva": [ encoder.default(dc) for dc in self.deuda_coactiva ],
+            "omision_tributaria": [ encoder.default(ot) for ot in self.omision_tributaria ],
+            "ciiu": [ encoder.default(ci) for ci in self.ciiu ]
         }
 
     def __repr__(self):
