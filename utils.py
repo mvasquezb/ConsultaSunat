@@ -133,10 +133,10 @@ class Contribuyente(JSONEnabled):
         encoder = self.json_class()()
         return {
             "ruc": int(self.ruc),
-            "nombre": str(self.nombre),
-            "nombre_comercial": str(self.nombre_comercial),
-            "condicion": str(self.condicion),
-            "estado": str(self.estado),
+            "nombre": self.nombre,
+            "nombre_comercial": self.nombre_comercial,
+            "condicion": self.condicion,
+            "estado": self.estado,
             "deuda_coactiva": encoder.default(self.deuda_coactiva),
             "omision_tributaria": encoder.default(self.omision_tributaria),
             "ciiu": encoder.default(self.ciiu)

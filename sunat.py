@@ -12,7 +12,8 @@ import tempfile
 from .utils import (
     CIIU,
     DeudaCoactiva,
-    OmisionTributaria
+    OmisionTributaria,
+    Contribuyente
 )
 
 class Sunat:
@@ -326,43 +327,43 @@ class Sunat:
         tmp_file.close()
         return data
 
-    def get_all_information(self, ruc):
-        try:
-            basic_data = self.get_basic_information(ruc)
-            ext_data = self.get_extended_information(ruc, basic_data['nombre'])
-            data = {}
-            data.update(basic_data)
-            data.update(ext_data)
-        except TimeoutException:
-            self.logger.error("Page load timed out")
-            self.logger.info('Waiting before retry...')
-            self.web_driver.implicitly_wait(5)
-            return None
-        except Exception as e:
-            self.logger.error(e)
-            return None
-        finally:
-            self.web_driver.switch_to_default_content()
+    def get_all_information_util(self, ruc):
+        basic_data = self.get_basic_information(ruc)
+        ext_data = self.get_extended_information(ruc, basic_data['nombre'])
+        data = {}
+        data.update(basic_data)
+        data.update(ext_data)
         return data
+
+    def get_all_information(self, ruc):
+        args = [ruc]
+        return self.query_wrapper(self.get_all_information_util, *args)
 
     def get_ruc_list_in_frame(self, frame):
         return []
 
-    def get_ruc_list_by_name(self, name):
+    def query_wrapper(self, func, *args):
         try:
-            self.web_driver.get(self.url_consulta)
-            captcha = self.solve_captcha(self.web_driver)
-            self.submit_search_form('name', name, captcha)
-            ruc_list = self.get_ruc_list_in_frame(result_frame)
+            data = None
+            data = func(*args)
         except TimeoutException:
             self.logger.error("Page load timed out")
             self.logger.info('Waiting before retry...')
             self.web_driver.implicitly_wait(5)
-            return None
         except Exception as e:
             self.logger.error(e)
-            return None
         finally:
             self.web_driver.switch_to_default_content()
+        return data
+
+    def get_ruc_list_by_name_util(self, name):
+        self.web_driver.get(self.url_consulta)
+        captcha = self.solve_captcha(self.web_driver)
+        self.submit_search_form('name', name, captcha)
+        ruc_list = self.get_ruc_list_in_frame(result_frame)
         return ruc_list
+
+    def get_ruc_list_by_name(self, name):
+        args = [name]
+        return self.query_wrapper(self.get_ruc_list_by_name_util, *args)
         
