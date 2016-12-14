@@ -32,7 +32,7 @@ class CIIU(JSONEnabled):
     """
     Tipo CIIU que define una actividad economica de un contribyente
     """
-    def __init__(self, codigo, descripcion, revision=3):
+    def __init__(self, codigo = 0, descripcion = "", revision = 3):
         self.codigo = codigo
         self.descripcion = descripcion
         self.revision = revision
@@ -66,14 +66,14 @@ class CIIU(JSONEnabled):
     def __ne__(self, other):
         return not (self == other)
 
-    def __str__(self):
+    def __repr__(self):
         return str(self._json())
 
 class DeudaCoactiva(JSONEnabled):
     """
     Representa la deuda coactiva de un contribuyente
     """
-    def __init__(self, monto, periodo_tributario, fecha_inicio, entidad_asociada):
+    def __init__(self, monto = 0, periodo_tributario = None, fecha_inicio = None, entidad_asociada = ""):
         self.monto = monto
         self.periodo_tributario = periodo_tributario
         self.fecha_inicio = fecha_inicio
@@ -91,17 +91,16 @@ class DeudaCoactiva(JSONEnabled):
             "entidad_asociada": self.entidad_asociada
         }
 
-    def __str__(self):
+    def __repr__(self):
         return str(self._json())
     
 class OmisionTributaria(JSONEnabled):
     """
     Representa la omision tributaria de un contribuyente
     """
-    def __init__(self, periodo_tributario, tributo):
+    def __init__(self, periodo_tributario = None, tributo = ""):
         self.periodo_tributario = periodo_tributario
         self.tributo = tributo
-
 
     def json_class(self):
         return CustomJSONEncoder
@@ -113,5 +112,37 @@ class OmisionTributaria(JSONEnabled):
             "tributo": self.tributo
         }
 
-    def __str__(self):
+    def __repr__(self):
+        return str(self._json())
+
+class Contribuyente(JSONEnabled):
+    def __init__(self, ruc = None, nombre = '-', nombre_comercial = '-', condicion = '', estado = '', deuda_coactiva = [], omision_tributaria = [], ciiu = []):
+        self.ruc = ruc
+        self.nombre = nombre
+        self.nombre_comercial = nombre_comercial
+        self.condicion = condicion
+        self.estado = estado
+        self.deuda_coactiva = deuda_coactiva
+        self.omision_tributaria = omision_tributaria
+        self.ciiu = ciiu
+
+    def json_class(self):
+        return CustomJSONEncoder
+
+    def _json(self):
+        encoder = self.json_class()()
+        return {
+            "ruc": int(self.ruc),
+            "nombre": str(self.nombre),
+            "nombre_comercial": str(self.nombre_comercial),
+            "condicion": str(self.condicion),
+            "estado": str(self.estado),
+            "deuda_coactiva": encoder.default(self.deuda_coactiva),
+            "omision_tributaria": encoder.default(self.omision_tributaria),
+            "ciiu": encoder.default(self.ciiu)
+        }
+
+    def __repr__(self):
+        if self.ruc is None:
+            return "Contribuyente inválido"
         return str(self._json())
