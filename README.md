@@ -30,7 +30,7 @@ Más detalladamente:
 
 Se puede hacer uso de esta aplicación de manera independiente:
 
-    python consulta.py ruc1 ruc2 --retries 3 -o resultados.txt
+    python consulta.py --ruc ruc1 ruc2 --retries 3 -o resultados.txt
 
 Asimismo, se puede importar como módulo dentro de otro script de Python:
 
