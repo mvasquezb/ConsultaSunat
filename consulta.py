@@ -82,7 +82,7 @@ def main(argv=None):
                     all_data.append(data)
                     retry = False
 
-            if num_retries >= max_retries and max_retries != -1:
+            if num_retries >= max_retries and max_retries != -1 and retry:
                 logger.info("Max number of retries reached.")
                 logger.info("Request for RUC: %d failed", ruc)
             else:
