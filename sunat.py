@@ -7,7 +7,6 @@ import bs4
 import sys
 import re
 import collections
-from datetime import datetime
 import tempfile
 from .utils import (
     CIIU,
@@ -195,9 +194,8 @@ class Sunat:
             raise ValueError("Incorrect number of attributes for '{name}' record".format(name='Deuda Coactiva'))
 
         monto = float(values[0])
-        date = [ int(val) for val in values[1].split('-') ]
-        periodo_tributario = datetime(date[0], date[1], 1)
-        fecha = datetime.strptime(values[2], "%d/%m/%Y")
+        periodo_tributario = values[1]
+        fecha = values[2]
         entidad_asociada = values[3]
 
         return DeudaCoactiva(monto, periodo_tributario, fecha, entidad_asociada)
@@ -209,8 +207,6 @@ class Sunat:
             raise ValueError("Incorrect number of attributes for '{name}' record".format(name='Omision Tributaria'))
 
         periodo_tributario = values[0]
-        date = [ int(val) for val in periodo_tributario.split('-') ]
-        periodo_tributario = datetime(date[0], date[1], 1)
         tributo = values[1]
 
         return OmisionTributaria(periodo_tributario, tributo)
@@ -222,7 +218,7 @@ class Sunat:
             raise ValueError("Incorrect number of attributes for '{name}' record".format(name='Acta Probatoria'))
 
         num_acta = int(values[0])
-        fecha = datetime.strptime(values[1], '%d/%m/%Y')
+        fecha = values[1]
         lugar = values[2]
         infraccion = values[3]
         desc_infraccion = values[4]
