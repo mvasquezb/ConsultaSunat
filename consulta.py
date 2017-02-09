@@ -10,11 +10,13 @@ import json
 import sys
 from ConsultaSunat.sunat import Sunat
 from ConsultaSunat.utils import CustomJSONEncoder
+from ConsultaSunat.sunat import InvalidRUCError
 import os 
 
 dir_path = os.path.dirname(os.path.realpath(__file__)) + '/'
 logging.config.fileConfig(dir_path + 'logging.conf')
 logger = logging.getLogger('sunat')
+
 
 def argparse_setup():
     arg_parser = argparse.ArgumentParser(
@@ -22,9 +24,9 @@ def argparse_setup():
     )
     group = arg_parser.add_mutually_exclusive_group(required=True)
     group.add_argument(
-        '--ruc', 
-        nargs='+', 
-        type=int, 
+        '--ruc',
+        nargs='+',
+        type=int,
         help='RUC list to query SUNAT with',
     )
     group.add_argument(
@@ -47,10 +49,12 @@ def argparse_setup():
 
     return arg_parser
 
+
 @contextlib.contextmanager
 def browse(driver):
     yield driver
     driver.quit()
+
 
 def main(argv=None):
     arg_parser = argparse_setup()
@@ -60,7 +64,7 @@ def main(argv=None):
     ruc_list = args.ruc
     max_retries = args.retries
     outfile = args.outfile
-    
+
     if args.test:
         ruc_list = [20331066703, 20141528069, 20159253539, 20217932565]
         outfile = 'sunat-search-test.txt'
@@ -70,21 +74,28 @@ def main(argv=None):
         driver.set_page_load_timeout(5)
         sunat = Sunat(driver, logger)
 
-        for ruc in ruc_list:
-            logger.info("Started request for RUC: %d", ruc)
+        for index, ruc in enumerate(ruc_list):
+            logger.info("Started request for RUC: %d (%d/%d)", ruc, index + 1, len(ruc_list))
             retry = True
             num_retries = 0
             # If max_retries is not specified, the query is repeated until it succeeds
             while retry and (max_retries == -1 or num_retries < max_retries):
                 num_retries += 1
-                data = sunat.get_all_information(ruc)
-                if data is not None:
+                try:
+                    data = sunat.get_all_information(ruc)
+                except InvalidRUCError as e:
+                    logger.error(e)
+                    data = None
+                    retry = False
+
+                if data:
                     all_data.append(data)
                     retry = False
 
             if num_retries >= max_retries and max_retries != -1 and retry:
-                logger.info("Max number of retries reached.")
-                logger.info("Request for RUC: %d failed", ruc)
+                logger.error("Max number of retries reached. Request for RUC: %d failed", ruc)
+            elif not retry and not data:
+                logger.error("Request for RUC: %d failed", ruc)
             else:
                 logger.info("Request for RUC %d completed successfully", ruc)
 
@@ -97,6 +108,7 @@ def main(argv=None):
             logger.info("Request finished successfully. Results saved to: %s", outfile)
 
     return all_data
+
 
 if __name__ == '__main__':
     main()

@@ -1,10 +1,8 @@
-from selenium import webdriver
 from selenium.common.exceptions import *
 from PIL import Image
 import pyocr
 import requests
 import bs4
-import sys
 import re
 import collections
 import tempfile
@@ -14,6 +12,11 @@ from .utils import (
     OmisionTributaria,
     Contribuyente
 )
+
+
+class InvalidRUCError(Error):
+    pass
+
 
 class Sunat:
     def __init__(self, web_driver, logger):
@@ -49,7 +52,7 @@ class Sunat:
         img_file = tempfile.NamedTemporaryFile()
         self.web_driver.save_screenshot(img_file.name)
         img_elem = self.web_driver.find_element_by_xpath(img_xpath)
-        
+
         loc = img_elem.location
         size = img_elem.size
         captcha = self.get_subimage(img_file, loc, size)
@@ -62,7 +65,8 @@ class Sunat:
         return self.get_text_from_image(captcha)
 
     def save_results(self, fileobj):
-        result_frame = self.web_driver.find_element_by_xpath('//frame[@src="frameResultadoBusqueda.html"]')
+        frame_path = '//frame[@src="frameResultadoBusqueda.html"]'
+        result_frame = self.web_driver.find_element_by_xpath(frame_path)
         self.web_driver.switch_to.frame(result_frame)
         source = self.web_driver.page_source
         fileobj.write(source)
@@ -74,17 +78,22 @@ class Sunat:
         Gets the RUC and name (not commercial) of the taxpayer
         Any exception should propagate upwards
         """
-        tag = soup.find('td', {'class':'bgn'}, text=re.compile('n[ú|u]mero\s+de\s+ruc:\s+', re.IGNORECASE))
+        tag = soup.find(
+            'td',
+            {'class': 'bgn'},
+            text=re.compile('n[ú|u]mero\s+de\s+ruc:\s+', re.IGNORECASE))
         ruc_tag = tag.find_next('td')
         text = ruc_tag.get_text()
 
         tokens = text.split('-')
         try:
             ruc = int(tokens[0])
-        except ValueError:
-            raise ValueError("Couldn't obtain RUC value from string: " + tokens[0])
-        except IndexError:
-            raise IndexError("Not enough tokens to get RUC: " + str(tokens))
+        except ValueError as e:
+            e.message = "Couldn't obtain RUC value from string: " + tokens[0]
+            raise
+        except IndexError as e:
+            e.message = "Not enough tokens to get RUC: " + str(tokens)
+            raise
 
         text = '-'.join(tokens[1:])
 
@@ -107,14 +116,14 @@ class Sunat:
 
     def get_ciiu_in_comments(self, soup):
         comments = soup.find_all(string=lambda text: isinstance(text, bs4.Comment))
-        
+
         ciiu = []
         indexSelect = -1
         selectEnd = False
         for index, com in enumerate(comments):
             if indexSelect == -1 and '<select name="select"' in com:
                 indexSelect = index
-            
+
             if indexSelect != -1 and not selectEnd:
                 if '<option' in com:
                     com_soup = bs4.BeautifulSoup(com, 'lxml')
@@ -122,13 +131,13 @@ class Sunat:
                 elif '</select>' in com:
                     selectEnd = True
 
-        ciiu = [ CIIU.from_string(ci) for ci in ciiu ]
+        ciiu = [CIIU.from_string(ci) for ci in ciiu]
 
         return ciiu
 
     def get_clean_ciiu_list(self, ciiu_comments, ciiu_options):
         clean_ciiu = []
-        
+
         for index, ci in enumerate(ciiu_options):
             if ci not in ciiu_comments:
                 ci.revision = 4
@@ -139,10 +148,10 @@ class Sunat:
     def get_ciiu_contribuyente(self, soup):
         ciiu = []
         comments = self.get_ciiu_in_comments(soup)
-        
-        select = soup.find('select', {'name':'select'})
+
+        select = soup.find('select', {'name': 'select'})
         options = select.find_all('option')
-        options = [ CIIU.from_string(op.get_text()) for op in options ]
+        options = [CIIU.from_string(op.get_text()) for op in options]
 
         ciiu = self.get_clean_ciiu_list(comments, options)
         return ciiu
@@ -159,14 +168,15 @@ class Sunat:
         try:
             res = requests.get(self.url_consulta, params, timeout=5)
         except requests.exceptions.Timeout as e:
-            raise TimeoutException("Couldn't connect to {action} within {time} seconds".format(action=accion, time=5))
+            e.message = "Couldn't connect to {action} within {time} seconds".format(action=accion, time=5)
+            raise
         soup = bs4.BeautifulSoup(res.text, 'lxml')
 
         # First table for the title, second for the results of the query
         tables = soup.find_all('table')
         results_table = tables[1]
         intro_cell = results_table.find('td', {'class': 'bgn'})
-        
+
         attr_list = []
         if intro_cell.get_text().strip().startswith('No'):
             # There are no records
@@ -176,7 +186,7 @@ class Sunat:
         debt_table = results_table.find('table').find('table')
         # Discard header row
         rows = debt_table.find_all('tr')[1:]
-        
+
         # Check if table only has error message (case with 'Actas Probatorias')
         if rows[0].find('td').get_text().strip().startswith('No'):
             return attr_list
@@ -188,10 +198,13 @@ class Sunat:
         return attr_list
 
     def get_deuda_from_row(self, row):
-        values = [ cell.get_text().strip() for cell in row.find_all('td') ]
-        
+        values = [cell.get_text().strip() for cell in row.find_all('td')]
+
         if len(values) != 4:
-            raise ValueError("Incorrect number of attributes for '{name}' record".format(name='Deuda Coactiva'))
+            raise ValueError(
+                "Incorrect number of attributes for '{name}' record"
+                .format(name='Deuda Coactiva')
+            )
 
         monto = float(values[0])
         periodo_tributario = values[1]
@@ -201,7 +214,7 @@ class Sunat:
         return DeudaCoactiva(monto, periodo_tributario, fecha, entidad_asociada)
 
     def get_ot_from_row(self, row):
-        values = [ cell.get_text().strip() for cell in row.find_all('td') ]
+        values = [cell.get_text().strip() for cell in row.find_all('td')]
 
         if len(values) != 2:
             raise ValueError("Incorrect number of attributes for '{name}' record".format(name='Omision Tributaria'))
@@ -212,7 +225,7 @@ class Sunat:
         return OmisionTributaria(periodo_tributario, tributo)
 
     def get_acta_prob_from_row(self, row):
-        values = [ cell.get_text().strip() for cell in row.find_all('td') ]
+        values = [cell.get_text().strip() for cell in row.find_all('td')]
 
         if len(values) != 2:
             raise ValueError("Incorrect number of attributes for '{name}' record".format(name='Acta Probatoria'))
@@ -234,7 +247,7 @@ class Sunat:
     def get_omision_tributaria_contribuyente(self, params):
         ot = self.get_extended_info_attr(params, 'getInfoOT', self.get_ot_from_row)
         return ot
-    
+
     def get_extended_information(self, ruc, nombre):
         """
         Get extended data
@@ -272,7 +285,8 @@ class Sunat:
             search_frame = driver.find_element_by_xpath(search_frame_xpath)
             return search_frame
         except NoSuchElementException as e:
-            raise NoSuchElementException(eval(e.msg)['errorMessage'])
+            e.msg = eval(e.msg)['errorMessage']
+            raise
 
     def solve_captcha(self, driver):
         search_frame = self.get_search_frame(driver)
@@ -291,20 +305,27 @@ class Sunat:
             raise ValueError("Query type must be one of: ruc, name or dni")
 
         try:
-            radio_list = self.web_driver.find_elements_by_xpath('//input[@type="radio" and @name="tQuery"]')
+            radio_path = '//input[@type="radio" and @name="tQuery"]'
+            radio_list = self.web_driver.find_elements_by_xpath(radio_path)
             if type == 'ruc':
-                value_input = self.web_driver.find_element_by_xpath('//input[@name="search1"]')
+                ruc_path = '//input[@name="search1"]'
+                value_input = self.web_driver.find_element_by_xpath(ruc_path)
                 type_radio = radio_list[0]
             elif type == 'dni':
-                value_input = self.web_driver.find_element_by_xpath('//input[@name="search2"]')
+                dni_path = '//input[@name="search2"]'
+                value_input = self.web_driver.find_element_by_xpath(dni_path)
                 type_radio = radio_list[1]
             elif type == 'name':
-                value_input = self.web_driver.find_element_by_xpath('//input[@name="search3"]')
+                name_path = '//input[@name="search3"]'
+                value_input = self.web_driver.find_element_by_xpath(name_path)
                 type_radio = radio_list[2]
-            captcha_input = self.web_driver.find_element_by_xpath('//input[@name="codigo"]')
-            submit_btn = self.web_driver.find_element_by_xpath('//input[@value="Buscar"]')
+            captcha_path = '//input[@name="codigo"]'
+            captcha_input = self.web_driver.find_element_by_xpath(captcha_path)
+            submit_path = '//input[@value="Buscar"]'
+            submit_btn = self.web_driver.find_element_by_xpath(submit_path)
         except NoSuchElementException as e:
-            raise NoSuchElementException(eval(e.msg)['errorMessage'])
+            e.msg = eval(e.msg)['errorMessage']
+            raise
 
         type_radio.click()
         value_input.send_keys(str(value))
@@ -332,6 +353,9 @@ class Sunat:
         return data
 
     def get_all_information(self, ruc):
+        if not self.validate_ruc(ruc):
+            raise InvalidRUCError("Invalid RUC: {ruc}".format(ruc=ruc))
+
         args = [ruc]
         return self.query_wrapper(self.get_all_information_util, *args)
 
@@ -362,4 +386,30 @@ class Sunat:
     def get_ruc_list_by_name(self, name):
         args = [name]
         return self.query_wrapper(self.get_ruc_list_by_name_util, *args)
-        
+
+    def validate_ruc(self, ruc):
+        ruc_str = str(ruc)
+
+        if len(ruc_str) != 11:
+            return False
+
+        prefix = ruc_str[:2]
+        if prefix not in ['10', '15', '17', '20']:
+            return False
+
+        last_digit = ruc_str[-1]
+        # Diez factores para multiplicar por los primeros 10 dígitos del ruc
+        fixed_multipliers = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2]
+        ten_digits = [int(num) for num in ruc_str[:10]]
+        # Suma de productos de los 10 primero dígitos con los factores fijos
+        weighted_sum = sum(
+            ten_digits[i] * fixed_multipliers[i] for i in range(10)
+        )
+        # Parte entera de la sumaproducto entre los 11 dígitos del ruc
+        int_avg = int(weighted_sum / len(ruc_str))
+        # Número mágico que debe ser igual al último dígito del ruc
+        # El 11 debe ser la longitud del ruc (no confirmado)
+        magic_number = 11 - (weighted_sum - int_avg * 11)
+        magic_number = int(magic_number) % 10
+
+        return str(magic_number) == last_digit
