@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 import sys
-sys.path.append("..")
 from selenium import webdriver
 import contextlib
 import logging
 import logging.config
 import argparse
 import json
-import sys
-from ConsultaSunat.sunat import Sunat
+import os
+
+sys.path.append("..")
+from ConsultaSunat.sunat import Sunat, InvalidRUCError
 from ConsultaSunat.utils import CustomJSONEncoder
-from ConsultaSunat.sunat import InvalidRUCError
-import os 
+
 
 dir_path = os.path.dirname(os.path.realpath(__file__)) + '/'
 logging.config.fileConfig(dir_path + 'logging.conf')

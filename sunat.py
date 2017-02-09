@@ -14,7 +14,7 @@ from .utils import (
 )
 
 
-class InvalidRUCError(Error):
+class InvalidRUCError(Exception):
     pass
 
 
