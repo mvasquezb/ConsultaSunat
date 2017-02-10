@@ -2,6 +2,7 @@ import json
 import datetime
 from abc import ABCMeta, abstractmethod
 
+
 class JSONEnabled(metaclass=ABCMeta):
     @abstractmethod
     def _json(self):
@@ -15,12 +16,14 @@ class JSONEnabled(metaclass=ABCMeta):
 
 class DateJSONEncoder(json.JSONEncoder):
     def default(self, obj):
-        if not (isinstance(obj, datetime.date) or isinstance(obj, datetime.datetime)):
+        if not (isinstance(obj, datetime.date) or
+           isinstance(obj, datetime.datetime)):
             return json.dumps(obj, indent=2, ensure_ascii=False)
         return {
             "year": obj.year,
             "month": obj.month
         }
+
 
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -28,11 +31,12 @@ class CustomJSONEncoder(json.JSONEncoder):
             return json.dumps(obj, indent=2, ensure_ascii=False)
         return obj._json()
 
+
 class CIIU(JSONEnabled):
     """
     Tipo CIIU que define una actividad economica de un contribyente
     """
-    def __init__(self, codigo = 0, descripcion = "", revision = 3):
+    def __init__(self, codigo=0, descripcion="", revision=3):
         self.codigo = codigo
         self.descripcion = descripcion
         self.revision = revision
@@ -49,7 +53,7 @@ class CIIU(JSONEnabled):
 
     @classmethod
     def from_string(cls, ciiu_str):
-        tokens = [ token.strip() for token in ciiu_str.split('-') ]
+        tokens = [token.strip() for token in ciiu_str.split('-')]
 
         desc = tokens[-1]
         codigo = tokens[-2]
@@ -69,11 +73,16 @@ class CIIU(JSONEnabled):
     def __repr__(self):
         return str(self._json())
 
+
 class DeudaCoactiva(JSONEnabled):
     """
     Representa la deuda coactiva de un contribuyente
     """
-    def __init__(self, monto = 0, periodo_tributario = None, fecha_inicio = None, entidad_asociada = ""):
+    def __init__(self,
+                 monto=0,
+                 periodo_tributario=None,
+                 fecha_inicio=None,
+                 entidad_asociada=""):
         self.monto = monto
         self.periodo_tributario = periodo_tributario
         self.fecha_inicio = fecha_inicio
@@ -93,12 +102,13 @@ class DeudaCoactiva(JSONEnabled):
 
     def __repr__(self):
         return str(self._json())
-    
+
+
 class OmisionTributaria(JSONEnabled):
     """
     Representa la omision tributaria de un contribuyente
     """
-    def __init__(self, periodo_tributario = None, tributo = ""):
+    def __init__(self, periodo_tributario=None, tributo=""):
         self.periodo_tributario = periodo_tributario
         self.tributo = tributo
 
@@ -115,8 +125,17 @@ class OmisionTributaria(JSONEnabled):
     def __repr__(self):
         return str(self._json())
 
+
 class Contribuyente(JSONEnabled):
-    def __init__(self, ruc = None, nombre = '-', nombre_comercial = '-', condicion = '', estado = '', deuda_coactiva = [], omision_tributaria = [], ciiu = []):
+    def __init__(self,
+                 ruc=None,
+                 nombre='-',
+                 nombre_comercial='-',
+                 condicion='',
+                 estado='',
+                 deuda_coactiva=[],
+                 omision_tributaria=[],
+                 ciiu=[]):
         self.ruc = ruc
         self.nombre = nombre
         self.nombre_comercial = nombre_comercial
@@ -137,9 +156,9 @@ class Contribuyente(JSONEnabled):
             "nombre_comercial": self.nombre_comercial,
             "condicion": self.condicion,
             "estado": self.estado,
-            "deuda_coactiva": [ encoder.default(dc) for dc in self.deuda_coactiva ],
-            "omision_tributaria": [ encoder.default(ot) for ot in self.omision_tributaria ],
-            "ciiu": [ encoder.default(ci) for ci in self.ciiu ]
+            "deuda_coactiva": [encoder.default(dc) for dc in self.deuda_coactiva],
+            "omision_tributaria": [encoder.default(ot) for ot in self.omision_tributaria],
+            "ciiu": [encoder.default(ci) for ci in self.ciiu]
         }
 
     def __repr__(self):
