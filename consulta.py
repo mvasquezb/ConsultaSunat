@@ -38,7 +38,7 @@ def argparse_setup():
         '--retries',
         type=int,
         default=-1,
-        help='Limit number of retries. Default: try until success'
+        help='Limit number of retries. Default: try until successful'
     )
     arg_parser.add_argument(
         '-o',
