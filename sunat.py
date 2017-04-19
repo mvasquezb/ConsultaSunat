@@ -14,7 +14,7 @@ from .utils import (
 )
 
 
-class InvalidRUCError(Error):
+class InvalidRUCError(Exception):
     pass
 
 
@@ -100,22 +100,39 @@ class Sunat:
         return ruc, text.strip()
 
     def get_nombre_comercial_contribuyente(self, soup):
-        tag = soup.find('td', {'class':'bgn'}, text=re.compile('nombre\s+comercial:\s*', re.IGNORECASE))
+        tag = soup.find(
+            'td',
+            {'class': 'bgn'},
+            text=re.compile('nombre\s+comercial:\s*', re.IGNORECASE)
+        )
         nombre_tag = tag.find_next('td')
         return nombre_tag.get_text().strip()
 
     def get_estado_contribuyente(self, soup):
-        tag = soup.find('td', {'class':'bgn'}, text=re.compile('estado\s+del?\s+contribuyente:\s*', re.IGNORECASE))
+        tag = soup.find(
+            'td',
+            {'class': 'bgn'},
+            text=re.compile('estado\s+del?\s+contribuyente:\s*', re.IGNORECASE)
+        )
         estado_tag = tag.find_next('td')
         return estado_tag.get_text().strip()
 
     def get_condicion_contribuyente(self, soup):
-        tag = soup.find('td', {'class':'bgn'}, text=re.compile('condici[ó|o]n\s+del\s+contribuyente:\s*', re.IGNORECASE))
+        tag = soup.find(
+            'td',
+            {'class': 'bgn'},
+            text=re.compile(
+                'condici[ó|o]n\s+del\s+contribuyente:\s*',
+                re.IGNORECASE
+            )
+        )
         cond_tag = tag.find_next('td')
         return cond_tag.get_text().strip()
 
     def get_ciiu_in_comments(self, soup):
-        comments = soup.find_all(string=lambda text: isinstance(text, bs4.Comment))
+        comments = soup.find_all(
+            string=lambda text: isinstance(text, bs4.Comment)
+        )
 
         ciiu = []
         indexSelect = -1
@@ -211,7 +228,12 @@ class Sunat:
         fecha = values[2]
         entidad_asociada = values[3]
 
-        return DeudaCoactiva(monto, periodo_tributario, fecha, entidad_asociada)
+        return DeudaCoactiva(
+            monto,
+            periodo_tributario,
+            fecha,
+            entidad_asociada
+        )
 
     def get_ot_from_row(self, row):
         values = [cell.get_text().strip() for cell in row.find_all('td')]
@@ -238,14 +260,29 @@ class Sunat:
         ri_roz = values[5]
         acta_recon = values[6]
 
-        return (num_acta, fecha, lugar, infraccion, desc_infraccion, ri_roz, acta_recon)
+        return (
+            num_acta,
+            fecha,
+            lugar,
+            infraccion,
+            desc_infraccion,
+            ri_roz, acta_recon
+        )
 
     def get_deuda_coactiva_contribuyente(self, params):
-        deudas = self.get_extended_info_attr(params, 'getInfoDC', self.get_deuda_from_row)
+        deudas = self.get_extended_info_attr(
+            params,
+            'getInfoDC',
+            self.get_deuda_from_row
+        )
         return deudas
 
     def get_omision_tributaria_contribuyente(self, params):
-        ot = self.get_extended_info_attr(params, 'getInfoOT', self.get_ot_from_row)
+        ot = self.get_extended_info_attr(
+            params,
+            'getInfoOT',
+            self.get_ot_from_row
+        )
         return ot
 
     def get_extended_information(self, ruc, nombre):
